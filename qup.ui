@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Qup</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="images.d/images.qrc">
+    <normaloff>:/cup.png</normaloff>:/cup.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -27,6 +31,10 @@
        <bool>true</bool>
       </property>
       <widget class="QWidget" name="page">
+       <attribute name="icon">
+        <iconset resource="images.d/images.qrc">
+         <normaloff>:/download.png</normaloff>:/download.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Download</string>
        </attribute>
@@ -48,6 +56,16 @@
             <property name="text">
              <string/>
             </property>
+            <property name="icon">
+             <iconset resource="images.d/images.qrc">
+              <normaloff>:/menu.png</normaloff>:/menu.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
            </widget>
           </item>
           <item row="1" column="2">
@@ -59,6 +77,9 @@
           </item>
           <item row="1" column="1">
            <widget class="QLineEdit" name="local">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
             <property name="placeholderText">
              <string>Local Product Directory</string>
             </property>
@@ -80,8 +101,18 @@
           </item>
           <item row="1" column="3">
            <widget class="QPushButton" name="save">
-            <property name="text">
+            <property name="toolTip">
              <string>Save Favorite</string>
+            </property>
+            <property name="icon">
+             <iconset resource="images.d/images.qrc">
+              <normaloff>:/save.png</normaloff>:/save.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -91,8 +122,18 @@
          <layout class="QHBoxLayout" name="horizontalLayout_3">
           <item>
            <widget class="QPushButton" name="download">
-            <property name="text">
-             <string>Download Product</string>
+            <property name="toolTip">
+             <string>Download</string>
+            </property>
+            <property name="icon">
+             <iconset resource="images.d/images.qrc">
+              <normaloff>:/download.png</normaloff>:/download.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
             </property>
            </widget>
           </item>
@@ -109,6 +150,23 @@
             </property>
            </spacer>
           </item>
+          <item>
+           <widget class="QPushButton" name="install">
+            <property name="toolTip">
+             <string>Install</string>
+            </property>
+            <property name="icon">
+             <iconset resource="images.d/images.qrc">
+              <normaloff>:/ok.png</normaloff>:/ok.png</iconset>
+            </property>
+            <property name="iconSize">
+             <size>
+              <width>32</width>
+              <height>32</height>
+             </size>
+            </property>
+           </widget>
+          </item>
          </layout>
         </item>
         <item>
@@ -124,36 +182,16 @@
              </property>
             </widget>
            </item>
-           <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_4">
-             <item>
-              <widget class="QPushButton" name="install">
-               <property name="text">
-                <string>Install</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <spacer name="horizontalSpacer_2">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-            </layout>
-           </item>
           </layout>
          </widget>
         </item>
        </layout>
       </widget>
       <widget class="QWidget" name="page">
+       <attribute name="icon">
+        <iconset resource="images.d/images.qrc">
+         <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
+       </attribute>
        <attribute name="title">
         <string>Settings</string>
        </attribute>
@@ -169,8 +207,11 @@
           </item>
           <item>
            <widget class="QLineEdit" name="temporary_directory">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
             <property name="placeholderText">
-             <string>Local Product Directory</string>
+             <string>Temporary Directory</string>
             </property>
            </widget>
           </item>
@@ -221,6 +262,10 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Exit">
+   <property name="icon">
+    <iconset resource="images.d/images.qrc">
+     <normaloff>:/cancel.png</normaloff>:/cancel.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Exit</string>
    </property>
@@ -232,10 +277,15 @@
   <tabstop>favorites</tabstop>
   <tabstop>local</tabstop>
   <tabstop>select_local</tabstop>
+  <tabstop>save</tabstop>
   <tabstop>download</tabstop>
-  <tabstop>activity</tabstop>
   <tabstop>install</tabstop>
+  <tabstop>activity</tabstop>
+  <tabstop>temporary_directory</tabstop>
+  <tabstop>select_temporary_directory</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="images.d/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

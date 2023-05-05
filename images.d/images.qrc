@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+	<file>cancel.png</file>
+	<file>cup.png</file>
+	<file>menu.png</file>
+	<file>ok.png</file>
+	<file>save.png</file>
+	<file>settings.png</file>
+    	<file>download.png</file>
+    </qresource>
+</RCC>
