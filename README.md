@@ -8,6 +8,13 @@ BiblioteQ requires Debian Linux, Mac, PowerPC Linux, Raspberry Pi Linux, and
 Windows releases. Five bundles! As a developer, it's easier to build the
 individual release files and upload them. Zero bundles.
 
+Benefits:
+<ul>
+<li>Creating bundles is not necessary!</li>
+<li>Downloads are smaller.</li>
+<li>Releases include only the necessary files.</li>
+</ul>
+
 Developers:
 <ol>
 <li>Compile and deploy only necessary files.</li>
