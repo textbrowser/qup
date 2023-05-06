@@ -73,5 +73,5 @@ int main(int argc, char *argv[])
   qup.show();
 
   auto rc = qapplication.exec();
-  return rc;
+  return static_cast<int> (rc);
 }
