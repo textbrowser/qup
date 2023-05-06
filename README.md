@@ -2,7 +2,7 @@ Are you annoyed with software maintenance? If so, read on.
 
 Qup, pronounced cup, is software maintenance simplified. Building and preparing
 numerous releases is boring and time-consuming. If a software release includes
-a single change, why download an entire bundle? Why create an entire bundle?
+a single-file change, why download an entire bundle? Why create an entire bundle?
 
 BiblioteQ requires Debian Linux, Mac, PowerPC Linux, Raspberry Pi Linux, and
 Windows releases. Five bundles! As a developer, it's easier to build the
