@@ -27,11 +27,15 @@
 
 #include <QApplication>
 #include <QDir>
+#include <QFont>
+#include <QIcon>
 #include <QSettings>
 
 #ifdef Q_OS_MACOS
 #include "CocoaInitializer.h"
 #endif
+
+#include "qup.h"
 
 int main(int argc, char *argv[])
 {

@@ -113,14 +113,15 @@ QMAKE_EXTRA_TARGETS += doxygen purge
 }
 
 FORMS       += ui/qup.ui
-HEADERS     +=
+HEADERS     += source/qup.h
 INCLUDEPATH += source
 MOC_DIR     = temp/moc
 OBJECTS_DIR = temp/obj
 PROJECTNAME = Qup
 RCC_DIR     = temp/rcc
 RESOURCES   = images/images.qrc
-SOURCES     += source/qup_main.cc
+SOURCES     += source/qup.cc \
+               source/qup_main.cc
 TARGET      = Qup
 TEMPLATE    = app
 UI_DIR      = temp/ui
