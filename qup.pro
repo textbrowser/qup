@@ -101,8 +101,8 @@ QMAKE_DISTCLEAN     += -r .qmake* \
 
 macx {
 LIBS                           += -framework AppKit -framework Cocoa
-OBJECTIVE_HEADERS              += Source/CocoaInitializer.h
-OBJECTIVE_SOURCES              += Source/CocoaInitializer.mm
+OBJECTIVE_HEADERS              += source/CocoaInitializer.h
+OBJECTIVE_SOURCES              += source/CocoaInitializer.mm
 QMAKE_DISTCLEAN                += -r Qup.d
 QMAKE_EXTRA_TARGETS            += dmg
 QMAKE_MACOSX_DEPLOYMENT_TARGET = 11.0
@@ -112,7 +112,7 @@ unix {
 QMAKE_EXTRA_TARGETS += doxygen purge
 }
 
-INCLUDEPATH += Source
+INCLUDEPATH += source
 MOC_DIR     = temp/moc
 OBJECTS_DIR = temp/obj
 PROJECTNAME = Qup

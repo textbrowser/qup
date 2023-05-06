@@ -14,7 +14,7 @@
    <string>Qup</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="images.d/images.qrc">
+   <iconset resource="../images/images.qrc">
     <normaloff>:/cup.png</normaloff>:/cup.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -32,7 +32,7 @@
       </property>
       <widget class="QWidget" name="page">
        <attribute name="icon">
-        <iconset resource="images.d/images.qrc">
+        <iconset resource="../images/images.qrc">
          <normaloff>:/download.png</normaloff>:/download.png</iconset>
        </attribute>
        <attribute name="title">
@@ -57,7 +57,7 @@
              <string/>
             </property>
             <property name="icon">
-             <iconset resource="images.d/images.qrc">
+             <iconset resource="../images/images.qrc">
               <normaloff>:/menu.png</normaloff>:/menu.png</iconset>
             </property>
             <property name="iconSize">
@@ -88,14 +88,14 @@
           <item row="0" column="0">
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Qup Download Location</string>
+             <string>Definitiions File Download Location</string>
             </property>
            </widget>
           </item>
           <item row="0" column="1">
            <widget class="QLineEdit" name="lineEdit">
             <property name="placeholderText">
-             <string>Qup Download Location</string>
+             <string>Definitiions File Download Location</string>
             </property>
            </widget>
           </item>
@@ -105,7 +105,7 @@
              <string>Save Favorite</string>
             </property>
             <property name="icon">
-             <iconset resource="images.d/images.qrc">
+             <iconset resource="../images/images.qrc">
               <normaloff>:/save.png</normaloff>:/save.png</iconset>
             </property>
             <property name="iconSize">
@@ -126,7 +126,7 @@
              <string>Download</string>
             </property>
             <property name="icon">
-             <iconset resource="images.d/images.qrc">
+             <iconset resource="../images/images.qrc">
               <normaloff>:/download.png</normaloff>:/download.png</iconset>
             </property>
             <property name="iconSize">
@@ -156,7 +156,7 @@
              <string>Install</string>
             </property>
             <property name="icon">
-             <iconset resource="images.d/images.qrc">
+             <iconset resource="../images/images.qrc">
               <normaloff>:/ok.png</normaloff>:/ok.png</iconset>
             </property>
             <property name="iconSize">
@@ -189,7 +189,7 @@
       </widget>
       <widget class="QWidget" name="page">
        <attribute name="icon">
-        <iconset resource="images.d/images.qrc">
+        <iconset resource="../images/images.qrc">
          <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
        </attribute>
        <attribute name="title">
@@ -263,7 +263,7 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="action_Exit">
    <property name="icon">
-    <iconset resource="images.d/images.qrc">
+    <iconset resource="../images/images.qrc">
      <normaloff>:/cancel.png</normaloff>:/cancel.png</iconset>
    </property>
    <property name="text">
@@ -285,7 +285,7 @@
   <tabstop>select_temporary_directory</tabstop>
  </tabstops>
  <resources>
-  <include location="images.d/images.qrc"/>
+  <include location="../images/images.qrc"/>
  </resources>
  <connections/>
 </ui>
