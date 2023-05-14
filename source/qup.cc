@@ -35,6 +35,11 @@ QString qup::QUP_VERSION_STRING = "2023.06.01";
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  connect(m_ui.action_exit,
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_exit);
+  m_ui.temporary_directory->setText(QDir::tempPath());
 }
 
 qup::~qup()
@@ -63,4 +68,9 @@ QString qup::home_path(void)
 
       return home_path;
     }
+}
+
+void qup::slot_exit(void)
+{
+  QApplication::exit(0);
 }

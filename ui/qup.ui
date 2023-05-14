@@ -41,8 +41,22 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <layout class="QGridLayout" name="gridLayout">
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Local Product Directory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="qup_txt_location">
+            <property name="placeholderText">
+             <string>For example, https://github.com/textbrowser/qup/qup.txt.</string>
+            </property>
+           </widget>
+          </item>
           <item row="1" column="3">
-           <widget class="QPushButton" name="save">
+           <widget class="QPushButton" name="save_favorite">
             <property name="toolTip">
              <string>Save Favorite</string>
             </property>
@@ -52,9 +66,33 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>32</width>
-              <height>32</height>
+              <width>24</width>
+              <height>24</height>
              </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="local_directory">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>Local Product Directory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="select_local_directory">
+            <property name="text">
+             <string>Select...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Definitiions File Download</string>
             </property>
            </widget>
           </item>
@@ -72,47 +110,9 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>32</width>
-              <height>32</height>
+              <width>24</width>
+              <height>24</height>
              </size>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="select_local">
-            <property name="text">
-             <string>Select...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Definitiions File Download Location</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QLineEdit" name="lineEdit">
-            <property name="placeholderText">
-             <string>Definitiions File Download Location</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Local Product Directory</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="local">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Local Product Directory</string>
             </property>
            </widget>
           </item>
@@ -131,8 +131,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>32</width>
-              <height>32</height>
+              <width>24</width>
+              <height>24</height>
              </size>
             </property>
            </widget>
@@ -161,8 +161,8 @@
             </property>
             <property name="iconSize">
              <size>
-              <width>32</width>
-              <height>32</height>
+              <width>24</width>
+              <height>24</height>
              </size>
             </property>
            </widget>
@@ -263,13 +263,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="select_temporary_directory">
-            <property name="text">
-             <string>Select...</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -304,12 +297,12 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_Exit"/>
+    <addaction name="action_exit"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_Exit">
+  <action name="action_exit">
    <property name="icon">
     <iconset resource="../images/images.qrc">
      <normaloff>:/cancel.png</normaloff>:/cancel.png</iconset>
@@ -321,17 +314,16 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>lineEdit</tabstop>
+  <tabstop>qup_txt_location</tabstop>
   <tabstop>favorites</tabstop>
-  <tabstop>local</tabstop>
-  <tabstop>select_local</tabstop>
-  <tabstop>save</tabstop>
+  <tabstop>local_directory</tabstop>
+  <tabstop>select_local_directory</tabstop>
+  <tabstop>save_favorite</tabstop>
   <tabstop>download</tabstop>
   <tabstop>install</tabstop>
   <tabstop>activity</tabstop>
   <tabstop>downloads</tabstop>
   <tabstop>temporary_directory</tabstop>
-  <tabstop>select_temporary_directory</tabstop>
  </tabstops>
  <resources>
   <include location="../images/images.qrc"/>

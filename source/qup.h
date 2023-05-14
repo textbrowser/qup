@@ -42,6 +42,9 @@ class qup: public QMainWindow
 
  private:
   Ui_qup m_ui;
+
+ private slots:
+  void slot_exit(void);
 };
 
 #endif
