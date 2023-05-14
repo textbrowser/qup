@@ -13,6 +13,7 @@ Benefits:
 <li>Creating bundles is not necessary!</li>
 <li>Downloads are smaller.</li>
 <li>Releases include only the necessary files.</li>
+<li>Simple!</li>
 </ul>
 
 Developers:
