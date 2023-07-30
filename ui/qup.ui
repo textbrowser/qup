@@ -308,25 +308,28 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>24</height>
+     <height>34</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="action_exit"/>
+    <addaction name="action_quit"/>
    </widget>
    <addaction name="menu_File"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action_exit">
+  <action name="action_quit">
    <property name="icon">
     <iconset resource="../images/images.qrc">
      <normaloff>:/cancel.png</normaloff>:/cancel.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Exit</string>
+    <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
  </widget>

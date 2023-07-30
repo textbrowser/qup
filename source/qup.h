@@ -42,9 +42,10 @@ class qup: public QMainWindow
 
  private:
   Ui_qup m_ui;
+  void closeEvent(QCloseEvent *event);
 
  private slots:
-  void slot_exit(void);
+  void slot_quit(void);
 };
 
 #endif

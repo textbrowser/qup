@@ -27,19 +27,24 @@
 
 #include <QDir>
 #include <QRegularExpression>
+#include <QSettings>
 
 #include "qup.h"
 
-QString qup::QUP_VERSION_STRING = "2023.06.01";
+QString qup::QUP_VERSION_STRING = "2023.00.00";
 
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  connect(m_ui.action_exit,
+  connect(m_ui.action_quit,
 	  &QAction::triggered,
 	  this,
-	  &qup::slot_exit);
+	  &qup::slot_quit);
   m_ui.temporary_directory->setText(QDir::tempPath());
+
+  QSettings settings;
+
+  restoreGeometry(settings.value("geometry").toByteArray());
 }
 
 qup::~qup()
@@ -70,7 +75,16 @@ QString qup::home_path(void)
     }
 }
 
-void qup::slot_exit(void)
+void qup::closeEvent(QCloseEvent *event)
 {
+  QMainWindow::closeEvent(event);
+  slot_quit();
+}
+
+void qup::slot_quit(void)
+{
+  QSettings settings;
+
+  settings.setValue("geometry", saveGeometry());
   QApplication::exit(0);
 }
