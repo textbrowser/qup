@@ -30,7 +30,7 @@
       <property name="documentMode">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="page">
+      <widget class="QWidget" name="page_download">
        <attribute name="icon">
         <iconset resource="../images/images.qrc">
          <normaloff>:/download.png</normaloff>:/download.png</iconset>
@@ -199,7 +199,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="page">
+      <widget class="QWidget" name="page_settings">
        <attribute name="icon">
         <iconset resource="../images/images.qrc">
          <normaloff>:/settings.png</normaloff>:/settings.png</iconset>
