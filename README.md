@@ -1,12 +1,14 @@
 Are you annoyed with software maintenance? If so, read on.
 
-Qup, pronounced cup, is software maintenance simplified. Building and preparing
-numerous releases is boring and time-consuming. If a software release includes
-a single-file change, why download an entire bundle? Why create an entire bundle?
+Qup, pronounced cup, is software maintenance simplified. Building and
+preparing numerous releases is boring and time-consuming. If a software
+release includes a single-file change, why download an entire bundle?
+Why create an entire bundle?
 
-BiblioteQ requires Android, Debian Linux, Mac, PowerPC Linux, Raspberry Pi Linux, and
-Windows releases. Six bundles! As a developer, it's easier to build the
-individual release files and upload them. Zero bundles.
+BiblioteQ requires Android, Debian Linux, Mac, PowerPC Linux,
+Raspberry Pi Linux, and Windows releases. Many bundles! As a developer,
+it's easier to compile the individual release files and upload them.
+Zero bundles.
 
 Benefits:
 <ul>
