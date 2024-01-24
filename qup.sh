@@ -1,0 +1,33 @@
+#!/usr/bin/env sh
+# Alexis Megas.
+
+export AA_ENABLEHIGHDPISCALING=1
+export AA_USEHIGHDPIPIXMAPS=1
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+export QT_X11_NO_MITSHM=1
+
+if [ -r ./Qup ] && [ -x ./Qup ]
+then
+    echo "Launching a local Qup."
+
+    if [ -r ./Lib ]
+    then
+	export LD_LIBRARY_PATH=Lib
+    fi
+
+    exec ./Qup "$@"
+    exit $?
+elif [ -r /opt/qup/Qup ] && [ -x /opt/qup/Qup ]
+then
+    echo "Launching an official Qup."
+    cd /opt/qup && exec ./Qup "$@"
+    exit $?
+elif [ -r /usr/local/qup/Qup ] && [ -x /usr/local/qup/Qup ]
+then
+    echo "Launching an official Qup."
+    cd /usr/local/qup && exec ./Qup "$@"
+    exit $?
+else
+    echo "Cannot locate Qup. Why?"
+    exit 1
+fi

@@ -97,7 +97,7 @@ QMAKE_CXXFLAGS_RELEASE += -Wall \
 QMAKE_DISTCLEAN     += -r .qmake* \
                        -r html \
                        -r latex \
-                       -r temp
+                       -r temporary
 
 macx {
 LIBS                           += -framework AppKit -framework Cocoa
@@ -115,13 +115,13 @@ QMAKE_EXTRA_TARGETS += doxygen purge
 FORMS       += ui/qup.ui
 HEADERS     += source/qup.h
 INCLUDEPATH += source
-MOC_DIR     = temp/moc
-OBJECTS_DIR = temp/obj
+MOC_DIR     = temporary/moc
+OBJECTS_DIR = temporary/obj
 PROJECTNAME = Qup
-RCC_DIR     = temp/rcc
+RCC_DIR     = temporary/rcc
 RESOURCES   = images/images.qrc
 SOURCES     += source/qup.cc \
                source/qup_main.cc
 TARGET      = Qup
 TEMPLATE    = app
-UI_DIR      = temp/ui
+UI_DIR      = temporary/ui
