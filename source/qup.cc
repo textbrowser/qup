@@ -31,7 +31,7 @@
 
 #include "qup.h"
 
-QString qup::QUP_VERSION_STRING = "2023.00.00";
+QString qup::QUP_VERSION_STRING = "2024.00.00";
 
 qup::qup(void):QMainWindow()
 {
