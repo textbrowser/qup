@@ -221,22 +221,7 @@
            <widget class="QComboBox" name="downloads">
             <item>
              <property name="text">
-              <string notr="true">1</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">2</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">4</string>
-             </property>
-            </item>
-            <item>
-             <property name="text">
-              <string notr="true">8</string>
+              <string>2</string>
              </property>
             </item>
            </widget>
