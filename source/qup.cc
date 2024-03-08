@@ -26,6 +26,7 @@
 */
 
 #include <QDir>
+#include <QFileDialog>
 #include <QRegularExpression>
 #include <QSettings>
 
@@ -40,6 +41,11 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.select_local_directory,
+	  &QPushButton::clicked,
+	  this,
+	  &qup::slot_select_local_directory);
+  m_ui.install->setEnabled(false);
   m_ui.temporary_directory->setText(QDir::tempPath());
 
   QSettings settings;
@@ -87,4 +93,21 @@ void qup::slot_quit(void)
 
   settings.setValue("geometry", saveGeometry());
   QApplication::exit(0);
+}
+
+void qup::slot_select_local_directory(void)
+{
+  QFileDialog dialog(this);
+
+  dialog.selectFile(m_ui.local_directory->text());
+  dialog.setDirectory(QDir::homePath());
+  dialog.setFileMode(QFileDialog::Directory);
+  dialog.setLabelText(QFileDialog::Accept, tr("Select"));
+  dialog.setOption(QFileDialog::DontUseNativeDialog);
+  dialog.setWindowTitle(tr("Qup: Select Download Path"));
+
+  if(dialog.exec() == QDialog::Accepted)
+    {
+      m_ui.local_directory->setText(dialog.selectedFiles().value(0));
+    }
 }
