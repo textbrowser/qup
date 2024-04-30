@@ -101,6 +101,18 @@ void qup::slot_quit(void)
 
 void qup::slot_save_favorite(void)
 {
+  auto local_directory(m_ui.local_directory->text().trimmed());
+  auto url(m_ui.qup_txt_location->text().trimmed());
+
+  if(local_directory.trimmed().isEmpty() || url.isEmpty())
+    return;
+
+  QSettings settings;
+
+  settings.beginGroup(QString("favorite-%1").arg(url));
+  settings.setValue("local-directory", local_directory);
+  settings.setValue("url", url);
+  settings.endGroup();
 }
 
 void qup::slot_select_local_directory(void)
@@ -115,7 +127,5 @@ void qup::slot_select_local_directory(void)
   dialog.setWindowTitle(tr("Qup: Select Download Path"));
 
   if(dialog.exec() == QDialog::Accepted)
-    {
-      m_ui.local_directory->setText(dialog.selectedFiles().value(0));
-    }
+    m_ui.local_directory->setText(dialog.selectedFiles().value(0));
 }
