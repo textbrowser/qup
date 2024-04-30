@@ -41,6 +41,10 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.save_favorite,
+	  &QPushButton::clicked,
+	  this,
+	  &qup::slot_save_favorite);
   connect(m_ui.select_local_directory,
 	  &QPushButton::clicked,
 	  this,
@@ -93,6 +97,10 @@ void qup::slot_quit(void)
 
   settings.setValue("geometry", saveGeometry());
   QApplication::exit(0);
+}
+
+void qup::slot_save_favorite(void)
+{
 }
 
 void qup::slot_select_local_directory(void)
