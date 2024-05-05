@@ -4,7 +4,7 @@ dmg.commands = make install && hdiutil create Qup.d.dmg -srcfolder Qup.d
 
 unix {
 doxygen.commands = doxygen qup.doxygen
-purge.commands   = find . -name '*~' -exec rm {} \\;
+purge.commands   = find . -name '*~' -exec rm {} \;
 }
 
 CONFIG	    += qt release warn_on
