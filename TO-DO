@@ -1,11 +1,13 @@
 Completed Items
 
+- Delete favorite.
 - Geometry.
+- Restore and retain favorites.
 
 Remaining Items
 
 - Download items.
 - Exiting during an update.
+- Highlight problematic product directory widget.
 - Interpret the instruction file.
 - Populate favorites if the INI has been changed.
-- Restore and retain favorites.

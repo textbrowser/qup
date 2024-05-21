@@ -27,6 +27,7 @@
 
 #include <QDir>
 #include <QFileDialog>
+#include <QMessageBox>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QTimer>
@@ -35,7 +36,7 @@
 #include "qup.h"
 
 QString qup::QUP_VERSION_STRING = "2024.00.00";
-static int s_timer_time = 2500;
+static int s_timer_time = 500;
 
 qup::qup(void):QMainWindow()
 {
@@ -45,6 +46,10 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.delete_favorite,
+	  &QToolButton::clicked,
+	  this,
+	  &qup::slot_delete_favorite);
   connect(m_ui.favorites,
 	  &QToolButton::clicked,
 	  m_ui.favorites,
@@ -108,6 +113,43 @@ void qup::closeEvent(QCloseEvent *event)
   slot_quit();
 }
 
+void qup::slot_delete_favorite(void)
+{
+  auto name(m_ui.favorite_name->text().trimmed());
+
+  if(name.isEmpty())
+    return;
+
+  QMessageBox mb(this);
+
+  mb.setIcon(QMessageBox::Question);
+  mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+  mb.setText(tr("Delete %1? Are you sure?").arg(name));
+  mb.setWindowIcon(windowIcon());
+  mb.setWindowModality(Qt::ApplicationModal);
+  mb.setWindowTitle(tr("Qup: Confirmation"));
+
+  if(mb.exec() == QMessageBox::No)
+    {
+      QApplication::processEvents();
+      return;
+    }
+
+  QApplication::processEvents();
+
+  QSettings settings;
+
+  settings.beginGroup(QString("favorite-%1").arg(name));
+  settings.remove("");
+  settings.endGroup(); // Optional.
+
+  if(settings.status() == QSettings::NoError)
+    slot_populate_favorites();
+  else
+    statusBar()->showMessage
+      (tr("Could not delete %1.").arg(name), 2500);
+}
+
 void qup::slot_populate_favorite(void)
 {
   auto action = qobject_cast<QAction *> (sender());
@@ -134,23 +176,16 @@ void qup::slot_populate_favorites(void)
   foreach(auto const &group, settings.childGroups())
     {
       settings.beginGroup(group);
-
-      foreach(auto const &key, settings.childKeys())
-	if(key == "name" &&
-	   settings.value(key).toString().trimmed().isEmpty() == false)
-	  {
-	    groups[settings.value(key).toString().trimmed()] = 0;
-	    break;
-	  }
-
+      groups[settings.value("name").toString().trimmed()] = 0;
       settings.endGroup();
     }
 
   m_ui.favorites->menu()->clear();
 
   foreach(auto const &key, groups.keys())
-    m_ui.favorites->menu()->addAction
-    (key, this, &qup::slot_populate_favorite);
+    if(!key.isEmpty())
+      m_ui.favorites->menu()->addAction
+	(key, this, &qup::slot_populate_favorite);
 
   m_ui.favorites->setEnabled(!groups.isEmpty());
   QApplication::restoreOverrideCursor();
@@ -208,5 +243,8 @@ void qup::slot_select_local_directory(void)
   dialog.setWindowTitle(tr("Qup: Select Download Path"));
 
   if(dialog.exec() == QDialog::Accepted)
-    m_ui.local_directory->setText(dialog.selectedFiles().value(0));
+    {
+      QApplication::processEvents();
+      m_ui.local_directory->setText(dialog.selectedFiles().value(0));
+    }
 }

@@ -45,6 +45,7 @@ class qup: public QMainWindow
   void closeEvent(QCloseEvent *event);
 
  private slots:
+  void slot_delete_favorite(void);
   void slot_quit(void);
   void slot_populate_favorite(void);
   void slot_populate_favorites(void);
