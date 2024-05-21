@@ -46,6 +46,7 @@ class qup: public QMainWindow
 
  private slots:
   void slot_quit(void);
+  void slot_populate_favorite(void);
   void slot_populate_favorites(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);

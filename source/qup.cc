@@ -35,10 +35,12 @@
 #include "qup.h"
 
 QString qup::QUP_VERSION_STRING = "2024.00.00";
+static int s_timer_time = 2500;
 
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  QTimer::singleShot(s_timer_time, this, &qup::slot_populate_favorites);
   connect(m_ui.action_quit,
 	  &QAction::triggered,
 	  this,
@@ -69,11 +71,7 @@ qup::qup(void):QMainWindow()
 #endif
   m_ui.install->setEnabled(false);
   m_ui.temporary_directory->setText(QDir::tempPath());
-
-  QSettings settings;
-
-  restoreGeometry(settings.value("geometry").toByteArray());
-  QTimer::singleShot(250, this, &qup::slot_populate_favorites);
+  restoreGeometry(QSettings().value("geometry").toByteArray());
 }
 
 qup::~qup()
@@ -110,6 +108,22 @@ void qup::closeEvent(QCloseEvent *event)
   slot_quit();
 }
 
+void qup::slot_populate_favorite(void)
+{
+  auto action = qobject_cast<QAction *> (sender());
+
+  if(!action)
+    return;
+
+  QSettings settings;
+
+  settings.beginGroup(QString("favorite-%1").arg(action->text()));
+  m_ui.favorite_name->setText(settings.value("name").toString());
+  m_ui.local_directory->setText(settings.value("local-directory").toString());
+  m_ui.qup_txt_location->setText(settings.value("url").toString());
+  settings.endGroup(); // Optional.
+}
+
 void qup::slot_populate_favorites(void)
 {
   QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -135,7 +149,8 @@ void qup::slot_populate_favorites(void)
   m_ui.favorites->menu()->clear();
 
   foreach(auto const &key, groups.keys())
-    m_ui.favorites->menu()->addAction(key);
+    m_ui.favorites->menu()->addAction
+    (key, this, &qup::slot_populate_favorite);
 
   m_ui.favorites->setEnabled(!groups.isEmpty());
   QApplication::restoreOverrideCursor();
@@ -156,7 +171,11 @@ void qup::slot_save_favorite(void)
   auto url(m_ui.qup_txt_location->text().trimmed());
 
   if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
-    return;
+    {
+      statusBar()->showMessage
+	(tr("Please complete the required fields."), 2500);
+      return;
+    }
 
   QSettings settings;
 
@@ -173,6 +192,8 @@ void qup::slot_save_favorite(void)
   else
     statusBar()->showMessage
       (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name));
+
+  QTimer::singleShot(s_timer_time, this, &qup::slot_populate_favorites);
 }
 
 void qup::slot_select_local_directory(void)

@@ -7,4 +7,5 @@ Remaining Items
 - Download items.
 - Exiting during an update.
 - Interpret the instruction file.
+- Populate favorites if the INI has been changed.
 - Restore and retain favorites.
