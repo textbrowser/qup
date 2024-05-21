@@ -1,0 +1,11 @@
+[Desktop Entry]
+Categories=Library
+Comment=Qup
+Exec=/opt/qup/qup.sh
+GenericName=Qup
+Icon=/opt/qup/qup.png
+MimeType=text/html;/text/xml;application/xhtml_xml;
+Name=Qup
+StartupNotify=true
+Terminal=false
+Type=Application
