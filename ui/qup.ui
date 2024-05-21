@@ -41,19 +41,10 @@
        <layout class="QVBoxLayout" name="verticalLayout_3">
         <item>
          <layout class="QGridLayout" name="gridLayout">
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="local_directory">
-            <property name="minimumSize">
-             <size>
-              <width>0</width>
-              <height>35</height>
-             </size>
-            </property>
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="placeholderText">
-             <string>Local Product Directory</string>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_3">
+            <property name="text">
+             <string>Name</string>
             </property>
            </widget>
           </item>
@@ -74,28 +65,14 @@
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
-           <widget class="QPushButton" name="select_local_directory">
-            <property name="text">
-             <string>Select...</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Definitiions File Download</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_4">
-            <property name="text">
-             <string>Local Product Directory</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
+           <widget class="QLineEdit" name="favorite_name">
+            <property name="placeholderText">
+             <string>Product Name</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
            <widget class="QLineEdit" name="qup_txt_location">
             <property name="minimumSize">
              <size>
@@ -125,6 +102,43 @@
               <width>24</width>
               <height>24</height>
              </size>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="local_directory">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>35</height>
+             </size>
+            </property>
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>Local Product Directory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Local Product Directory</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="select_local_directory">
+            <property name="text">
+             <string>Select...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label">
+            <property name="text">
+             <string>Definitiions File Download</string>
             </property>
            </widget>
           </item>
@@ -349,10 +363,11 @@
  </widget>
  <tabstops>
   <tabstop>tabWidget</tabstop>
-  <tabstop>qup_txt_location</tabstop>
+  <tabstop>favorite_name</tabstop>
   <tabstop>favorites</tabstop>
   <tabstop>save_favorite</tabstop>
   <tabstop>delete_favorite</tabstop>
+  <tabstop>qup_txt_location</tabstop>
   <tabstop>local_directory</tabstop>
   <tabstop>select_local_directory</tabstop>
   <tabstop>download</tabstop>

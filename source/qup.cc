@@ -29,6 +29,8 @@
 #include <QFileDialog>
 #include <QRegularExpression>
 #include <QSettings>
+#include <QTimer>
+#include <QtDebug>
 
 #include "qup.h"
 
@@ -41,6 +43,10 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.favorites,
+	  &QToolButton::clicked,
+	  m_ui.favorites,
+	  &QToolButton::showMenu);
   connect(m_ui.save_favorite,
 	  &QPushButton::clicked,
 	  this,
@@ -49,12 +55,25 @@ qup::qup(void):QMainWindow()
 	  &QPushButton::clicked,
 	  this,
 	  &qup::slot_select_local_directory);
+  m_ui.favorites->setArrowType(Qt::NoArrow);
+  m_ui.favorites->setMenu(new QMenu(this));
+#ifdef Q_OS_MACOS
+#else
+  m_ui.favorites->setPopupMode(QToolButton::MenuButtonPopup);
+#endif
+#ifdef Q_OS_MACOS
+  m_ui.favorites->setStyleSheet
+    ("QToolButton {border: none;}"
+     "QToolButton::menu-button {border: none;}"
+     "QToolButton::menu-indicator {image: none;}");
+#endif
   m_ui.install->setEnabled(false);
   m_ui.temporary_directory->setText(QDir::tempPath());
 
   QSettings settings;
 
   restoreGeometry(settings.value("geometry").toByteArray());
+  QTimer::singleShot(250, this, &qup::slot_populate_favorites);
 }
 
 qup::~qup()
@@ -91,6 +110,37 @@ void qup::closeEvent(QCloseEvent *event)
   slot_quit();
 }
 
+void qup::slot_populate_favorites(void)
+{
+  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+  QMap<QString, char> groups;
+  QSettings settings;
+
+  foreach(auto const &group, settings.childGroups())
+    {
+      settings.beginGroup(group);
+
+      foreach(auto const &key, settings.childKeys())
+	if(key == "name" &&
+	   settings.value(key).toString().trimmed().isEmpty() == false)
+	  {
+	    groups[settings.value(key).toString().trimmed()] = 0;
+	    break;
+	  }
+
+      settings.endGroup();
+    }
+
+  m_ui.favorites->menu()->clear();
+
+  foreach(auto const &key, groups.keys())
+    m_ui.favorites->menu()->addAction(key);
+
+  m_ui.favorites->setEnabled(!groups.isEmpty());
+  QApplication::restoreOverrideCursor();
+}
+
 void qup::slot_quit(void)
 {
   QSettings settings;
@@ -102,17 +152,27 @@ void qup::slot_quit(void)
 void qup::slot_save_favorite(void)
 {
   auto local_directory(m_ui.local_directory->text().trimmed());
+  auto name(m_ui.favorite_name->text().trimmed());
   auto url(m_ui.qup_txt_location->text().trimmed());
 
-  if(local_directory.trimmed().isEmpty() || url.isEmpty())
+  if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
     return;
 
   QSettings settings;
 
-  settings.beginGroup(QString("favorite-%1").arg(url));
+  settings.beginGroup(QString("favorite-%1").arg(name));
   settings.setValue("local-directory", local_directory);
+  settings.setValue("name", name);
   settings.setValue("url", url);
   settings.endGroup();
+
+  if(settings.status() == QSettings::NoError)
+    statusBar()->showMessage
+      (tr("The favorite %1 has been saved in the Qup INI file.").arg(name),
+       2500);
+  else
+    statusBar()->showMessage
+      (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name));
 }
 
 void qup::slot_select_local_directory(void)
