@@ -265,7 +265,12 @@ void qup::slot_timeout(void)
   auto palette(m_ui.local_directory->palette());
 
   if(QFileInfo(m_ui.local_directory->text().trimmed()).isWritable())
-    color = QColor(144, 238, 144); // Light green!
+    {
+      color = QColor(144, 238, 144); // Light green!
+      m_ui.local_directory->setToolTip("");
+    }
+  else
+    m_ui.local_directory->setToolTip(tr("Writable directory, please."));
 
   palette.setColor(m_ui.local_directory->backgroundRole(), color);
   m_ui.local_directory->setPalette(palette);
