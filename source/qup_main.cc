@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
 #endif
   QCoreApplication::setApplicationName("Qup");
   QCoreApplication::setApplicationVersion(qup::QUP_VERSION_STRING);
+  QCoreApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
   QCoreApplication::setOrganizationName("Qup");
   QSettings::setDefaultFormat(QSettings::IniFormat);
   QSettings::setPath

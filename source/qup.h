@@ -28,6 +28,8 @@
 #ifndef _qup_h_
 #define _qup_h_
 
+#include <QTimer>
+
 #include "ui_qup.h"
 
 class qup: public QMainWindow
@@ -41,6 +43,7 @@ class qup: public QMainWindow
   static QString home_path(void);
 
  private:
+  QTimer m_timer;
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);
 
@@ -51,6 +54,7 @@ class qup: public QMainWindow
   void slot_populate_favorites(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
+  void slot_timeout(void);
 };
 
 #endif

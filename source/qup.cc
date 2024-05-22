@@ -36,12 +36,18 @@
 #include "qup.h"
 
 QString qup::QUP_VERSION_STRING = "2024.00.00";
-static int s_timer_time = 500;
+static int s_populate_favorites_interval = 250;
+static int s_show_message_interval = 5000;
 
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
-  QTimer::singleShot(s_timer_time, this, &qup::slot_populate_favorites);
+  QTimer::singleShot
+    (s_populate_favorites_interval, this, &qup::slot_populate_favorites);
+  connect(&m_timer,
+	  &QTimer::timeout,
+	  this,
+	  &qup::slot_timeout);
   connect(m_ui.action_quit,
 	  &QAction::triggered,
 	  this,
@@ -62,6 +68,7 @@ qup::qup(void):QMainWindow()
 	  &QPushButton::clicked,
 	  this,
 	  &qup::slot_select_local_directory);
+  m_timer.start(1500);
   m_ui.favorites->setArrowType(Qt::NoArrow);
   m_ui.favorites->setMenu(new QMenu(this));
 #ifdef Q_OS_MACOS
@@ -147,7 +154,7 @@ void qup::slot_delete_favorite(void)
     slot_populate_favorites();
   else
     statusBar()->showMessage
-      (tr("Could not delete %1.").arg(name), 2500);
+      (tr("Could not delete %1.").arg(name), s_show_message_interval);
 }
 
 void qup::slot_populate_favorite(void)
@@ -208,7 +215,7 @@ void qup::slot_save_favorite(void)
   if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
     {
       statusBar()->showMessage
-	(tr("Please complete the required fields."), 2500);
+	(tr("Please complete the required fields."), s_show_message_interval);
       return;
     }
 
@@ -223,12 +230,14 @@ void qup::slot_save_favorite(void)
   if(settings.status() == QSettings::NoError)
     statusBar()->showMessage
       (tr("The favorite %1 has been saved in the Qup INI file.").arg(name),
-       2500);
+       s_show_message_interval);
   else
     statusBar()->showMessage
-      (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name));
+      (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name),
+       s_show_message_interval);
 
-  QTimer::singleShot(s_timer_time, this, &qup::slot_populate_favorites);
+  QTimer::singleShot
+    (s_populate_favorites_interval, this, &qup::slot_populate_favorites);
 }
 
 void qup::slot_select_local_directory(void)
@@ -239,7 +248,6 @@ void qup::slot_select_local_directory(void)
   dialog.setDirectory(QDir::homePath());
   dialog.setFileMode(QFileDialog::Directory);
   dialog.setLabelText(QFileDialog::Accept, tr("Select"));
-  dialog.setOption(QFileDialog::DontUseNativeDialog);
   dialog.setWindowTitle(tr("Qup: Select Download Path"));
 
   if(dialog.exec() == QDialog::Accepted)
@@ -247,4 +255,18 @@ void qup::slot_select_local_directory(void)
       QApplication::processEvents();
       m_ui.local_directory->setText(dialog.selectedFiles().value(0));
     }
+  else
+    QApplication::processEvents();
+}
+
+void qup::slot_timeout(void)
+{
+  QColor color(240, 128, 128); // Light coral!
+  auto palette(m_ui.local_directory->palette());
+
+  if(QFileInfo(m_ui.local_directory->text().trimmed()).isWritable())
+    color = QColor(144, 238, 144); // Light green!
+
+  palette.setColor(m_ui.local_directory->backgroundRole(), color);
+  m_ui.local_directory->setPalette(palette);
 }
