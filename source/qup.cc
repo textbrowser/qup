@@ -56,6 +56,10 @@ qup::qup(void):QMainWindow()
 	  &QToolButton::clicked,
 	  this,
 	  &qup::slot_delete_favorite);
+  connect(m_ui.download,
+	  &QToolButton::clicked,
+	  this,
+	  &qup::slot_download);
   connect(m_ui.favorites,
 	  &QToolButton::clicked,
 	  m_ui.favorites,
@@ -155,6 +159,53 @@ void qup::slot_delete_favorite(void)
   else
     statusBar()->showMessage
       (tr("Could not delete %1.").arg(name), s_show_message_interval);
+}
+
+void qup::slot_download(void)
+{
+  auto local_directory(m_ui.local_directory->text().trimmed());
+
+  if(local_directory.isEmpty())
+    {
+      m_ui.activity->append(tr("Please provide a product directory."));
+      return;
+    }
+
+  auto name(m_ui.favorite_name->text().trimmed());
+
+  if(name.isEmpty())
+    {
+      m_ui.activity->append(tr("Please provide a product name."));
+      return;
+    }
+
+  auto url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
+
+  if(url.isEmpty() || url.isValid() == false)
+    {
+      m_ui.activity->append(tr("Please provide a valid product URL."));
+      return;
+    }
+
+  auto path(m_ui.temporary_directory->text());
+
+  path.append(QDir::separator());
+  path.append("qup-");
+  path.append(name);
+
+  QDir directory;
+  QString text(tr("Creating %1... ").arg(path));
+
+  if(directory.mkpath(path) == false)
+    {
+      text.append(tr("<font color='red'>Failure.</font>"));
+      m_ui.activity->append(text);
+      return;
+    }
+  else
+    text.append(tr("<font color='green'>Created.</font>"));
+
+  m_ui.activity->append(text);
 }
 
 void qup::slot_populate_favorite(void)
