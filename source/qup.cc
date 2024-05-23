@@ -194,7 +194,7 @@ void qup::slot_download(void)
   path.append(name);
 
   QDir directory;
-  QString text(tr("Creating %1... ").arg(path));
+  auto text(tr("Creating %1... ").arg(path));
 
   if(directory.mkpath(path) == false)
     {
