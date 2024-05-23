@@ -28,6 +28,8 @@
 #ifndef _qup_h_
 #define _qup_h_
 
+#include <QNetworkAccessManager>
+#include <QPointer>
 #include <QTimer>
 
 #include "ui_qup.h"
@@ -43,6 +45,8 @@ class qup: public QMainWindow
   static QString home_path(void);
 
  private:
+  QNetworkAccessManager m_network_access_manager;
+  QPointer<QNetworkReply> m_instruction_file_reply;
   QTimer m_timer;
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);

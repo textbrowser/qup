@@ -28,6 +28,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QNetworkReply>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QTimer>
@@ -206,6 +207,15 @@ void qup::slot_download(void)
     text.append(tr("<font color='green'>Created.</font>"));
 
   m_ui.activity->append(text);
+
+  // Download the instruction file.
+
+  m_ui.activity->append
+    (QString("Downloading the file %1.").arg(url.toString()));
+  m_instruction_file_reply ?
+    m_instruction_file_reply->deleteLater() : (void) 0;
+  m_instruction_file_reply = m_network_access_manager.get
+    (QNetworkRequest(url));
 }
 
 void qup::slot_populate_favorite(void)
