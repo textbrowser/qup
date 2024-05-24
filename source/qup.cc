@@ -25,6 +25,7 @@
 ** QUP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QDateTime>
 #include <QDir>
 #include <QFileDialog>
 #include <QMessageBox>
@@ -37,8 +38,9 @@
 #include "qup.h"
 
 QString qup::QUP_VERSION_STRING = "2024.00.00";
-static int s_populate_favorites_interval = 250;
-static int s_show_message_interval = 5000;
+char const static *const s_end_of_file = "# End of file. Required comment.";
+const int static s_populate_favorites_interval = 250;
+const int static s_show_message_interval = 5000;
 
 qup::qup(void):QMainWindow()
 {
@@ -119,6 +121,17 @@ QString qup::home_path(void)
     }
 }
 
+void qup::append(const QString &text)
+{
+  if(text.trimmed().isEmpty())
+    return;
+
+  m_ui.activity->append
+    (QString("<u>[%1]</u>: %2").
+     arg(QDateTime::currentDateTime().toString(Qt::ISODate)).
+     arg(text.trimmed()));
+}
+
 void qup::closeEvent(QCloseEvent *event)
 {
   QMainWindow::closeEvent(event);
@@ -168,7 +181,9 @@ void qup::slot_download(void)
 
   if(local_directory.isEmpty())
     {
-      m_ui.activity->append(tr("Please provide a product directory."));
+      append
+	(tr("<font color='darkred'>Please provide a product directory."
+	    "</font>"));
       return;
     }
 
@@ -176,7 +191,8 @@ void qup::slot_download(void)
 
   if(name.isEmpty())
     {
-      m_ui.activity->append(tr("Please provide a product name."));
+      append
+	(tr("<font color='darkred'>Please provide a product name.</font>"));
       return;
     }
 
@@ -184,7 +200,9 @@ void qup::slot_download(void)
 
   if(url.isEmpty() || url.isValid() == false)
     {
-      m_ui.activity->append(tr("Please provide a valid product URL."));
+      append
+	(tr("<font color='darkred'>Please provide a valid product URL."
+	    "</font>"));
       return;
     }
 
@@ -199,19 +217,18 @@ void qup::slot_download(void)
 
   if(directory.mkpath(path) == false)
     {
-      text.append(tr("<font color='red'>Failure.</font>"));
-      m_ui.activity->append(text);
+      text.append(tr("<font color='darkred'>Failure.</font>"));
+      append(text);
       return;
     }
   else
-    text.append(tr("<font color='green'>Created.</font>"));
+    text.append(tr("<font color='darkgreen'>Created.</font>"));
 
-  m_ui.activity->append(text);
+  append(text);
 
   // Download the instruction file.
 
-  m_ui.activity->append
-    (QString("<b>Downloading the file %1.</b>").arg(url.toString()));
+  append(QString("<b>Downloading the file %1.</b>").arg(url.toString()));
   m_instruction_file_reply ?
     m_instruction_file_reply->deleteLater() : (void) 0;
   m_instruction_file_reply = m_network_access_manager.get
@@ -354,29 +371,32 @@ void qup::slot_write_instruction_file_data(void)
       m_instruction_file_reply_data.append
 	(m_instruction_file_reply->readAll());
 
-      if(m_instruction_file_reply_data.trimmed().
-	 endsWith("# End of file. Required comment."))
+      if(m_instruction_file_reply_data.trimmed().endsWith(s_end_of_file))
 	break;
     }
 
-  if(m_instruction_file_reply_data.trimmed().
-     endsWith("# End of file. Required comment."))
+  if(m_instruction_file_reply_data.trimmed().endsWith(s_end_of_file))
     {
       QFile file(m_instruction_file_reply->property("file_name").toString());
+      QFileInfo file_information
+	(m_instruction_file_reply->property("file_name").toString());
 
       if(file.open(QIODevice::Truncate | QIODevice::WriteOnly))
 	{
 	  if(file.write(m_instruction_file_reply_data) ==
 	     static_cast<qint64> (m_instruction_file_reply_data.length()))
-	    m_ui.activity->append
-	      (tr("<font color='green'>File saved locally.</font>"));
+	    append
+	      (tr("<font color='darkgreen'>File %1 saved locally.</font>").
+	       arg(file_information.fileName()));
 	  else
-	    m_ui.activity->append
-	      (tr("<font color='red'>Could not write the entire file.</font>"));
+	    append
+	      (tr("<font color='darkred'>Could not write the entire file %1."
+		  "</font>").arg(file_information.fileName()));
 	}
       else
-	m_ui.activity->append
-	  (tr("<font color='red'>Could not open a local file.</file>"));
+	append
+	  (tr("<font color='darkred'>Could not open a local file %1.</file>").
+	   arg(file_information.fileName()));
 
       m_instruction_file_reply->deleteLater();
       m_instruction_file_reply_data.clear();

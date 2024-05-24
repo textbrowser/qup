@@ -50,6 +50,7 @@ class qup: public QMainWindow
   QPointer<QNetworkReply> m_instruction_file_reply;
   QTimer m_timer;
   Ui_qup m_ui;
+  void append(const QString &text);
   void closeEvent(QCloseEvent *event);
 
  private slots:
