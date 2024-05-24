@@ -195,7 +195,7 @@ void qup::slot_download(void)
   path.append(name);
 
   QDir directory;
-  auto text(tr("Creating %1... ").arg(path));
+  auto text(tr("<b>Creating %1... </b>").arg(path));
 
   if(directory.mkpath(path) == false)
     {
@@ -211,11 +211,18 @@ void qup::slot_download(void)
   // Download the instruction file.
 
   m_ui.activity->append
-    (QString("Downloading the file %1.").arg(url.toString()));
+    (QString("<b>Downloading the file %1.</b>").arg(url.toString()));
   m_instruction_file_reply ?
     m_instruction_file_reply->deleteLater() : (void) 0;
   m_instruction_file_reply = m_network_access_manager.get
     (QNetworkRequest(url));
+  m_instruction_file_reply->setProperty
+    ("file_name", path + QDir::separator() + url.fileName());
+  m_instruction_file_reply_data.clear();
+  connect(m_instruction_file_reply,
+	  &QNetworkReply::readyRead,
+	  this,
+	  &qup::slot_write_instruction_file_data);
 }
 
 void qup::slot_populate_favorite(void)
@@ -335,4 +342,43 @@ void qup::slot_timeout(void)
 
   palette.setColor(m_ui.local_directory->backgroundRole(), color);
   m_ui.local_directory->setPalette(palette);
+}
+
+void qup::slot_write_instruction_file_data(void)
+{
+  if(!m_instruction_file_reply)
+    return;
+
+  while(m_instruction_file_reply->bytesAvailable() > 0)
+    {
+      m_instruction_file_reply_data.append
+	(m_instruction_file_reply->readAll());
+
+      if(m_instruction_file_reply_data.trimmed().
+	 endsWith("# End of file. Required comment."))
+	break;
+    }
+
+  if(m_instruction_file_reply_data.trimmed().
+     endsWith("# End of file. Required comment."))
+    {
+      QFile file(m_instruction_file_reply->property("file_name").toString());
+
+      if(file.open(QIODevice::Truncate | QIODevice::WriteOnly))
+	{
+	  if(file.write(m_instruction_file_reply_data) ==
+	     static_cast<qint64> (m_instruction_file_reply_data.length()))
+	    m_ui.activity->append
+	      (tr("<font color='green'>File saved locally.</font>"));
+	  else
+	    m_ui.activity->append
+	      (tr("<font color='red'>Could not write the entire file.</font>"));
+	}
+      else
+	m_ui.activity->append
+	  (tr("<font color='red'>Could not open a local file.</file>"));
+
+      m_instruction_file_reply->deleteLater();
+      m_instruction_file_reply_data.clear();
+    }
 }

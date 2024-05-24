@@ -45,6 +45,7 @@ class qup: public QMainWindow
   static QString home_path(void);
 
  private:
+  QByteArray m_instruction_file_reply_data;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
   QTimer m_timer;
@@ -54,12 +55,13 @@ class qup: public QMainWindow
  private slots:
   void slot_delete_favorite(void);
   void slot_download(void);
-  void slot_quit(void);
   void slot_populate_favorite(void);
   void slot_populate_favorites(void);
+  void slot_quit(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
   void slot_timeout(void);
+  void slot_write_instruction_file_data(void);
 };
 
 #endif
