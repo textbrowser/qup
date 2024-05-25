@@ -39,7 +39,7 @@ class qup_page: public QWidget
   Q_OBJECT
 
  public:
-  qup_page(void);
+  qup_page(QWidget *parent);
   ~qup_page();
 
  private:

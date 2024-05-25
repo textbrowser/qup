@@ -39,7 +39,7 @@
 char const static *const s_end_of_file = "# End of file. Required comment.";
 const int static s_populate_favorites_interval = 250;
 
-qup_page::qup_page(void):QWidget()
+qup_page::qup_page(QWidget *parent):QWidget(parent)
 {
   m_ui.setupUi(this);
   QTimer::singleShot

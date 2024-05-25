@@ -45,6 +45,7 @@ class qup: public QMainWindow
   void closeEvent(QCloseEvent *event);
 
  private slots:
+  void slot_new_page(void);
   void slot_quit(void);
 };
 

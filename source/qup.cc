@@ -30,17 +30,23 @@
 #include <QSettings>
 
 #include "qup.h"
+#include "qup_page.h"
 
 QString qup::QUP_VERSION_STRING = "2024.00.00";
 
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  connect(m_ui.action_new_page,
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_new_page);
   connect(m_ui.action_quit,
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
   restoreGeometry(QSettings().value("geometry").toByteArray());
+  slot_new_page();
 }
 
 qup::~qup()
@@ -75,6 +81,12 @@ void qup::closeEvent(QCloseEvent *event)
 {
   QMainWindow::closeEvent(event);
   slot_quit();
+}
+
+void qup::slot_new_page(void)
+{
+  m_ui.pages->setCurrentIndex
+    (m_ui.pages->addTab(new qup_page(this), tr("Download")));
 }
 
 void qup::slot_quit(void)
