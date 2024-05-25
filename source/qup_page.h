@@ -42,6 +42,9 @@ class qup_page: public QWidget
   qup_page(QWidget *parent);
   ~qup_page();
 
+ public slots:
+  void slot_populate_favorites(void);
+
  private:
   QByteArray m_instruction_file_reply_data;
   QNetworkAccessManager m_network_access_manager;
@@ -56,11 +59,13 @@ class qup_page: public QWidget
   void slot_download(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
-  void slot_populate_favorites(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
   void slot_timeout(void);
   void slot_write_instruction_file_data(void);
+
+ signals:
+  void populate_favorites(void);
 };
 
 #endif

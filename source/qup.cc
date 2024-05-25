@@ -85,8 +85,17 @@ void qup::closeEvent(QCloseEvent *event)
 
 void qup::slot_new_page(void)
 {
-  m_ui.pages->setCurrentIndex
-    (m_ui.pages->addTab(new qup_page(this), tr("Download")));
+  auto page = new qup_page(this);
+
+  connect(page,
+	  &qup_page::populate_favorites,
+	  this,
+	  &qup::populate_favorites);
+  connect(this,
+	  &qup::populate_favorites,
+	  page,
+	  &qup_page::slot_populate_favorites);
+  m_ui.pages->setCurrentIndex(m_ui.pages->addTab(page, tr("Download")));
 }
 
 void qup::slot_quit(void)

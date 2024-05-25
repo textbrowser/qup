@@ -135,7 +135,12 @@ void qup_page::slot_delete_favorite(void)
   settings.endGroup(); // Optional.
 
   if(settings.status() == QSettings::NoError)
-    slot_populate_favorites();
+    {
+      QTimer::singleShot(s_populate_favorites_interval,
+			 this,
+			 &qup_page::slot_populate_favorites);
+      emit populate_favorites();
+    }
   else
     append(tr("Could not delete %1.").arg(name));
 }
@@ -283,6 +288,7 @@ void qup_page::slot_save_favorite(void)
       append
 	(tr("The favorite %1 has been saved in the Qup_Page INI file.").
 	 arg(name));
+      emit populate_favorites();
     }
   else
     append

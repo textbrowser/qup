@@ -47,6 +47,9 @@ class qup: public QMainWindow
  private slots:
   void slot_new_page(void);
   void slot_quit(void);
+
+ signals:
+  void populate_favorites(void);
 };
 
 #endif
