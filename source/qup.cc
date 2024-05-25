@@ -242,6 +242,13 @@ void qup::slot_download(void)
 	  &qup::slot_write_instruction_file_data);
 }
 
+void qup::slot_parse_instruction_file(void)
+{
+  /*
+  ** General section(s).
+  */
+}
+
 void qup::slot_populate_favorite(void)
 {
   auto action = qobject_cast<QAction *> (sender());
@@ -385,9 +392,12 @@ void qup::slot_write_instruction_file_data(void)
 	{
 	  if(file.write(m_instruction_file_reply_data) ==
 	     static_cast<qint64> (m_instruction_file_reply_data.length()))
-	    append
-	      (tr("<font color='darkgreen'>File %1 saved locally.</font>").
-	       arg(file_information.fileName()));
+	    {
+	      QTimer::singleShot(250, this, &qup::slot_parse_instruction_file);
+	      append
+		(tr("<font color='darkgreen'>File %1 saved locally.</font>").
+		 arg(file_information.fileName()));
+	    }
 	  else
 	    append
 	      (tr("<font color='darkred'>Could not write the entire file %1."

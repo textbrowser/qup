@@ -10,6 +10,7 @@ Remaining Items
 
 - Download items.
 - Exiting during an update.
-- Interpret the instruction file.
-- Populate favorites if the INI file has been changed.
+- Interpret the instructions file.
+- Multiple download pages.
+- Populate favorites if the INI file has been changed?
 - Proxy.
