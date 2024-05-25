@@ -25,62 +25,42 @@
 ** QUP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <QDir>
-#include <QRegularExpression>
-#include <QSettings>
+#ifndef _qup_page_h_
+#define _qup_page_h_
 
-#include "qup.h"
+#include <QNetworkAccessManager>
+#include <QPointer>
+#include <QTimer>
 
-QString qup::QUP_VERSION_STRING = "2024.00.00";
+#include "ui_qup_page.h"
 
-qup::qup(void):QMainWindow()
+class qup_page: public QWidget
 {
-  m_ui.setupUi(this);
-  connect(m_ui.action_quit,
-	  &QAction::triggered,
-	  this,
-	  &qup::slot_quit);
-  restoreGeometry(QSettings().value("geometry").toByteArray());
-}
+  Q_OBJECT
 
-qup::~qup()
-{
-}
+ public:
+  qup_page(void);
+  ~qup_page();
 
-QString qup::home_path(void)
-{
-  QString home_path(qgetenv("QUP_HOME").trimmed());
+ private:
+  QByteArray m_instruction_file_reply_data;
+  QNetworkAccessManager m_network_access_manager;
+  QPointer<QNetworkReply> m_instruction_file_reply;
+  QTimer m_timer;
+  Ui_qup_page m_ui;
+  void append(const QString &text);
+  void closeEvent(QCloseEvent *event);
 
-  if(home_path.isEmpty())
-#ifdef Q_OS_WIN32
-    return QDir::currentPath() + QDir::separator() + ".qup";
-#else
-    return QDir::homePath() + QDir::separator() + ".qup";
+ private slots:
+  void slot_delete_favorite(void);
+  void slot_download(void);
+  void slot_parse_instruction_file(void);
+  void slot_populate_favorite(void);
+  void slot_populate_favorites(void);
+  void slot_save_favorite(void);
+  void slot_select_local_directory(void);
+  void slot_timeout(void);
+  void slot_write_instruction_file_data(void);
+};
+
 #endif
-  else
-    {
-      static auto r
-	(QRegularExpression(QString("[%1%1]+").arg(QDir::separator())));
-
-      home_path.replace(r, QDir::separator());
-
-      if(home_path.endsWith(QDir::separator()))
-	home_path = home_path.mid(0, home_path.length() - 1);
-
-      return home_path;
-    }
-}
-
-void qup::closeEvent(QCloseEvent *event)
-{
-  QMainWindow::closeEvent(event);
-  slot_quit();
-}
-
-void qup::slot_quit(void)
-{
-  QSettings settings;
-
-  settings.setValue("geometry", saveGeometry());
-  QApplication::exit(0);
-}

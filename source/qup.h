@@ -28,10 +28,6 @@
 #ifndef _qup_h_
 #define _qup_h_
 
-#include <QNetworkAccessManager>
-#include <QPointer>
-#include <QTimer>
-
 #include "ui_qup.h"
 
 class qup: public QMainWindow
@@ -45,25 +41,11 @@ class qup: public QMainWindow
   static QString home_path(void);
 
  private:
-  QByteArray m_instruction_file_reply_data;
-  QNetworkAccessManager m_network_access_manager;
-  QPointer<QNetworkReply> m_instruction_file_reply;
-  QTimer m_timer;
   Ui_qup m_ui;
-  void append(const QString &text);
   void closeEvent(QCloseEvent *event);
 
  private slots:
-  void slot_delete_favorite(void);
-  void slot_download(void);
-  void slot_parse_instruction_file(void);
-  void slot_populate_favorite(void);
-  void slot_populate_favorites(void);
   void slot_quit(void);
-  void slot_save_favorite(void);
-  void slot_select_local_directory(void);
-  void slot_timeout(void);
-  void slot_write_instruction_file_data(void);
 };
 
 #endif
