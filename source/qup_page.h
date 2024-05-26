@@ -50,11 +50,15 @@ class qup_page: public QWidget
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
   QString m_qup_txt_file_name;
+  QString m_path;
   QTimer m_timer;
   Ui_qup_page m_ui;
   void append(const QString &text);
   void closeEvent(QCloseEvent *event);
-
+  void download_files
+    (const QString &file_destination,
+     const QStringList &files,
+     const QUrl &url);
  private slots:
   void slot_delete_favorite(void);
   void slot_download(void);

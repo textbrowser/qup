@@ -104,6 +104,23 @@ void qup_page::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
+void qup_page::download_files(const QString &file_destination,
+			      const QStringList &files,
+			      const QUrl &url)
+{
+  if(file_destination.isEmpty() ||
+     files.isEmpty() ||
+     url.isEmpty() ||
+     url.isValid() == false)
+    return;
+
+  foreach(auto const &file, files)
+    if(files.length() > 0)
+      {
+	append(tr("Downloading %1.").arg(file));
+      }
+}
+
 void qup_page::slot_delete_favorite(void)
 {
   auto name(m_ui.favorite_name->text().trimmed());
@@ -176,16 +193,15 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto path(QDir::tempPath());
-
-  path.append(QDir::separator());
-  path.append("qup-");
-  path.append(name);
+  m_path = QDir::tempPath();
+  m_path.append(QDir::separator());
+  m_path.append("qup-");
+  m_path.append(name);
 
   QDir directory;
-  auto text(tr("<b>Creating %1... </b>").arg(path));
+  auto text(tr("<b>Creating %1... </b>").arg(m_path));
 
-  if(directory.mkpath(path) == false)
+  if(directory.mkpath(m_path) == false)
     {
       text.append(tr("<font color='darkred'>Failure.</font>"));
       append(text);
@@ -204,7 +220,7 @@ void qup_page::slot_download(void)
   m_instruction_file_reply = m_network_access_manager.get
     (QNetworkRequest(url));
   m_instruction_file_reply_data.clear();
-  m_qup_txt_file_name = path + QDir::separator() + url.fileName();
+  m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
 	  this,
@@ -222,14 +238,21 @@ void qup_page::slot_parse_instruction_file(void)
 
   QFile file(m_qup_txt_file_name);
 
-  if(file.open(QIODevice::ReadOnly))
+  if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-      QMultiHash<QString, QString> files;
-      QString line("");
+      QString file_destination("");
+      QStringList files;
+      QTextStream stream(&file);
       auto general = false;
 
-      while((line = file.readLine().trimmed()).length() > 0)
+      while(!stream.atEnd())
 	{
+	  QString line(stream.readLine().trimmed());
+	  auto index = line.indexOf('#');
+
+	  if(index > 0)
+	    line = line.mid(0, index);
+
 	  if(line == "[General]")
 	    {
 	      general = true;
@@ -238,22 +261,29 @@ void qup_page::slot_parse_instruction_file(void)
 	  else if(line.startsWith('#'))
 	    continue;
 
-	  auto index = line.indexOf('#');
-
-	  if(index > 0)
-	    line = line.mid(0, index);
-
 	  if(general)
 	    {
 	      auto list(line.split('='));
+	      auto p
+		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
-	      if(list.value(0) == "file")
+	      if(p.first == "file")
 		{
-		  auto key(list.value(0).trimmed());
-		  auto value(list.value(1).trimmed());
+		  if(p.first.length() > 0 && p.second.length() > 0)
+		    files << p.second;
+		}
+	      else if(p.first == "file_destination")
+		file_destination = p.second;
+	      else if(p.first == "url")
+		{
+		  // Begin the download(s).
 
-		  if(key.length() > 0 && value.length() > 0)
-		    files.insert(key, value);
+		  if(p.first.length() > 0 && p.second.length() > 0)
+		    download_files
+		      (file_destination, files, QUrl::fromUserInput(p.second));
+
+		  file_destination.clear();
+		  files.clear();
 		}
 	    }
 	}
@@ -397,7 +427,9 @@ void qup_page::slot_write_instruction_file_data(void)
       QFile file(m_qup_txt_file_name);
       QFileInfo file_information(m_qup_txt_file_name);
 
-      if(file.open(QIODevice::Truncate | QIODevice::WriteOnly))
+      if(file.open(QIODevice::Text |
+		   QIODevice::Truncate |
+		   QIODevice::WriteOnly))
 	{
 	  if(file.write(m_instruction_file_reply_data) ==
 	     static_cast<qint64> (m_instruction_file_reply_data.length()))
