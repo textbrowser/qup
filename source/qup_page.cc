@@ -179,7 +179,7 @@ void qup_page::slot_download(void)
   auto path(QDir::tempPath());
 
   path.append(QDir::separator());
-  path.append("qup_page-");
+  path.append("qup-");
   path.append(name);
 
   QDir directory;
@@ -203,9 +203,8 @@ void qup_page::slot_download(void)
     m_instruction_file_reply->deleteLater() : (void) 0;
   m_instruction_file_reply = m_network_access_manager.get
     (QNetworkRequest(url));
-  m_instruction_file_reply->setProperty
-    ("file_name", path + QDir::separator() + url.fileName());
   m_instruction_file_reply_data.clear();
+  m_qup_txt_file_name = path + QDir::separator() + url.fileName();
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
 	  this,
@@ -214,9 +213,56 @@ void qup_page::slot_download(void)
 
 void qup_page::slot_parse_instruction_file(void)
 {
+  if(m_qup_txt_file_name.trimmed().isEmpty())
+    return;
+
   /*
   ** General section(s).
   */
+
+  QFile file(m_qup_txt_file_name);
+
+  if(file.open(QIODevice::ReadOnly))
+    {
+      QMultiHash<QString, QString> files;
+      QString line("");
+      auto general = false;
+
+      while((line = file.readLine().trimmed()).length() > 0)
+	{
+	  if(line == "[General]")
+	    {
+	      general = true;
+	      continue;
+	    }
+	  else if(line.startsWith('#'))
+	    continue;
+
+	  auto index = line.indexOf('#');
+
+	  if(index > 0)
+	    line = line.mid(0, index);
+
+	  if(general)
+	    {
+	      auto list(line.split('='));
+
+	      if(list.value(0) == "file")
+		{
+		  auto key(list.value(0).trimmed());
+		  auto value(list.value(1).trimmed());
+
+		  if(key.length() > 0 && value.length() > 0)
+		    files.insert(key, value);
+		}
+	    }
+	}
+    }
+  else
+    {
+      append(tr("Cannot open %1 for processing.").arg(m_qup_txt_file_name));
+      return;
+    }
 }
 
 void qup_page::slot_populate_favorite(void)
@@ -348,9 +394,8 @@ void qup_page::slot_write_instruction_file_data(void)
 
   if(m_instruction_file_reply_data.trimmed().endsWith(s_end_of_file))
     {
-      QFile file(m_instruction_file_reply->property("file_name").toString());
-      QFileInfo file_information
-	(m_instruction_file_reply->property("file_name").toString());
+      QFile file(m_qup_txt_file_name);
+      QFileInfo file_information(m_qup_txt_file_name);
 
       if(file.open(QIODevice::Truncate | QIODevice::WriteOnly))
 	{

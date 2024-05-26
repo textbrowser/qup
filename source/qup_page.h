@@ -49,6 +49,7 @@ class qup_page: public QWidget
   QByteArray m_instruction_file_reply_data;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
+  QString m_qup_txt_file_name;
   QTimer m_timer;
   Ui_qup_page m_ui;
   void append(const QString &text);
