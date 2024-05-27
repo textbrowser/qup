@@ -15,6 +15,16 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>Qup does not monitor the INI file. Favorites are recorded in the INI file.</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QGridLayout" name="gridLayout">
      <item row="1" column="1">
       <widget class="QLineEdit" name="qup_txt_location">

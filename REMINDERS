@@ -4,6 +4,7 @@ Completed Items
 - Geometry.
 - Highlight problematic product directory widget.
 - Multiple download pages.
+- Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
 - Restore and retain favorites.
 
@@ -12,5 +13,4 @@ Remaining Items
 - Download items.
 - Exiting during an update.
 - Interpret the instructions file.
-- Populate favorites if the INI file has been changed?
 - Proxy.
