@@ -68,6 +68,8 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QPushButton::clicked,
 	  this,
 	  &qup_page::slot_select_local_directory);
+  m_network_access_manager.setRedirectPolicy
+    (QNetworkRequest::NoLessSafeRedirectPolicy);
   m_timer.start(1500);
   m_ui.favorites->setArrowType(Qt::NoArrow);
   m_ui.favorites->setMenu(new QMenu(this));
@@ -115,9 +117,27 @@ void qup_page::download_files(const QString &file_destination,
     return;
 
   foreach(auto const &file, files)
-    if(files.length() > 0)
+    if(file.length() > 0)
       {
-	append(tr("Downloading %1.").arg(file));
+	QNetworkReply *reply = nullptr;
+	auto remote_file_name(url.toString());
+
+	remote_file_name.append('/');
+	remote_file_name.append(file);
+	append(tr("Downloading %1.").arg(remote_file_name));
+	reply = m_network_access_manager.get
+	  (QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
+	reply->ignoreSslErrors();
+	reply->setProperty("destination", file_destination);
+	reply->setProperty("file_name", file);
+	connect(reply,
+		&QNetworkReply::finished,
+		reply,
+		&QNetworkReply::deleteLater);
+	connect(reply,
+		&QNetworkReply::readyRead,
+		this,
+		&qup_page::slot_write_file);
       }
 }
 
@@ -247,11 +267,11 @@ void qup_page::slot_parse_instruction_file(void)
 
       while(!stream.atEnd())
 	{
-	  QString line(stream.readLine().trimmed());
-	  auto index = line.indexOf('#');
+	  auto line(stream.readLine().trimmed());
+	  auto position = line.indexOf('#');
 
-	  if(index > 0)
-	    line = line.mid(0, index);
+	  if(position > 0)
+	    line = line.mid(0, position);
 
 	  if(line == "[General]")
 	    {
@@ -406,6 +426,33 @@ void qup_page::slot_timeout(void)
 
   palette.setColor(m_ui.local_directory->backgroundRole(), color);
   m_ui.local_directory->setPalette(palette);
+}
+
+void qup_page::slot_write_file(void)
+{
+  auto reply = qobject_cast<QNetworkReply *> (sender());
+
+  if(!reply)
+    return;
+
+  QDir directory;
+
+  directory.mkpath
+    (m_path + QDir::separator() + reply->property("destination").toString());
+
+  QFile file
+    (m_path +
+     QDir::separator() +
+     reply->property("destination").toString() +
+     QDir::separator() +
+     reply->property("file_name").toString());
+
+  if(file.open(QIODevice::Append | QIODevice::WriteOnly))
+    while(reply->bytesAvailable() > 0)
+      {
+	append(tr("Writing data into %1.").arg(file.fileName()));
+	file.write(reply->readAll());
+      }
 }
 
 void qup_page::slot_write_instruction_file_data(void)

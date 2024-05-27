@@ -67,6 +67,7 @@ class qup_page: public QWidget
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
   void slot_timeout(void);
+  void slot_write_file(void);
   void slot_write_instruction_file_data(void);
 
  signals:
