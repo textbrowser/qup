@@ -4,6 +4,7 @@ Completed Items
 - Download items.
 - Geometry.
 - Highlight problematic product directory widget.
+- Interpret the instructions file.
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
@@ -11,7 +12,9 @@ Completed Items
 
 Remaining Items
 
+- Clear activity widget.
+- Delete downloaded files after a proper installation.
+- Deposit downloaded files into local directories.
 - Digests. Lots of work and require separate sites.
 - Exiting during an update.
-- Interpret the instructions file.
 - Proxy.
