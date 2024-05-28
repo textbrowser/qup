@@ -257,10 +257,6 @@ void qup_page::slot_parse_instruction_file(void)
   if(m_qup_txt_file_name.trimmed().isEmpty())
     return;
 
-  /*
-  ** General section(s).
-  */
-
   QFile file(m_qup_txt_file_name);
 
   if(file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -286,7 +282,14 @@ void qup_page::slot_parse_instruction_file(void)
 	    }
 	  else if(line == "[Linux Debian]")
 	    {
-	      linux_debian = true;
+	      auto kernel_type(QSysInfo::kernelType().toLower());
+	      auto product_type(QSysInfo::productType().toLower());
+
+	      if(kernel_type.contains("linux"))
+		if(product_type.contains("debian") ||
+		   product_type.contains("ubuntu"))
+		  linux_debian = true;
+
 	      continue;
 	    }
 	  else if(line.startsWith('#'))
@@ -315,6 +318,26 @@ void qup_page::slot_parse_instruction_file(void)
 
 		  file_destination.clear();
 		  files.clear();
+		}
+	    }
+	  else if(linux_debian)
+	    {
+	      auto cpu(QSysInfo::currentCpuArchitecture().toLower());
+	      auto list(line.split('='));
+	      auto p
+		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
+
+	      if(cpu == "arm")
+		{
+		}
+	      else if(cpu == "arm64")
+		{
+		}
+	      else if(cpu == "power")
+		{
+		}
+	      else if(cpu == "x86_64")
+		{
 		}
 	    }
 	}
