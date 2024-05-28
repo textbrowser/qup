@@ -41,6 +41,7 @@ const int static s_populate_favorites_interval = 250;
 
 qup_page::qup_page(QWidget *parent):QWidget(parent)
 {
+  m_ok = true;
   m_ui.setupUi(this);
   QTimer::singleShot
     (s_populate_favorites_interval, this, &qup_page::slot_populate_favorites);
@@ -60,6 +61,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QToolButton::clicked,
 	  m_ui.favorites,
 	  &QToolButton::showMenu);
+  connect(m_ui.reset,
+	  &QPushButton::clicked,
+	  m_ui.activity,
+	  &QTextEdit::clear);
   connect(m_ui.save_favorite,
 	  &QPushButton::clicked,
 	  this,
@@ -132,8 +137,8 @@ void qup_page::download_files(const QString &file_destination,
 	reply->setProperty("file_name", file);
 	connect(reply,
 		&QNetworkReply::finished,
-		reply,
-		&QNetworkReply::deleteLater);
+		this,
+		&qup_page::slot_reply_finished);
 	connect(reply,
 		&QNetworkReply::readyRead,
 		this,
@@ -264,6 +269,7 @@ void qup_page::slot_parse_instruction_file(void)
       QStringList files;
       QTextStream stream(&file);
       auto general = false;
+      auto linux_debian = false;
 
       while(!stream.atEnd())
 	{
@@ -276,6 +282,11 @@ void qup_page::slot_parse_instruction_file(void)
 	  if(line == "[General]")
 	    {
 	      general = true;
+	      continue;
+	    }
+	  else if(line == "[Linux Debian]")
+	    {
+	      linux_debian = true;
 	      continue;
 	    }
 	  else if(line.startsWith('#'))
@@ -354,6 +365,26 @@ void qup_page::slot_populate_favorites(void)
 
   m_ui.favorites->setEnabled(!groups.isEmpty());
   QApplication::restoreOverrideCursor();
+}
+
+void qup_page::slot_reply_finished(void)
+{
+  auto reply = qobject_cast<QNetworkReply *> (sender());
+
+  if(!reply)
+    return;
+
+  if(reply->error() != QNetworkReply::NoError)
+    {
+      auto text
+	(tr("<font color='red'>An error occurred while downloading %1.</font>").
+	 arg(reply->property("file_name").toString()));
+
+      append(text);
+      m_ok = false;
+    }
+
+  reply->deleteLater();
 }
 
 void qup_page::slot_save_favorite(void)

@@ -53,6 +53,7 @@ class qup_page: public QWidget
   QString m_path;
   QTimer m_timer;
   Ui_qup_page m_ui;
+  bool m_ok;
   void append(const QString &text);
   void closeEvent(QCloseEvent *event);
   void download_files
@@ -64,6 +65,7 @@ class qup_page: public QWidget
   void slot_download(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
+  void slot_reply_finished(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
   void slot_timeout(void);
