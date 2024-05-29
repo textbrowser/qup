@@ -111,38 +111,47 @@ void qup_page::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-void qup_page::download_files(const QString &directory_destination,
+void qup_page::download_files(const QHash<QString, FileInformation> &files,
+			      const QString &directory_destination,
 			      const QString &file_destination,
-			      const QStringList &files,
 			      const QUrl &url)
 {
   if(files.isEmpty() || url.isEmpty() || url.isValid() == false)
     return;
 
-  foreach(auto const &file, files)
-    if(file.length() > 0)
-      {
-	QNetworkReply *reply = nullptr;
-	auto remote_file_name(url.toString());
+  QHashIterator<QString, FileInformation> it(files);
 
-	remote_file_name.append('/');
-	remote_file_name.append(file);
-	append(tr("Downloading %1.").arg(remote_file_name));
-	reply = m_network_access_manager.get
-	  (QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
-	reply->ignoreSslErrors();
-	reply->setProperty("destination_directory", directory_destination);
-	reply->setProperty("destination_file", file_destination);
-	reply->setProperty("file_name", file);
-	connect(reply,
-		&QNetworkReply::finished,
-		this,
-		&qup_page::slot_reply_finished);
-	connect(reply,
-		&QNetworkReply::readyRead,
-		this,
-		&qup_page::slot_write_file);
-      }
+  while(it.hasNext())
+    {
+      it.next();
+
+      if(it.key().trimmed().isEmpty())
+	continue;
+
+      QNetworkReply *reply = nullptr;
+      auto dot = it.value().m_destination == ".";
+      auto remote_file_name(url.toString());
+
+      remote_file_name.append('/');
+      remote_file_name.append(it.key());
+      append(tr("Downloading %1.").arg(remote_file_name));
+      reply = m_network_access_manager.get
+	(QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
+      reply->ignoreSslErrors();
+      reply->setProperty
+	("destination_directory", dot ? "" : directory_destination);
+      reply->setProperty
+	("destination_file", dot ? it.key() : file_destination);
+      reply->setProperty("file_name", it.key());
+      connect(reply,
+	      &QNetworkReply::finished,
+	      this,
+	      &qup_page::slot_reply_finished);
+      connect(reply,
+	      &QNetworkReply::readyRead,
+	      this,
+	      &qup_page::slot_write_file);
+    }
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -260,8 +269,8 @@ void qup_page::slot_parse_instruction_file(void)
 
   if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+      QHash<QString, qup_page::FileInformation> files;
       QString file_destination("");
-      QStringList files;
       QTextStream stream(&file);
       auto general = false;
       auto linux_debian = false;
@@ -303,7 +312,12 @@ void qup_page::slot_parse_instruction_file(void)
 	      if(p.first == "file")
 		{
 		  if(p.first.length() > 0 && p.second.length() > 0)
-		    files << p.second;
+		    {
+		      FileInformation file_information;
+
+		      file_information.m_executable = false;
+		      files[p.second] = file_information;
+		    }
 		}
 	      else if(p.first == "file_destination")
 		file_destination = p.second;
@@ -313,9 +327,9 @@ void qup_page::slot_parse_instruction_file(void)
 
 		  if(p.first.length() > 0 && p.second.length() > 0)
 		    download_files
-		      (file_destination, // Directory.
+		      (files,
+		       file_destination, // Directory.
 		       "",
-		       files,
 		       QUrl::fromUserInput(p.second));
 
 		  file_destination.clear();
@@ -335,7 +349,14 @@ void qup_page::slot_parse_instruction_file(void)
 	      if(executable == p.first || p.first == "shell")
 		{
 		  if(p.first.length() > 0 && p.second.length() > 0)
-		    files << p.second;
+		    {
+		      FileInformation file_information;
+
+		      file_information.m_destination =
+			p.first == "shell" ? "." : "";
+		      file_information.m_executable = true;
+		      files[p.second] = file_information;
+		    }
 		}
 	      else if(p.first == "local_executable")
 		file_destination = p.second;
@@ -345,9 +366,9 @@ void qup_page::slot_parse_instruction_file(void)
 
 		  if(p.first.length() > 0 && p.second.length() > 0)
 		    download_files
-		      ("", // Directory.
+		      (files,
+		       "", // Directory.
 		       file_destination,
-		       files,
 		       QUrl::fromUserInput(p.second));
 
 		  file_destination.clear();

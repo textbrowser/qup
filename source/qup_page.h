@@ -46,6 +46,13 @@ class qup_page: public QWidget
   void slot_populate_favorites(void);
 
  private:
+  class FileInformation
+  {
+  public:
+    QString m_destination;
+    bool m_executable;
+  };
+
   QByteArray m_instruction_file_reply_data;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
@@ -57,9 +64,9 @@ class qup_page: public QWidget
   void append(const QString &text);
   void closeEvent(QCloseEvent *event);
   void download_files
-    (const QString &directory_destination,
+    (const QHash<QString, FileInformation> &files,
+     const QString &directory_destination,
      const QString &file_destination,
-     const QStringList &files,
      const QUrl &url);
  private slots:
   void slot_delete_favorite(void);
