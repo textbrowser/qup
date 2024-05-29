@@ -57,7 +57,8 @@ class qup_page: public QWidget
   void append(const QString &text);
   void closeEvent(QCloseEvent *event);
   void download_files
-    (const QString &file_destination,
+    (const QString &directory_destination,
+     const QString &file_destination,
      const QStringList &files,
      const QUrl &url);
  private slots:

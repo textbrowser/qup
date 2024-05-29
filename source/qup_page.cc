@@ -111,14 +111,12 @@ void qup_page::closeEvent(QCloseEvent *event)
   QWidget::closeEvent(event);
 }
 
-void qup_page::download_files(const QString &file_destination,
+void qup_page::download_files(const QString &directory_destination,
+			      const QString &file_destination,
 			      const QStringList &files,
 			      const QUrl &url)
 {
-  if(file_destination.isEmpty() ||
-     files.isEmpty() ||
-     url.isEmpty() ||
-     url.isValid() == false)
+  if(files.isEmpty() || url.isEmpty() || url.isValid() == false)
     return;
 
   foreach(auto const &file, files)
@@ -133,7 +131,8 @@ void qup_page::download_files(const QString &file_destination,
 	reply = m_network_access_manager.get
 	  (QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
 	reply->ignoreSslErrors();
-	reply->setProperty("destination", file_destination);
+	reply->setProperty("destination_directory", directory_destination);
+	reply->setProperty("destination_file", file_destination);
 	reply->setProperty("file_name", file);
 	connect(reply,
 		&QNetworkReply::finished,
@@ -314,30 +313,46 @@ void qup_page::slot_parse_instruction_file(void)
 
 		  if(p.first.length() > 0 && p.second.length() > 0)
 		    download_files
-		      (file_destination, files, QUrl::fromUserInput(p.second));
+		      (file_destination, // Directory.
+		       "",
+		       files,
+		       QUrl::fromUserInput(p.second));
 
 		  file_destination.clear();
 		  files.clear();
+		  general = false;
 		}
 	    }
 	  else if(linux_debian)
 	    {
-	      auto cpu(QSysInfo::currentCpuArchitecture().toLower());
+	      auto executable
+		(QString("executable:%1").
+		 arg(QSysInfo::currentCpuArchitecture().toLower()));
 	      auto list(line.split('='));
 	      auto p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
-	      if(cpu == "arm")
+	      if(executable == p.first || p.first == "shell")
 		{
+		  if(p.first.length() > 0 && p.second.length() > 0)
+		    files << p.second;
 		}
-	      else if(cpu == "arm64")
+	      else if(p.first == "local_executable")
+		file_destination = p.second;
+	      else if(p.first == "url")
 		{
-		}
-	      else if(cpu == "power")
-		{
-		}
-	      else if(cpu == "x86_64")
-		{
+		  // Begin the download(s).
+
+		  if(p.first.length() > 0 && p.second.length() > 0)
+		    download_files
+		      ("", // Directory.
+		       file_destination,
+		       files,
+		       QUrl::fromUserInput(p.second));
+
+		  file_destination.clear();
+		  files.clear();
+		  linux_debian = false;
 		}
 	    }
 	}
@@ -489,17 +504,30 @@ void qup_page::slot_write_file(void)
   if(!reply)
     return;
 
-  QDir directory;
+  if(!reply->property("destination_directory").toString().isEmpty())
+    {
+      QDir directory;
 
-  directory.mkpath
-    (m_path + QDir::separator() + reply->property("destination").toString());
+      directory.mkpath
+	(m_path +
+	 QDir::separator() +
+	 reply->property("destination_directory").toString());
+    }
 
-  QFile file
-    (m_path +
-     QDir::separator() +
-     reply->property("destination").toString() +
-     QDir::separator() +
-     reply->property("file_name").toString());
+  QFile file;
+
+  if(!reply->property("destination_directory").toString().isEmpty())
+    file.setFileName
+      (m_path +
+       QDir::separator() +
+       reply->property("destination_directory").toString() +
+       QDir::separator() +
+       reply->property("file_name").toString());
+  else
+    file.setFileName
+      (m_path +
+       QDir::separator() +
+       reply->property("destination_file").toString());
 
   if(file.open(QIODevice::Append | QIODevice::WriteOnly))
     while(reply->bytesAvailable() > 0)
