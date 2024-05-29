@@ -10,6 +10,7 @@ Completed Items
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
 - Restore and retain favorites.
+- Truncate new downloads.
 
 Remaining Items
 
@@ -18,4 +19,3 @@ Remaining Items
 - Digests. Lots of work and require separate sites.
 - Exiting during an update.
 - Proxy.
-- Truncate new downloads.

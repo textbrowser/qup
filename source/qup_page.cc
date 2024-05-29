@@ -550,7 +550,16 @@ void qup_page::slot_write_file(void)
        QDir::separator() +
        reply->property("destination_file").toString());
 
-  if(file.open(QIODevice::Append | QIODevice::WriteOnly))
+  QIODevice::OpenMode flags = QIODevice::NotOpen;
+
+  if(reply->property("read").toBool())
+    flags = QIODevice::Append | QIODevice::WriteOnly;
+  else
+    flags = QIODevice::Truncate | QIODevice::WriteOnly;
+
+  reply->setProperty("read", true);
+
+  if(file.open(flags))
     while(reply->bytesAvailable() > 0)
       {
 	append(tr("Writing data into %1.").arg(file.fileName()));
