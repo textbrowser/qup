@@ -129,7 +129,8 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
 	continue;
 
       QNetworkReply *reply = nullptr;
-      auto dot = it.value().m_destination == ".";
+      auto dot = it.value().m_destination == "." ||
+	it.value().m_destination.startsWith("./");
       auto remote_file_name(url.toString());
 
       remote_file_name.append('/');
@@ -309,15 +310,15 @@ void qup_page::slot_parse_instruction_file(void)
 	      auto p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
+	      if(p.first.isEmpty() || p.second.isEmpty())
+		continue;
+
 	      if(p.first == "file")
 		{
-		  if(p.first.length() > 0 && p.second.length() > 0)
-		    {
-		      FileInformation file_information;
+		  FileInformation file_information;
 
-		      file_information.m_executable = false;
-		      files[p.second] = file_information;
-		    }
+		  file_information.m_executable = false;
+		  files[p.second] = file_information;
 		}
 	      else if(p.first == "file_destination")
 		file_destination = p.second;
@@ -325,13 +326,11 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 		  // Begin the download(s).
 
-		  if(p.first.length() > 0 && p.second.length() > 0)
-		    download_files
-		      (files,
-		       file_destination, // Directory.
-		       "",
-		       QUrl::fromUserInput(p.second));
-
+		  download_files
+		    (files,
+		     file_destination, // Directory.
+		     "",
+		     QUrl::fromUserInput(p.second));
 		  file_destination.clear();
 		  files.clear();
 		  general = false;
@@ -339,38 +338,52 @@ void qup_page::slot_parse_instruction_file(void)
 	    }
 	  else if(linux_debian)
 	    {
-	      auto executable
-		(QString("executable:%1").
-		 arg(QSysInfo::currentCpuArchitecture().toLower()));
 	      auto list(line.split('='));
 	      auto p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
-	      if(executable == p.first || p.first == "shell")
-		{
-		  if(p.first.length() > 0 && p.second.length() > 0)
-		    {
-		      FileInformation file_information;
+	      if(p.first.isEmpty() || p.second.isEmpty())
+		continue;
 
-		      file_information.m_destination =
-			p.first == "shell" ? "." : "";
-		      file_information.m_executable = true;
-		      files[p.second] = file_information;
-		    }
+	      auto executable
+		(QString("executable:%1").
+		 arg(QSysInfo::currentCpuArchitecture().toLower()));
+
+	      if(executable == p.first)
+		{
+		  FileInformation file_information;
+
+		  file_information.m_executable = false;
+		  file_information.m_destination = "";
+		  files[p.second] = file_information;
+		}
+	      else if(p.first == "file")
+		{
+		  FileInformation file_information;
+
+		  file_information.m_executable = false;
+		  file_information.m_destination = p.second;
+		  files[p.second] = file_information;
 		}
 	      else if(p.first == "local_executable")
 		file_destination = p.second;
+	      else if(p.first == "shell")
+		{
+		  FileInformation file_information;
+
+		  file_information.m_executable = true;
+		  file_information.m_destination = p.second;
+		  files[p.second] = file_information;
+		}
 	      else if(p.first == "url")
 		{
 		  // Begin the download(s).
 
-		  if(p.first.length() > 0 && p.second.length() > 0)
-		    download_files
-		      (files,
-		       "", // Directory.
-		       file_destination,
-		       QUrl::fromUserInput(p.second));
-
+		  download_files
+		    (files,
+		     "", // Directory.
+		     file_destination,
+		     QUrl::fromUserInput(p.second));
 		  file_destination.clear();
 		  files.clear();
 		  linux_debian = false;
