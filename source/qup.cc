@@ -45,6 +45,7 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  m_ui.temporary_directory->setText(QDir::tempPath());
   restoreGeometry(QSettings().value("geometry").toByteArray());
   slot_new_page();
 }
