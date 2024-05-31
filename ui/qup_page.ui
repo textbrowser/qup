@@ -26,93 +26,6 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="qup_txt_location">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="placeholderText">
-        <string>For example, https://github.com/textbrowser/qup/qup.txt.</string>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="select_local_directory">
-       <property name="text">
-        <string>Select...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Local Product Directory</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="local_directory">
-       <property name="minimumSize">
-        <size>
-         <width>0</width>
-         <height>35</height>
-        </size>
-       </property>
-       <property name="placeholderText">
-        <string>Local Product Directory</string>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="save_favorite">
-       <property name="toolTip">
-        <string>Save Favorite</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images/images.qrc">
-         <normaloff>:/save.png</normaloff>:/save.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="favorite_name">
-       <property name="placeholderText">
-        <string>Product Name</string>
-       </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Definitiions File Download</string>
-       </property>
-      </widget>
-     </item>
      <item row="0" column="4">
       <widget class="QPushButton" name="delete_favorite">
        <property name="toolTip">
@@ -127,6 +40,13 @@
          <width>24</width>
          <height>24</height>
         </size>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Name</string>
        </property>
       </widget>
      </item>
@@ -161,6 +81,162 @@
           </size>
          </property>
         </widget>
+       </item>
+      </layout>
+     </item>
+     <item row="0" column="3">
+      <widget class="QPushButton" name="save_favorite">
+       <property name="toolTip">
+        <string>Save Favorite</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images/images.qrc">
+         <normaloff>:/save.png</normaloff>:/save.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QPushButton" name="select_local_directory">
+       <property name="text">
+        <string>Select...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="qup_txt_location">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="placeholderText">
+        <string>For example, https://github.com/textbrowser/qup/qup.txt.</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Definitiions File Download</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="local_directory">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>35</height>
+        </size>
+       </property>
+       <property name="placeholderText">
+        <string>Local Product Directory</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="favorite_name">
+       <property name="placeholderText">
+        <string>Product Name</string>
+       </property>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Local Product Directory</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Operating System</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QComboBox" name="operating_system">
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string notr="true">Debian AMD64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">FreeBSD AMD64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">MacOS Apple Silicon</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">MacOS Intel</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">PiOS ARM</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">PiOS ARM64</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Ubuntu AMD64 24.04</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Ubuntu PowerPC</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string notr="true">Windows 11</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </item>
@@ -277,9 +353,11 @@
   <tabstop>qup_txt_location</tabstop>
   <tabstop>local_directory</tabstop>
   <tabstop>select_local_directory</tabstop>
+  <tabstop>operating_system</tabstop>
   <tabstop>download</tabstop>
   <tabstop>install</tabstop>
   <tabstop>activity</tabstop>
+  <tabstop>reset</tabstop>
  </tabstops>
  <resources>
   <include location="../images/images.qrc"/>

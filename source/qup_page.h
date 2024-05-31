@@ -61,6 +61,7 @@ class qup_page: public QWidget
   QTimer m_timer;
   Ui_qup_page m_ui;
   bool m_ok;
+  QString executable_suffix(void) const;
   void append(const QString &text);
   void closeEvent(QCloseEvent *event);
   void download_files

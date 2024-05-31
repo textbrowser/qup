@@ -95,6 +95,11 @@ qup_page::~qup_page()
 {
 }
 
+QString qup_page::executable_suffix(void) const
+{
+  return "";
+}
+
 void qup_page::append(const QString &text)
 {
   if(text.trimmed().isEmpty())
@@ -271,10 +276,11 @@ void qup_page::slot_parse_instruction_file(void)
   if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QHash<QString, qup_page::FileInformation> files;
+      QString executable_suffix(this->executable_suffix());
       QString file_destination("");
       QTextStream stream(&file);
       auto general = false;
-      auto linux_debian = false;
+      auto unix = false;
 
       while(!stream.atEnd())
 	{
@@ -289,16 +295,13 @@ void qup_page::slot_parse_instruction_file(void)
 	      general = true;
 	      continue;
 	    }
-	  else if(line == "[Linux Debian]")
+	  else if(line == "[Unix]")
 	    {
-	      auto kernel_type(QSysInfo::kernelType().toLower());
-	      auto product_type(QSysInfo::productType().toLower());
-
-	      if(kernel_type.contains("linux"))
-		if(product_type.contains("debian") ||
-		   product_type.contains("ubuntu"))
-		  linux_debian = true;
-
+#ifdef Q_OS_MACOS
+	      unix = false;
+#elif defined(Q_OS_UNIX)
+	      unix = true;
+#endif
 	      continue;
 	    }
 	  else if(line.startsWith('#'))
@@ -336,7 +339,7 @@ void qup_page::slot_parse_instruction_file(void)
 		  general = false;
 		}
 	    }
-	  else if(linux_debian)
+	  else if(unix)
 	    {
 	      auto list(line.split('='));
 	      auto p
@@ -386,7 +389,7 @@ void qup_page::slot_parse_instruction_file(void)
 		     QUrl::fromUserInput(p.second));
 		  file_destination.clear();
 		  files.clear();
-		  linux_debian = false;
+		  unix = false;
 		}
 	    }
 	}
@@ -408,9 +411,16 @@ void qup_page::slot_populate_favorite(void)
   QSettings settings;
 
   settings.beginGroup(QString("favorite-%1").arg(action->text()));
-  m_ui.favorite_name->setText(settings.value("name").toString());
-  m_ui.local_directory->setText(settings.value("local-directory").toString());
-  m_ui.qup_txt_location->setText(settings.value("url").toString());
+  m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
+  m_ui.local_directory->setText
+    (settings.value("local-directory").toString().trimmed());
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->
+     findText(settings.value("operating-system").toString().trimmed()));
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->currentIndex() < 0 ?
+     0 : m_ui.operating_system->currentIndex());
+  m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
   settings.endGroup(); // Optional.
 }
 
@@ -476,6 +486,7 @@ void qup_page::slot_save_favorite(void)
   settings.beginGroup(QString("favorite-%1").arg(name));
   settings.setValue("local-directory", local_directory);
   settings.setValue("name", name);
+  settings.setValue("operating-system", m_ui.operating_system->currentText());
   settings.setValue("url", url);
   settings.endGroup();
 
