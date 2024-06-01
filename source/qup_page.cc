@@ -454,17 +454,23 @@ void qup_page::slot_reply_finished(void)
   auto reply = qobject_cast<QNetworkReply *> (sender());
 
   if(!reply)
-    return;
+    {
+      append("<font color='red'>Cannot discover QNetworkReply object. "
+	     "Serious problem!</font>");
+      return;
+    }
 
   if(reply->error() != QNetworkReply::NoError)
     {
-      auto text
-	(tr("<font color='red'>An error occurred while downloading %1.</font>").
-	 arg(reply->property("file_name").toString()));
-
-      append(text);
+      append
+	(tr("<font color='red'>An error occurred while downloading %1."
+	    "</font>").arg(reply->property("file_name").toString()));
       m_ok = false;
     }
+  else
+    append
+      (tr("<font color='green'>Completed downloading %1.</font>").
+       arg(reply->property("file_name").toString()));
 
   reply->deleteLater();
 }
