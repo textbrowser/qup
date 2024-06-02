@@ -41,10 +41,16 @@ const int static s_populate_favorites_interval = 250;
 
 qup_page::qup_page(QWidget *parent):QWidget(parent)
 {
+  m_copy_files_timer.setInterval(1500);
+  m_copy_files_timer.setSingleShot(true);
   m_ok = true;
   m_ui.setupUi(this);
   QTimer::singleShot
     (s_populate_favorites_interval, this, &qup_page::slot_populate_favorites);
+  connect(&m_copy_files_timer,
+	  &QTimer::timeout,
+	  this,
+	  &qup_page::slot_copy_files);
   connect(&m_timer,
 	  &QTimer::timeout,
 	  this,
@@ -160,6 +166,24 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
     }
 }
 
+void qup_page::slot_copy_files(void)
+{
+  if(m_network_access_manager.findChildren<QNetworkReply *> ().size() > 0 &&
+     m_ok)
+    {
+      m_copy_files_timer.start();
+      return;
+    }
+  else if(m_ok == false)
+    {
+      m_copy_files_timer.stop();
+      return;
+    }
+
+  append
+    (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
+}
+
 void qup_page::slot_delete_favorite(void)
 {
   auto name(m_ui.favorite_name->text().trimmed());
@@ -232,6 +256,7 @@ void qup_page::slot_download(void)
       return;
     }
 
+  m_destination = m_ui.local_directory->text().trimmed();
   m_path = QDir::tempPath();
   m_path.append(QDir::separator());
   m_path.append("qup-");
@@ -251,7 +276,9 @@ void qup_page::slot_download(void)
 
   append(text);
 
-  // Download the instruction file.
+  /*
+  ** Download the instructions file.
+  */
 
   append(QString("<b>Downloading the file %1.</b>").arg(url.toString()));
   m_instruction_file_reply ?
@@ -259,6 +286,7 @@ void qup_page::slot_download(void)
   m_instruction_file_reply = m_network_access_manager.get
     (QNetworkRequest(url));
   m_instruction_file_reply_data.clear();
+  m_ok = true;
   m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
@@ -327,7 +355,9 @@ void qup_page::slot_parse_instruction_file(void)
 		file_destination = p.second;
 	      else if(p.first == "url")
 		{
-		  // Begin the download(s).
+		  /*
+		  ** Begin the download(s).
+		  */
 
 		  download_files
 		    (files,
@@ -380,7 +410,9 @@ void qup_page::slot_parse_instruction_file(void)
 		}
 	      else if(p.first == "url")
 		{
-		  // Begin the download(s).
+		  /*
+		  ** Begin the download(s).
+		  */
 
 		  download_files
 		    (files,
@@ -455,7 +487,7 @@ void qup_page::slot_reply_finished(void)
 
   if(!reply)
     {
-      append("<font color='red'>Cannot discover QNetworkReply object. "
+      append("<font color='darkred'>Cannot discover QNetworkReply object. "
 	     "Serious problem!</font>");
       return;
     }
@@ -463,16 +495,24 @@ void qup_page::slot_reply_finished(void)
   if(reply->error() != QNetworkReply::NoError)
     {
       append
-	(tr("<font color='red'>An error occurred while downloading %1."
+	(tr("<font color='darkred'>An error occurred while downloading %1."
 	    "</font>").arg(reply->property("file_name").toString()));
       m_ok = false;
     }
   else
     append
-      (tr("<font color='green'>Completed downloading %1.</font>").
+      (tr("<font color='darkgreen'>Completed downloading %1.</font>").
        arg(reply->property("file_name").toString()));
 
   reply->deleteLater();
+  
+  if(m_ok)
+    /*
+    ** Downloads completed! Copy the files from the temporary
+    ** directory into the destination directory.
+    */
+
+    m_copy_files_timer.start();
 }
 
 void qup_page::slot_save_favorite(void)
@@ -589,12 +629,13 @@ void qup_page::slot_write_file(void)
 
   reply->setProperty("read", true);
 
-  if(file.open(flags))
-    while(reply->bytesAvailable() > 0)
-      {
-	append(tr("Writing data into %1.").arg(file.fileName()));
+  if(file.open(flags) && reply->bytesAvailable() > 0)
+    {
+      append(tr("Writing data into %1.").arg(file.fileName()));
+
+      while(reply->bytesAvailable() > 0)
 	file.write(reply->readAll());
-      }
+    }
 }
 
 void qup_page::slot_write_instruction_file_data(void)

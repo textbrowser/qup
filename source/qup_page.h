@@ -56,8 +56,10 @@ class qup_page: public QWidget
   QByteArray m_instruction_file_reply_data;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
-  QString m_qup_txt_file_name;
+  QString m_destination;
   QString m_path;
+  QString m_qup_txt_file_name;
+  QTimer m_copy_files_timer;
   QTimer m_timer;
   Ui_qup_page m_ui;
   bool m_ok;
@@ -70,6 +72,7 @@ class qup_page: public QWidget
      const QString &file_destination,
      const QUrl &url);
  private slots:
+  void slot_copy_files(void);
   void slot_delete_favorite(void);
   void slot_download(void);
   void slot_parse_instruction_file(void);
