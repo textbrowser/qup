@@ -27,6 +27,7 @@
 
 #include <QDateTime>
 #include <QDir>
+#include <QDirIterator>
 #include <QFileDialog>
 #include <QMenu>
 #include <QMessageBox>
@@ -182,6 +183,69 @@ void qup_page::slot_copy_files(void)
 
   append
     (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
+  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+
+  QDirIterator it
+    (m_path,
+     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
+     QDirIterator::Subdirectories);
+
+  while(it.hasNext())
+    {
+      it.next();
+
+      auto file_information(it.fileInfo());
+
+      if(file_information.isDir())
+	{
+	  QString text("");
+	  auto destination(m_destination);
+
+	  destination.append(QDir::separator());
+	  destination.append(file_information.fileName());
+	  text.append(tr("Creating %1... ").arg(destination));
+
+	  if(QDir().mkpath(destination))
+	    text.append("<font color='darkgreen'>Created.</font>");
+	  else
+	    text.append("<font color='darkred'>Failure.</font>");
+
+	  append(text);
+	}
+      else
+	{
+	  auto destination(m_destination);
+
+	  destination.append(QDir::separator());
+	  destination.append(file_information.dir().dirName());
+
+	  if(QFileInfo(destination).isDir())
+	    destination.append(QDir::separator());
+	  else
+	    destination = m_destination + QDir::separator();
+
+	  QString text("");
+
+	  destination.append(file_information.fileName());
+
+	  if(QFileInfo(destination).exists())
+	    QFile::remove(destination);
+
+	  text.append
+	    (tr("Copying %1 to %2... ").
+	     arg(file_information.absoluteFilePath()).
+	     arg(destination));
+
+	  if(QFile::copy(file_information.absoluteFilePath(), destination))
+	    text.append("<font color='darkgreen'>Copied.</font>");
+	  else
+	    text.append("<font color='darkred'>Failure.</font>");
+
+	  append(text);
+	}
+    }
+
+  QApplication::restoreOverrideCursor();
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -262,10 +326,9 @@ void qup_page::slot_download(void)
   m_path.append("qup-");
   m_path.append(name);
 
-  QDir directory;
   auto text(tr("<b>Creating %1... </b>").arg(m_path));
 
-  if(directory.mkpath(m_path) == false)
+  if(QDir().mkpath(m_path) == false)
     {
       text.append(tr("<font color='darkred'>Failure.</font>"));
       append(text);
@@ -505,7 +568,7 @@ void qup_page::slot_reply_finished(void)
        arg(reply->property("file_name").toString()));
 
   reply->deleteLater();
-  
+
   if(m_ok)
     /*
     ** Downloads completed! Copy the files from the temporary
@@ -596,14 +659,10 @@ void qup_page::slot_write_file(void)
     return;
 
   if(!reply->property("destination_directory").toString().isEmpty())
-    {
-      QDir directory;
-
-      directory.mkpath
-	(m_path +
-	 QDir::separator() +
-	 reply->property("destination_directory").toString());
-    }
+    QDir().mkpath
+      (m_path +
+       QDir::separator() +
+       reply->property("destination_directory").toString());
 
   QFile file;
 
