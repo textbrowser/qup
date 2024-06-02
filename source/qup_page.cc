@@ -34,6 +34,7 @@
 #include <QNetworkReply>
 #include <QSettings>
 #include <QTimer>
+#include <QtConcurrent>
 
 #include "qup_page.h"
 
@@ -80,6 +81,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QPushButton::clicked,
 	  this,
 	  &qup_page::slot_select_local_directory);
+  connect(this,
+	  SIGNAL(append_text(const QString &)),
+	  this,
+	  SLOT(append(const QString &)));
   m_network_access_manager.setRedirectPolicy
     (QNetworkRequest::NoLessSafeRedirectPolicy);
   m_timer.start(1500);
@@ -100,6 +105,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 
 qup_page::~qup_page()
 {
+  m_copy_files_future.cancel();
+  m_copy_files_future.waitForFinished();
+  m_copy_files_timer.stop();
+  m_timer.stop();
 }
 
 QString qup_page::executable_suffix(void) const
@@ -121,6 +130,70 @@ void qup_page::append(const QString &text)
 void qup_page::closeEvent(QCloseEvent *event)
 {
   QWidget::closeEvent(event);
+}
+
+void qup_page::copy_files
+(const QString &destination_path, const QString &local_path)
+{
+  QDirIterator it
+    (local_path,
+     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
+     QDirIterator::Subdirectories);
+
+  while(it.hasNext() && m_copy_files_future.isCanceled() == false)
+    {
+      it.next();
+
+      auto file_information(it.fileInfo());
+
+      if(file_information.isDir())
+	{
+	  QString text("");
+	  auto destination(destination_path);
+
+	  destination.append(QDir::separator());
+	  destination.append(file_information.fileName());
+	  text.append(tr("Creating %1... ").arg(destination));
+
+	  if(QDir().mkpath(destination))
+	    text.append("<font color='darkgreen'>Created.</font>");
+	  else
+	    text.append("<font color='darkred'>Failure.</font>");
+
+	  emit append_text(text);
+	}
+      else
+	{
+	  auto destination(destination_path);
+
+	  destination.append(QDir::separator());
+	  destination.append(file_information.dir().dirName());
+
+	  if(QFileInfo(destination).isDir())
+	    destination.append(QDir::separator());
+	  else
+	    destination = destination_path + QDir::separator();
+
+	  QString text("");
+
+	  destination.append(file_information.fileName());
+
+	  if(QFileInfo(destination).exists())
+	    QFile::remove(destination);
+
+	  text.append
+	    (tr("Copying %1 to %2... ").
+	     arg(file_information.absoluteFilePath()).
+	     arg(destination));
+
+	  if(QFile::copy(file_information.absoluteFilePath(), destination))
+	    text.append("<font color='darkgreen'>Copied.</font>");
+	  else
+	    text.append("<font color='darkred'>Failure.</font>");
+
+	  emit append_text(text);
+	}
+    }
 }
 
 void qup_page::download_files(const QHash<QString, FileInformation> &files,
@@ -175,7 +248,7 @@ void qup_page::slot_copy_files(void)
       m_copy_files_timer.start();
       return;
     }
-  else if(m_ok == false)
+  else if(m_copy_files_future.isFinished() == false || m_ok == false)
     {
       m_copy_files_timer.stop();
       return;
@@ -183,69 +256,13 @@ void qup_page::slot_copy_files(void)
 
   append
     (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
-  QApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
-
-  QDirIterator it
-    (m_path,
-     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
-     QDirIterator::Subdirectories);
-
-  while(it.hasNext())
-    {
-      it.next();
-
-      auto file_information(it.fileInfo());
-
-      if(file_information.isDir())
-	{
-	  QString text("");
-	  auto destination(m_destination);
-
-	  destination.append(QDir::separator());
-	  destination.append(file_information.fileName());
-	  text.append(tr("Creating %1... ").arg(destination));
-
-	  if(QDir().mkpath(destination))
-	    text.append("<font color='darkgreen'>Created.</font>");
-	  else
-	    text.append("<font color='darkred'>Failure.</font>");
-
-	  append(text);
-	}
-      else
-	{
-	  auto destination(m_destination);
-
-	  destination.append(QDir::separator());
-	  destination.append(file_information.dir().dirName());
-
-	  if(QFileInfo(destination).isDir())
-	    destination.append(QDir::separator());
-	  else
-	    destination = m_destination + QDir::separator();
-
-	  QString text("");
-
-	  destination.append(file_information.fileName());
-
-	  if(QFileInfo(destination).exists())
-	    QFile::remove(destination);
-
-	  text.append
-	    (tr("Copying %1 to %2... ").
-	     arg(file_information.absoluteFilePath()).
-	     arg(destination));
-
-	  if(QFile::copy(file_information.absoluteFilePath(), destination))
-	    text.append("<font color='darkgreen'>Copied.</font>");
-	  else
-	    text.append("<font color='darkred'>Failure.</font>");
-
-	  append(text);
-	}
-    }
-
-  QApplication::restoreOverrideCursor();
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+  m_copy_files_future = QtConcurrent::run
+    (this, &qup_page::copy_files, m_destination, m_path);
+#else
+  m_copy_files_future = QtConcurrent::run
+    (&qup_page::copy_files, this, m_destination, m_path);
+#endif
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -291,6 +308,14 @@ void qup_page::slot_delete_favorite(void)
 
 void qup_page::slot_download(void)
 {
+  if(m_copy_files_future.isRunning())
+    {
+      append
+	(tr("<font color='darkred'>Downloaded files are being copied. Please "
+	    "wait until the process completes.</font>"));
+      return;
+    }
+
   auto local_directory(m_ui.local_directory->text().trimmed());
 
   if(local_directory.isEmpty())

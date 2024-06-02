@@ -10,6 +10,7 @@ Completed Items
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
 - Restore and retain favorites.
+- Tasked file copying.
 - Truncate new downloads.
 
 Remaining Items

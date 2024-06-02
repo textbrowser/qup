@@ -10,7 +10,7 @@ purge.commands   = find . -name '*~' -exec rm {} \;
 CONFIG	    += qt release warn_on
 LANGUAGE    = C++
 QMAKE_CLEAN += Qup
-QT	    += gui network widgets
+QT	    += concurrent gui network widgets
 
 freebsd-* {
 QMAKE_CXXFLAGS_RELEASE += -Wall \

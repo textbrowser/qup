@@ -28,6 +28,7 @@
 #ifndef _qup_page_h_
 #define _qup_page_h_
 
+#include <QFuture>
 #include <QNetworkAccessManager>
 #include <QPointer>
 #include <QTimer>
@@ -54,6 +55,7 @@ class qup_page: public QWidget
   };
 
   QByteArray m_instruction_file_reply_data;
+  QFuture<void> m_copy_files_future;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
   QString m_destination;
@@ -64,14 +66,16 @@ class qup_page: public QWidget
   Ui_qup_page m_ui;
   bool m_ok;
   QString executable_suffix(void) const;
-  void append(const QString &text);
   void closeEvent(QCloseEvent *event);
+  void copy_files
+    (const QString &destination_path, const QString &local_path);
   void download_files
     (const QHash<QString, FileInformation> &files,
      const QString &directory_destination,
      const QString &file_destination,
      const QUrl &url);
  private slots:
+  void append(const QString &text);
   void slot_copy_files(void);
   void slot_delete_favorite(void);
   void slot_download(void);
@@ -85,6 +89,7 @@ class qup_page: public QWidget
   void slot_write_instruction_file_data(void);
 
  signals:
+  void append_text(const QString &text);
   void populate_favorites(void);
 };
 
