@@ -101,6 +101,8 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
      "QToolButton::menu-indicator {image: none;}");
 #endif
   m_ui.install->setEnabled(false);
+  m_ui.reset->setIcon(QIcon::fromTheme("edit-reset"));
+  m_ui.select_local_directory->setIcon(QIcon::fromTheme("document-open"));
 }
 
 qup_page::~qup_page()

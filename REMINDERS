@@ -1,10 +1,12 @@
 Completed Items
 
 - Clear activity widget.
+- Copy downloaded files into local directories.
 - Delete favorite.
 - Download items.
 - Geometry.
 - Highlight problematic product directory widget.
+- Icons for activities.
 - Interpret the instructions file.
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
@@ -16,9 +18,9 @@ Completed Items
 Remaining Items
 
 - Close page with confirmation.
-- Copy downloaded files into local directories.
 - Delete downloaded files after a proper installation?
 - Digests. Lots of work and require separate sites.
 - Exiting during an update.
-- Icons for activities.
 - Proxy.
+- Qt 5.5.1.
+- Super-nested directories.
