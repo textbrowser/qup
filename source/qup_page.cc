@@ -69,6 +69,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QToolButton::clicked,
 	  m_ui.favorites,
 	  &QToolButton::showMenu);
+  connect(m_ui.install,
+	  &QToolButton::clicked,
+	  this,
+	  &qup_page::slot_install);
   connect(m_ui.reset,
 	  &QPushButton::clicked,
 	  m_ui.activity,
@@ -189,11 +193,29 @@ void qup_page::copy_files
 	     arg(destination));
 
 	  if(QFile::copy(file_information.absoluteFilePath(), destination))
-	    text.append("<font color='darkgreen'>Copied.</font>");
-	  else
-	    text.append("<font color='darkred'>Failure.</font>");
+	    {
+	      text.append("<font color='darkgreen'>Copied.</font>");
+	      emit append_text(text);
+	      text.clear();
+	      text.append
+		(tr("Setting permissions on %1...").arg(destination));
 
-	  emit append_text(text);
+	      QFile file(destination);
+
+	      if(file.
+		 setPermissions(QFileInfo(file_information.
+					  absoluteFilePath()).permissions()))
+		text.append("<font color='darkgreen'>Success.</font>");
+	      else
+		text.append("<font color='darkred'>Failure.</font>");
+
+	      emit append_text(text);
+	    }
+	  else
+	    {
+	      text.append("<font color='darkred'>Failure.</font>");
+	      emit append_text(text);
+	    }
 	}
     }
 }
@@ -256,15 +278,7 @@ void qup_page::slot_copy_files(void)
       return;
     }
 
-  append
-    (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-  m_copy_files_future = QtConcurrent::run
-    (this, &qup_page::copy_files, m_destination, m_path);
-#else
-  m_copy_files_future = QtConcurrent::run
-    (&qup_page::copy_files, this, m_destination, m_path);
-#endif
+  m_ui.install->setEnabled(true);
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -378,10 +392,32 @@ void qup_page::slot_download(void)
   m_instruction_file_reply_data.clear();
   m_ok = true;
   m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
+  m_ui.install->setEnabled(false);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
 	  this,
 	  &qup_page::slot_write_instruction_file_data);
+}
+
+void qup_page::slot_install(void)
+{
+  if(m_copy_files_future.isRunning())
+    {
+      append
+	(tr("<font color='darkred'>Downloaded files are being copied. Please "
+	    "wait until the process completes.</font>"));
+      return;
+    }
+
+  append
+    (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+  m_copy_files_future = QtConcurrent::run
+    (this, &qup_page::copy_files, m_destination, m_path);
+#else
+  m_copy_files_future = QtConcurrent::run
+    (&qup_page::copy_files, this, m_destination, m_path);
+#endif
 }
 
 void qup_page::slot_parse_instruction_file(void)

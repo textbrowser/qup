@@ -79,6 +79,7 @@ class qup_page: public QWidget
   void slot_copy_files(void);
   void slot_delete_favorite(void);
   void slot_download(void);
+  void slot_install(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
   void slot_reply_finished(void);
