@@ -59,6 +59,7 @@ class qup_page: public QWidget
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
   QString m_destination;
+  QString m_operating_system;
   QString m_path;
   QString m_qup_txt_file_name;
   QTimer m_copy_files_timer;

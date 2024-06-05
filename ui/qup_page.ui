@@ -180,12 +180,12 @@
          </property>
          <item>
           <property name="text">
-           <string notr="true">Debian AMD64</string>
+           <string notr="true">Debian 12 AMD64</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string notr="true">FreeBSD AMD64</string>
+           <string notr="true">FreeBSD 13 AMD64</string>
           </property>
          </item>
          <item>
@@ -200,22 +200,22 @@
          </item>
          <item>
           <property name="text">
-           <string notr="true">PiOS ARM</string>
+           <string notr="true">PiOS 12 ARM</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string notr="true">PiOS ARM64</string>
+           <string notr="true">PiOS 12 ARM64</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string notr="true">Ubuntu AMD64 24.04</string>
+           <string notr="true">Ubuntu 24.04 AMD64</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string notr="true">Ubuntu PowerPC</string>
+           <string notr="true">Ubuntu 16.04 PowerPC</string>
           </property>
          </item>
          <item>

@@ -119,7 +119,26 @@ qup_page::~qup_page()
 
 QString qup_page::executable_suffix(void) const
 {
-  return "";
+  if(m_operating_system == "Debian 12 AMD64")
+    return "_debian_12_amd64";
+  else if(m_operating_system == "FreeBSD 13 AMD64")
+    return "_freebsd_13_amd64";
+  else if(m_operating_system == "MacOS Apple Silicon")
+    return "_macos_apple_silicon";
+  else if(m_operating_system == "MacOS Intel")
+    return "_macos_intel";
+  else if(m_operating_system == "PiOS 12 ARM")
+    return "_pios_12_arm";
+  else if(m_operating_system == "PiOS 12 ARM64")
+    return "_pios_12_arm64";
+  else if(m_operating_system == "Ubuntu 24.04 AMD64")
+    return "_ubuntu_24_04_amd64";
+  else if(m_operating_system == "Ubuntu 16.04 PowerPC")
+    return "_ubuntu_16_04_powerpc";
+  else if(m_operating_system == "Windows 11")
+    return "";
+  else
+    return "";
 }
 
 void qup_page::append(const QString &text)
@@ -362,6 +381,7 @@ void qup_page::slot_download(void)
     }
 
   m_destination = m_ui.local_directory->text().trimmed();
+  m_operating_system = m_ui.operating_system->currentText();
   m_path = QDir::tempPath();
   m_path.append(QDir::separator());
   m_path.append("qup-");
@@ -643,7 +663,8 @@ void qup_page::slot_reply_finished(void)
 
 void qup_page::slot_save_favorite(void)
 {
-  auto local_directory(m_ui.local_directory->text().trimmed());
+  auto local_directory
+    (QDir::cleanPath(m_ui.local_directory->text().trimmed()));
   auto name(m_ui.favorite_name->text().trimmed());
   auto url(m_ui.qup_txt_location->text().trimmed());
 
@@ -670,6 +691,7 @@ void qup_page::slot_save_favorite(void)
       append
 	(tr("The favorite %1 has been saved in the Qup_Page INI file.").
 	 arg(name));
+      m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
     }
   else
