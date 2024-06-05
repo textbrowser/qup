@@ -450,7 +450,6 @@ void qup_page::slot_parse_instruction_file(void)
   if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QHash<QString, qup_page::FileInformation> files;
-      QString executable_suffix(this->executable_suffix());
       QString file_destination("");
       QTextStream stream(&file);
       auto general = false;
@@ -524,17 +523,15 @@ void qup_page::slot_parse_instruction_file(void)
 	      if(p.first.isEmpty() || p.second.isEmpty())
 		continue;
 
-	      auto executable
-		(QString("executable:%1").
-		 arg(QSysInfo::currentCpuArchitecture().toLower()));
-
-	      if(executable == p.first)
+	      if(p.first == "executable" &&
+		 p.second.toLower().endsWith(executable_suffix()))
 		{
 		  FileInformation file_information;
 
 		  file_information.m_executable = false;
 		  file_information.m_destination = "";
 		  files[p.second] = file_information;
+		  qDebug() << p.second;
 		}
 	      else if(p.first == "file")
 		{
