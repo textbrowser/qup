@@ -314,7 +314,7 @@ void qup_page::slot_delete_favorite(void)
   mb.setText(tr("Delete %1? Are you sure?").arg(name));
   mb.setWindowIcon(windowIcon());
   mb.setWindowModality(Qt::ApplicationModal);
-  mb.setWindowTitle(tr("Qup_Page: Confirmation"));
+  mb.setWindowTitle(tr("Qup: Confirmation"));
 
   if(mb.exec() == QMessageBox::No)
     {
@@ -708,7 +708,7 @@ void qup_page::slot_select_local_directory(void)
   dialog.setDirectory(QDir::homePath());
   dialog.setFileMode(QFileDialog::Directory);
   dialog.setLabelText(QFileDialog::Accept, tr("Select"));
-  dialog.setWindowTitle(tr("Qup_Page: Select Download Path"));
+  dialog.setWindowTitle(tr("Qup: Select Download Path"));
 
   if(dialog.exec() == QDialog::Accepted)
     {
