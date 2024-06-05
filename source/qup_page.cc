@@ -689,14 +689,14 @@ void qup_page::slot_save_favorite(void)
 			 this,
 			 &qup_page::slot_populate_favorites);
       append
-	(tr("The favorite %1 has been saved in the Qup_Page INI file.").
+	(tr("The favorite %1 has been saved in the Qup INI file.").
 	 arg(name));
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
     }
   else
     append
-      (tr("The favorite %1 cannot be saved in the Qup_Page INI file!").
+      (tr("The favorite %1 cannot be saved in the Qup INI file!").
        arg(name));
 }
 
