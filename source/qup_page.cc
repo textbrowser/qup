@@ -405,14 +405,15 @@ void qup_page::slot_download(void)
   */
 
   append(QString("<b>Downloading the file %1.</b>").arg(url.toString()));
-  m_instruction_file_reply ?
-    m_instruction_file_reply->deleteLater() : (void) 0;
-  m_instruction_file_reply = m_network_access_manager.get
-    (QNetworkRequest(url));
+  m_instruction_file_reply = m_network_access_manager.get(QNetworkRequest(url));
   m_instruction_file_reply_data.clear();
   m_ok = true;
   m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
   m_ui.install->setEnabled(false);
+  connect(m_instruction_file_reply,
+	  &QNetworkReply::finished,
+	  m_instruction_file_reply,
+	  &QNetworkReply::deleteLater);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
 	  this,
@@ -531,7 +532,6 @@ void qup_page::slot_parse_instruction_file(void)
 		  file_information.m_executable = false;
 		  file_information.m_destination = "";
 		  files[p.second] = file_information;
-		  qDebug() << p.second;
 		}
 	      else if(p.first == "file")
 		{
@@ -821,7 +821,6 @@ void qup_page::slot_write_instruction_file_data(void)
 	  (tr("<font color='darkred'>Could not open a local file %1.</file>").
 	   arg(file_information.fileName()));
 
-      m_instruction_file_reply->deleteLater();
       m_instruction_file_reply_data.clear();
     }
 }
