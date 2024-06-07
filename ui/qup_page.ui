@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>500</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -314,6 +314,67 @@
     </layout>
    </item>
    <item>
+    <widget class="QTableWidget" name="files">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>250</number>
+     </attribute>
+     <attribute name="horizontalHeaderStretchLastSection">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Local File Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Permissions</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>SHA3-256</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Temporary Location File Name</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>SHA3-256</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Permissions</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Activity</string>
@@ -366,6 +427,7 @@
   <tabstop>operating_system</tabstop>
   <tabstop>download</tabstop>
   <tabstop>install</tabstop>
+  <tabstop>files</tabstop>
   <tabstop>activity</tabstop>
   <tabstop>reset</tabstop>
  </tabstops>
