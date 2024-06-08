@@ -32,6 +32,7 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QNetworkReply>
+#include <QScrollBar>
 #include <QSettings>
 #include <QTimer>
 #include <QtConcurrent>
@@ -684,10 +685,12 @@ void qup_page::slot_populate_favorites(void)
 void qup_page::slot_populate_files_table
 (const QVector<QVector<QString> > &data)
 {
+  auto const &h = m_ui.files->horizontalScrollBar()->value();
   auto const &row = m_ui.files->currentRow();
+  auto const &v = m_ui.files->verticalScrollBar()->value();
 
-  m_ui.files->setSortingEnabled(false);
   m_ui.files->setRowCount(data.size());
+  m_ui.files->setSortingEnabled(false);
 
   for(int i = 0; i < data.size(); i++)
     {
@@ -702,8 +705,10 @@ void qup_page::slot_populate_files_table
 	}
     }
 
-  m_ui.files->setSortingEnabled(true);
+  m_ui.files->horizontalScrollBar()->setValue(h);
   m_ui.files->selectRow(row);
+  m_ui.files->setSortingEnabled(true);
+  m_ui.files->verticalScrollBar()->setValue(v);
 }
 
 void qup_page::slot_reply_finished(void)
