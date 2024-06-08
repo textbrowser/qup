@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
   QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps, true);
 #endif
 #endif
+  qRegisterMetaType<QVector<QVector<QString> > > ("QVectorQVectorQString");
 
   QApplication qapplication(argc, argv);
   auto font(qapplication.font());

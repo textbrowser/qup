@@ -89,6 +89,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  SIGNAL(append_text(const QString &)),
 	  this,
 	  SLOT(append(const QString &)));
+  connect(this,
+	  SIGNAL(files_gathered(const QVector<QVector<QString> > &)),
+	  this,
+	  SLOT(slot_populate_files_table(const QVector<QVector<QString> > &)));
   m_network_access_manager.setRedirectPolicy
     (QNetworkRequest::NoLessSafeRedirectPolicy);
   m_timer.start(1500);
@@ -239,6 +243,13 @@ void qup_page::copy_files
     }
 }
 
+void qup_page::gather_files
+(const QString &destination_path, const QString &local_path)
+{
+  QVector<QVector<QString> > data;
+
+  emit files_gathered(data);
+}
 void qup_page::download_files(const QHash<QString, FileInformation> &files,
 			      const QString &directory_destination,
 			      const QString &file_destination,
@@ -624,6 +635,25 @@ void qup_page::slot_populate_favorites(void)
   QApplication::restoreOverrideCursor();
 }
 
+void qup_page::slot_populate_files_table
+(const QVector<QVector<QString> > &data)
+{
+  m_ui.files->setRowCount(data.size());
+
+  for(int i = 0; i < data.size(); i++)
+    {
+      auto file(data.at(i));
+
+      for(int j = 0; j < m_ui.files->columnCount(); i++)
+	{
+	  auto item = new QTableWidgetItem(file.value(j));
+
+	  item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+	  m_ui.files->setItem(i, j, item);
+	}
+    }
+}
+
 void qup_page::slot_reply_finished(void)
 {
   auto reply = qobject_cast<QNetworkReply *> (sender());
@@ -731,6 +761,16 @@ void qup_page::slot_timeout(void)
 
   palette.setColor(m_ui.local_directory->backgroundRole(), color);
   m_ui.local_directory->setPalette(palette);
+
+  if(m_populate_files_table_future.isFinished())
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    m_populate_files_table_future = QtConcurrent::run
+      (this, &qup_page::gather_files, m_destination, m_path);
+#else
+    m_populate_files_table_future = QtConcurrent::run
+      (&qup_page::gather_files, this, m_destination, m_path);
+#endif
+
 }
 
 void qup_page::slot_write_file(void)

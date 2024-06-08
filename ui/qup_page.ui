@@ -364,12 +364,12 @@
      </column>
      <column>
       <property name="text">
-       <string>SHA3-256</string>
+       <string>Permissions</string>
       </property>
      </column>
      <column>
       <property name="text">
-       <string>Permissions</string>
+       <string>SHA3-256</string>
       </property>
      </column>
     </widget>
