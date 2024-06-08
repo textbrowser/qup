@@ -118,6 +118,8 @@ qup_page::~qup_page()
   m_copy_files_future.cancel();
   m_copy_files_future.waitForFinished();
   m_copy_files_timer.stop();
+  m_populate_files_table_future.cancel();
+  m_populate_files_table_future.waitForFinished();
   m_timer.stop();
 }
 
@@ -173,7 +175,7 @@ void qup_page::copy_files
     {
       it.next();
 
-      auto file_information(it.fileInfo());
+      auto const &file_information(it.fileInfo());
 
       if(file_information.isDir())
 	{
@@ -246,7 +248,46 @@ void qup_page::copy_files
 void qup_page::gather_files
 (const QString &destination_path, const QString &local_path)
 {
+  Q_UNUSED(local_path);
+
+  QDirIterator it
+    (destination_path,
+     QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
+     QDirIterator::Subdirectories);
   QVector<QVector<QString> > data;
+
+  while(it.hasNext() && m_populate_files_table_future.isCanceled() == false)
+    {
+      it.next();
+
+      auto const &file_information(it.fileInfo());
+
+      if(file_information.isFile())
+	{
+	  QCryptographicHash hash(QCryptographicHash::Sha3_256);
+	  QVector<QString> vector(static_cast<int> (FilesColumns::XYZ));
+
+	  {
+	    QFile file(file_information.absoluteFilePath());
+
+	    if(file.open(QIODevice::ReadOnly))
+	      {
+		hash.addData(&file);
+		file.close();
+	      }
+
+	    vector[static_cast<int> (FilesColumns::LocalFileDigest)] =
+	    hash.result().toHex();
+	    hash.reset();
+	  }
+
+	  vector[static_cast<int> (FilesColumns::LocalFileName)] =
+	    file_information.absoluteFilePath();
+	  vector[static_cast<int> (FilesColumns::LocalFilePermissions)] =
+	    QString::number(file_information.permissions());
+	  data << vector;
+	}
+    }
 
   emit files_gathered(data);
 }
@@ -268,7 +309,7 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
 	continue;
 
       QNetworkReply *reply = nullptr;
-      auto dot = it.value().m_destination == "." ||
+      auto const &dot = it.value().m_destination == "." ||
 	it.value().m_destination.startsWith("./");
       auto remote_file_name(url.toString());
 
@@ -313,7 +354,7 @@ void qup_page::slot_copy_files(void)
 
 void qup_page::slot_delete_favorite(void)
 {
-  auto name(m_ui.favorite_name->text().trimmed());
+  auto const &name(m_ui.favorite_name->text().trimmed());
 
   if(name.isEmpty())
     return;
@@ -362,7 +403,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto local_directory(m_ui.local_directory->text().trimmed());
+  auto const &local_directory(m_ui.local_directory->text().trimmed());
 
   if(local_directory.isEmpty())
     {
@@ -372,7 +413,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto name(m_ui.favorite_name->text().trimmed());
+  auto const &name(m_ui.favorite_name->text().trimmed());
 
   if(name.isEmpty())
     {
@@ -381,7 +422,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
+  auto const &url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
 
   if(url.isEmpty() || url.isValid() == false)
     {
@@ -470,7 +511,7 @@ void qup_page::slot_parse_instruction_file(void)
       while(!stream.atEnd())
 	{
 	  auto line(stream.readLine().trimmed());
-	  auto position = line.indexOf('#');
+	  auto const &position = line.indexOf('#');
 
 	  if(position > 0)
 	    line = line.mid(0, position);
@@ -494,8 +535,8 @@ void qup_page::slot_parse_instruction_file(void)
 
 	  if(general)
 	    {
-	      auto list(line.split('='));
-	      auto p
+	      auto const &list(line.split('='));
+	      auto const &p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
 	      if(p.first.isEmpty() || p.second.isEmpty())
@@ -528,8 +569,8 @@ void qup_page::slot_parse_instruction_file(void)
 	    }
 	  else if(unix)
 	    {
-	      auto list(line.split('='));
-	      auto p
+	      auto const &list(line.split('='));
+	      auto const &p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
 	      if(p.first.isEmpty() || p.second.isEmpty())
@@ -597,6 +638,11 @@ void qup_page::slot_populate_favorite(void)
   QSettings settings;
 
   settings.beginGroup(QString("favorite-%1").arg(action->text()));
+  m_destination = settings.value("local-directory").toString().trimmed();
+  m_path = QDir::tempPath();
+  m_path.append(QDir::separator());
+  m_path.append("qup-");
+  m_path.append(settings.value("name").toString().trimmed());
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
   m_ui.local_directory->setText
     (settings.value("local-directory").toString().trimmed());
@@ -638,13 +684,16 @@ void qup_page::slot_populate_favorites(void)
 void qup_page::slot_populate_files_table
 (const QVector<QVector<QString> > &data)
 {
+  auto const &row = m_ui.files->currentRow();
+
+  m_ui.files->setSortingEnabled(false);
   m_ui.files->setRowCount(data.size());
 
   for(int i = 0; i < data.size(); i++)
     {
-      auto file(data.at(i));
+      auto const &file(data.at(i));
 
-      for(int j = 0; j < m_ui.files->columnCount(); i++)
+      for(int j = 0; j < m_ui.files->columnCount(); j++)
 	{
 	  auto item = new QTableWidgetItem(file.value(j));
 
@@ -652,6 +701,9 @@ void qup_page::slot_populate_files_table
 	  m_ui.files->setItem(i, j, item);
 	}
     }
+
+  m_ui.files->setSortingEnabled(true);
+  m_ui.files->selectRow(row);
 }
 
 void qup_page::slot_reply_finished(void)
@@ -690,10 +742,10 @@ void qup_page::slot_reply_finished(void)
 
 void qup_page::slot_save_favorite(void)
 {
-  auto local_directory
+  auto const &local_directory
     (QDir::cleanPath(m_ui.local_directory->text().trimmed()));
-  auto name(m_ui.favorite_name->text().trimmed());
-  auto url(m_ui.qup_txt_location->text().trimmed());
+  auto const &name(m_ui.favorite_name->text().trimmed());
+  auto const &url(m_ui.qup_txt_location->text().trimmed());
 
   if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
     {

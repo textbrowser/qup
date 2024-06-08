@@ -61,7 +61,8 @@ class qup_page: public QWidget
     LocalFilePermissions = 1,
     TemporaryFileDigest = 5,
     TemporaryFileName = 3,
-    TemporaryFilePermissions = 4
+    TemporaryFilePermissions = 4,
+    XYZ = TemporaryFileDigest + 1
   };
 
   QByteArray m_instruction_file_reply_data;
