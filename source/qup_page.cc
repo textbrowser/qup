@@ -332,6 +332,7 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
 	("destination_directory", dot ? "" : directory_destination);
       reply->setProperty
 	("destination_file", dot ? it.key() : file_destination);
+      reply->setProperty("executable", it.value().m_executable);
       reply->setProperty("file_name", it.key());
       connect(reply,
 	      &QNetworkReply::finished,
@@ -590,7 +591,7 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 		  FileInformation file_information;
 
-		  file_information.m_executable = false;
+		  file_information.m_executable = true;
 		  file_information.m_destination = "";
 		  files[p.second] = file_information;
 		}
@@ -743,9 +744,18 @@ void qup_page::slot_reply_finished(void)
       m_ok = false;
     }
   else
-    append
-      (tr("<font color='darkgreen'>Completed downloading %1.</font>").
-       arg(reply->property("file_name").toString()));
+    {
+      append
+	(tr("<font color='darkgreen'>Completed downloading %1.</font>").
+	 arg(reply->property("file_name").toString()));
+
+      if(reply->property("executable").toBool())
+	{
+	  QFile file(reply->property("absolute_file_path").toString());
+
+	  file.setPermissions(QFileDevice::ExeOwner | file.permissions());
+	}
+    }
 
   reply->deleteLater();
 
@@ -879,6 +889,7 @@ void qup_page::slot_write_file(void)
   else
     flags = QIODevice::Truncate | QIODevice::WriteOnly;
 
+  reply->setProperty("absolute_file_path", file.fileName());
   reply->setProperty("read", true);
 
   if(file.open(flags) && reply->bytesAvailable() > 0)
