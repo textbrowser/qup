@@ -66,6 +66,7 @@ class qup_page: public QWidget
   };
 
   QByteArray m_instruction_file_reply_data;
+  QByteArray m_super_hash;
   QFuture<void> m_copy_files_future;
   QFuture<void> m_populate_files_table_future;
   QNetworkAccessManager m_network_access_manager;
@@ -87,7 +88,10 @@ class qup_page: public QWidget
      const QString &directory_destination,
      const QString &file_destination,
      const QUrl &url);
-  void gather_files(const QString &destination_path, const QString &local_path);
+  void gather_files
+    (const QByteArray &super_hash,
+     const QString &destination_path,
+     const QString &local_path);
  private slots:
   void append(const QString &text);
   void slot_copy_files(void);
@@ -96,7 +100,8 @@ class qup_page: public QWidget
   void slot_install(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
-  void slot_populate_files_table(const QVector<QVector<QString> > &data);
+  void slot_populate_files_table
+    (const QByteArray &hash, const QVector<QVector<QString> > &data);
   void slot_reply_finished(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);
@@ -106,7 +111,8 @@ class qup_page: public QWidget
 
  signals:
   void append_text(const QString &text);
-  void files_gathered(const QVector<QVector<QString> > &data);
+  void files_gathered
+    (const QByteArray &hash, const QVector<QVector<QString> > &data);
   void populate_favorites(void);
   void product_name_changed(const QString &text);
 };

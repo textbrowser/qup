@@ -91,9 +91,11 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  this,
 	  SLOT(append(const QString &)));
   connect(this,
-	  SIGNAL(files_gathered(const QVector<QVector<QString> > &)),
+	  SIGNAL(files_gathered(const QByteArray &,
+				const QVector<QVector<QString> > &)),
 	  this,
-	  SLOT(slot_populate_files_table(const QVector<QVector<QString> > &)));
+	  SLOT(slot_populate_files_table(const QByteArray &,
+					 const QVector<QVector<QString> > &)));
   m_network_access_manager.setRedirectPolicy
     (QNetworkRequest::NoLessSafeRedirectPolicy);
   m_timer.start(1500);
@@ -247,10 +249,13 @@ void qup_page::copy_files
 }
 
 void qup_page::gather_files
-(const QString &destination_path, const QString &local_path)
+(const QByteArray &super_hash,
+ const QString &destination_path,
+ const QString &local_path)
 {
   Q_UNUSED(local_path);
 
+  QCryptographicHash sha3_512(QCryptographicHash::Sha3_512);
   QDirIterator it
     (destination_path,
      QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot,
@@ -265,21 +270,20 @@ void qup_page::gather_files
 
       if(file_information.isFile())
 	{
-	  QCryptographicHash hash(QCryptographicHash::Sha3_256);
 	  QVector<QString> vector(static_cast<int> (FilesColumns::XYZ));
 
 	  {
+	    QCryptographicHash sha3_256(QCryptographicHash::Sha3_256);
 	    QFile file(file_information.absoluteFilePath());
 
 	    if(file.open(QIODevice::ReadOnly))
 	      {
-		hash.addData(&file);
+		sha3_256.addData(&file);
 		file.close();
 	      }
 
 	    vector[static_cast<int> (FilesColumns::LocalFileDigest)] =
-	    hash.result().toHex();
-	    hash.reset();
+	      sha3_256.result().toHex();
 	  }
 
 	  vector[static_cast<int> (FilesColumns::LocalFileName)] =
@@ -287,10 +291,14 @@ void qup_page::gather_files
 	  vector[static_cast<int> (FilesColumns::LocalFilePermissions)] =
 	    QString::number(file_information.permissions());
 	  data << vector;
+
+	  foreach(auto const &i, vector)
+	    sha3_512.addData(i.toUtf8());
 	}
     }
 
-  emit files_gathered(data);
+  if(sha3_512.result() != super_hash)
+    emit files_gathered(sha3_512.result(), data);
 }
 void qup_page::download_files(const QHash<QString, FileInformation> &files,
 			      const QString &directory_destination,
@@ -684,8 +692,10 @@ void qup_page::slot_populate_favorites(void)
 }
 
 void qup_page::slot_populate_files_table
-(const QVector<QVector<QString> > &data)
+(const QByteArray &hash, const QVector<QVector<QString> > &data)
 {
+  m_super_hash = hash;
+
   auto const &h = m_ui.files->horizontalScrollBar()->value();
   auto const &v = m_ui.files->verticalScrollBar()->value();
 
@@ -826,10 +836,10 @@ void qup_page::slot_timeout(void)
   if(m_populate_files_table_future.isFinished())
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     m_populate_files_table_future = QtConcurrent::run
-      (this, &qup_page::gather_files, m_destination, m_path);
+      (this, &qup_page::gather_files, m_super_hash, m_destination, m_path);
 #else
     m_populate_files_table_future = QtConcurrent::run
-      (&qup_page::gather_files, this, m_destination, m_path);
+      (&qup_page::gather_files, this, m_super_hash, m_destination, m_path);
 #endif
 
 }
