@@ -474,8 +474,8 @@ void qup_page::slot_download(void)
   m_ui.install->setEnabled(false);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::finished,
-	  m_instruction_file_reply,
-	  &QNetworkReply::deleteLater);
+	  this,
+	  &qup_page::slot_instruction_reply_finished);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::readyRead,
 	  this,
@@ -501,6 +501,20 @@ void qup_page::slot_install(void)
   m_copy_files_future = QtConcurrent::run
     (&qup_page::copy_files, this, m_destination, m_path);
 #endif
+}
+
+void qup_page::slot_instruction_reply_finished(void)
+{
+  if(m_instruction_file_reply)
+    {
+      if(m_instruction_file_reply->error() != QNetworkReply::NoError)
+	append
+	  (tr("<font color='darkred'>Could not download %1. Perhaps "
+	      "the file does not exist.</font>").
+	   arg(m_instruction_file_reply->url().toString()));
+
+      m_instruction_file_reply->deleteLater();
+    }
 }
 
 void qup_page::slot_parse_instruction_file(void)
@@ -738,6 +752,7 @@ void qup_page::slot_reply_finished(void)
 
   if(reply->error() != QNetworkReply::NoError)
     {
+      QFile::remove(reply->property("absolute_file_path").toString());
       append
 	(tr("<font color='darkred'>An error occurred while downloading %1."
 	    "</font>").arg(reply->property("file_name").toString()));
@@ -798,6 +813,7 @@ void qup_page::slot_save_favorite(void)
       append
 	(tr("The favorite %1 has been saved in the Qup INI file.").
 	 arg(name));
+      m_super_hash.clear();
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
       emit product_name_changed(m_ui.favorite_name->text());

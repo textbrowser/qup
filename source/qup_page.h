@@ -92,12 +92,14 @@ class qup_page: public QWidget
     (const QByteArray &super_hash,
      const QString &destination_path,
      const QString &local_path);
+
  private slots:
   void append(const QString &text);
   void slot_copy_files(void);
   void slot_delete_favorite(void);
   void slot_download(void);
   void slot_install(void);
+  void slot_instruction_reply_finished(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
   void slot_populate_files_table
