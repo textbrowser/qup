@@ -108,6 +108,7 @@ class qup_page: public QWidget
   void append_text(const QString &text);
   void files_gathered(const QVector<QVector<QString> > &data);
   void populate_favorites(void);
+  void product_name_changed(const QString &text);
 };
 
 #endif

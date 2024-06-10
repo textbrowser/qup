@@ -93,11 +93,26 @@ void qup::slot_new_page(void)
 	  &qup_page::populate_favorites,
 	  this,
 	  &qup::populate_favorites);
+  connect(page,
+	  SIGNAL(product_name_changed(const QString &)),
+	  this,
+	  SLOT(slot_product_name_changed(const QString &)));
   connect(this,
 	  &qup::populate_favorites,
 	  page,
 	  &qup_page::slot_populate_favorites);
   m_ui.pages->setCurrentIndex(m_ui.pages->addTab(page, tr("Download")));
+}
+
+void qup::slot_product_name_changed(const QString &t)
+{
+  auto text(t.trimmed());
+
+  if(text.isEmpty())
+    text = tr("Download");
+
+  m_ui.pages->setTabText
+    (m_ui.pages->indexOf(qobject_cast<qup_page *> (sender())), text);
 }
 
 void qup::slot_quit(void)

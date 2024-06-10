@@ -655,6 +655,7 @@ void qup_page::slot_populate_favorite(void)
      0 : m_ui.operating_system->currentIndex());
   m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
   settings.endGroup(); // Optional.
+  emit product_name_changed(m_ui.favorite_name->text());
 }
 
 void qup_page::slot_populate_favorites(void)
@@ -686,7 +687,6 @@ void qup_page::slot_populate_files_table
 (const QVector<QVector<QString> > &data)
 {
   auto const &h = m_ui.files->horizontalScrollBar()->value();
-  auto const &row = m_ui.files->currentRow();
   auto const &v = m_ui.files->verticalScrollBar()->value();
 
   m_ui.files->setRowCount(data.size());
@@ -700,14 +700,17 @@ void qup_page::slot_populate_files_table
 	{
 	  auto item = new QTableWidgetItem(file.value(j));
 
-	  item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+	  item->setFlags(Qt::ItemIsEnabled);
+	  item->setToolTip(item->text());
 	  m_ui.files->setItem(i, j, item);
 	}
     }
 
   m_ui.files->horizontalScrollBar()->setValue(h);
-  m_ui.files->selectRow(row);
   m_ui.files->setSortingEnabled(true);
+  m_ui.files->sortByColumn
+    (m_ui.files->horizontalHeader()->sortIndicatorSection(),
+     m_ui.files->horizontalHeader()->sortIndicatorOrder());
   m_ui.files->verticalScrollBar()->setValue(v);
 }
 
@@ -777,6 +780,7 @@ void qup_page::slot_save_favorite(void)
 	 arg(name));
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
+      emit product_name_changed(m_ui.favorite_name->text());
     }
   else
     append

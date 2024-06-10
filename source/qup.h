@@ -46,6 +46,7 @@ class qup: public QMainWindow
 
  private slots:
   void slot_new_page(void);
+  void slot_product_name_changed(const QString &t);
   void slot_quit(void);
 
  signals:

@@ -12,6 +12,7 @@ Completed Items
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
 - Restore and retain favorites.
+- Show product name in tab title.
 - Tasked file copying.
 - Truncate new downloads.
 
@@ -23,5 +24,4 @@ Remaining Items
 - Exiting during an update.
 - Proxy.
 - Qt 5.5.1.
-- Show product name in tab title.
 - Super-nested directories.
