@@ -39,6 +39,23 @@
 
 #include "qup_page.h"
 
+class PropertyNames
+{
+ public:
+  char const static *AbsoluteFilePath;
+  char const static *DestinationDirectory;
+  char const static *DestinationFile;
+  char const static *Executable;
+  char const static *FileName;
+  char const static *Read;
+};
+
+char const *PropertyNames::AbsoluteFilePath = "absolute_file_path";
+char const *PropertyNames::DestinationDirectory = "destination_directory";
+char const *PropertyNames::DestinationFile = "destination_file";
+char const *PropertyNames::Executable = "executable";
+char const *PropertyNames::FileName = "file_name";
+char const *PropertyNames::Read = "read";
 char const static *const s_end_of_file = "# End of file. Required comment.";
 const int static s_populate_favorites_interval = 250;
 
@@ -329,11 +346,11 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
 	(QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
       reply->ignoreSslErrors();
       reply->setProperty
-	("destination_directory", dot ? "" : directory_destination);
+	(PropertyNames::DestinationDirectory, dot ? "" : directory_destination);
       reply->setProperty
-	("destination_file", dot ? it.key() : file_destination);
-      reply->setProperty("executable", it.value().m_executable);
-      reply->setProperty("file_name", it.key());
+	(PropertyNames::DestinationFile, dot ? it.key() : file_destination);
+      reply->setProperty(PropertyNames::Executable, it.value().m_executable);
+      reply->setProperty(PropertyNames::FileName, it.key());
       connect(reply,
 	      &QNetworkReply::finished,
 	      this,
@@ -752,7 +769,8 @@ void qup_page::slot_reply_finished(void)
 
   if(reply->error() != QNetworkReply::NoError)
     {
-      QFile::remove(reply->property("absolute_file_path").toString());
+      QFile::remove
+	(reply->property(PropertyNames::AbsoluteFilePath).toString());
       append
 	(tr("<font color='darkred'>An error occurred while downloading %1."
 	    "</font>").arg(reply->property("file_name").toString()));
@@ -762,11 +780,12 @@ void qup_page::slot_reply_finished(void)
     {
       append
 	(tr("<font color='darkgreen'>Completed downloading %1.</font>").
-	 arg(reply->property("file_name").toString()));
+	 arg(reply->property(PropertyNames::FileName).toString()));
 
-      if(reply->property("executable").toBool())
+      if(reply->property(PropertyNames::Executable).toBool())
 	{
-	  QFile file(reply->property("absolute_file_path").toString());
+	  QFile file
+	    (reply->property(PropertyNames::AbsoluteFilePath).toString());
 
 	  file.setPermissions(QFileDevice::ExeOwner | file.permissions());
 	}
@@ -877,36 +896,36 @@ void qup_page::slot_write_file(void)
   if(!reply)
     return;
 
-  if(!reply->property("destination_directory").toString().isEmpty())
+  if(!reply->property(PropertyNames::DestinationDirectory).toString().isEmpty())
     QDir().mkpath
       (m_path +
        QDir::separator() +
-       reply->property("destination_directory").toString());
+       reply->property(PropertyNames::DestinationDirectory).toString());
 
   QFile file;
 
-  if(!reply->property("destination_directory").toString().isEmpty())
+  if(!reply->property(PropertyNames::DestinationDirectory).toString().isEmpty())
     file.setFileName
       (m_path +
        QDir::separator() +
-       reply->property("destination_directory").toString() +
+       reply->property(PropertyNames::DestinationDirectory).toString() +
        QDir::separator() +
-       reply->property("file_name").toString());
+       reply->property(PropertyNames::FileName).toString());
   else
     file.setFileName
       (m_path +
        QDir::separator() +
-       reply->property("destination_file").toString());
+       reply->property(PropertyNames::DestinationFile).toString());
 
   QIODevice::OpenMode flags = QIODevice::NotOpen;
 
-  if(reply->property("read").toBool())
+  if(reply->property(PropertyNames::Read).toBool())
     flags = QIODevice::Append | QIODevice::WriteOnly;
   else
     flags = QIODevice::Truncate | QIODevice::WriteOnly;
 
-  reply->setProperty("absolute_file_path", file.fileName());
-  reply->setProperty("read", true);
+  reply->setProperty(PropertyNames::AbsoluteFilePath, file.fileName());
+  reply->setProperty(PropertyNames::Read, true);
 
   if(file.open(flags) && reply->bytesAvailable() > 0)
     {
