@@ -71,6 +71,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QTimer::timeout,
 	  this,
 	  &qup_page::slot_copy_files);
+  connect(&m_copy_files_future_watcher,
+	  &QFutureWatcher<void>::finished,
+	  this,
+	  &qup_page::launch_file_gatherer);
   connect(&m_timer,
 	  &QTimer::timeout,
 	  this,
@@ -362,6 +366,18 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
     }
 }
 
+void qup_page::launch_file_gatherer(void)
+{
+  if(m_populate_files_table_future.isFinished())
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+    m_populate_files_table_future = QtConcurrent::run
+      (this, &qup_page::gather_files, m_super_hash, m_destination, m_path);
+#else
+    m_populate_files_table_future = QtConcurrent::run
+      (&qup_page::gather_files, this, m_super_hash, m_destination, m_path);
+#endif
+}
+
 void qup_page::slot_copy_files(void)
 {
   if(m_network_access_manager.findChildren<QNetworkReply *> ().size() > 0 &&
@@ -376,6 +392,7 @@ void qup_page::slot_copy_files(void)
       return;
     }
 
+  launch_file_gatherer();
   m_ui.install->setEnabled(true);
 }
 
@@ -518,6 +535,7 @@ void qup_page::slot_install(void)
   m_copy_files_future = QtConcurrent::run
     (&qup_page::copy_files, this, m_destination, m_path);
 #endif
+  m_copy_files_future_watcher.setFuture(m_copy_files_future);
 }
 
 void qup_page::slot_instruction_reply_finished(void)
@@ -684,7 +702,11 @@ void qup_page::slot_populate_favorite(void)
   m_path.append(QDir::separator());
   m_path.append("qup-");
   m_path.append(settings.value("name").toString().trimmed());
+  m_super_hash.clear();
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
+  m_ui.files->setRowCount(0);
+  m_ui.files->sortByColumn(0, Qt::AscendingOrder);
+  m_ui.install->setEnabled(false);
   m_ui.local_directory->setText
     (settings.value("local-directory").toString().trimmed());
   m_ui.operating_system->setCurrentIndex
@@ -694,7 +716,7 @@ void qup_page::slot_populate_favorite(void)
     (m_ui.operating_system->currentIndex() < 0 ?
      0 : m_ui.operating_system->currentIndex());
   m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
-  settings.endGroup(); // Optional.
+  launch_file_gatherer();
   emit product_name_changed(m_ui.favorite_name->text());
 }
 
@@ -749,6 +771,7 @@ void qup_page::slot_populate_files_table
     }
 
   m_ui.files->horizontalScrollBar()->setValue(h);
+  m_ui.files->resizeColumnsToContents();
   m_ui.files->setSortingEnabled(true);
   m_ui.files->sortByColumn
     (m_ui.files->horizontalHeader()->sortIndicatorSection(),
@@ -877,16 +900,6 @@ void qup_page::slot_timeout(void)
 
   palette.setColor(m_ui.local_directory->backgroundRole(), color);
   m_ui.local_directory->setPalette(palette);
-
-  if(m_populate_files_table_future.isFinished())
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
-    m_populate_files_table_future = QtConcurrent::run
-      (this, &qup_page::gather_files, m_super_hash, m_destination, m_path);
-#else
-    m_populate_files_table_future = QtConcurrent::run
-      (&qup_page::gather_files, this, m_super_hash, m_destination, m_path);
-#endif
-
 }
 
 void qup_page::slot_write_file(void)

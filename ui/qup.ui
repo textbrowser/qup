@@ -121,13 +121,15 @@
     </property>
     <addaction name="action_new_page"/>
     <addaction name="separator"/>
+    <addaction name="action_close_page"/>
+    <addaction name="separator"/>
     <addaction name="action_quit"/>
    </widget>
    <widget class="QMenu" name="menu_Help">
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="action_About"/>
+    <addaction name="action_about"/>
    </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Help"/>
@@ -145,7 +147,7 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
-  <action name="action_About">
+  <action name="action_about">
    <property name="icon">
     <iconset resource="../images/images.qrc">
      <normaloff>:/cup.png</normaloff>:/cup.png</iconset>
@@ -160,6 +162,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="action_close_page">
+   <property name="text">
+    <string>&amp;Close Page</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+W</string>
    </property>
   </action>
  </widget>

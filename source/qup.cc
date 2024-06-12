@@ -37,6 +37,10 @@ QString qup::QUP_VERSION_STRING = "2024.00.00";
 qup::qup(void):QMainWindow()
 {
   m_ui.setupUi(this);
+  connect(m_ui.action_close_page,
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_close_page);
   connect(m_ui.action_new_page,
 	  &QAction::triggered,
 	  this,
@@ -45,6 +49,11 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.pages,
+	  SIGNAL(tabCloseRequested(int)),
+	  this,
+	  SLOT(slot_tab_close_requested(int)));
+  m_ui.action_close_page->setIcon(QIcon::fromTheme("window-close"));
   m_ui.action_new_page->setIcon(QIcon::fromTheme("document-new"));
   m_ui.temporary_directory->setText(QDir::tempPath());
   restoreGeometry(QSettings().value("geometry").toByteArray());
@@ -85,6 +94,22 @@ void qup::closeEvent(QCloseEvent *event)
   slot_quit();
 }
 
+void qup::close_page(QWidget *widget)
+{
+  auto page = qobject_cast<qup_page *> (widget);
+
+  if(!page)
+    return;
+
+  m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);
+  m_ui.pages->removeTab(m_ui.pages->indexOf(page));
+  page ? page->deleteLater() : (void) 0;
+}
+void qup::slot_close_page(void)
+{
+  close_page(m_ui.pages->widget(m_ui.pages->currentIndex()));
+}
+
 void qup::slot_new_page(void)
 {
   auto page = new qup_page(this);
@@ -101,6 +126,7 @@ void qup::slot_new_page(void)
 	  &qup::populate_favorites,
 	  page,
 	  &qup_page::slot_populate_favorites);
+  m_ui.action_close_page->setEnabled(true);
   m_ui.pages->setCurrentIndex(m_ui.pages->addTab(page, tr("Download")));
 }
 
@@ -121,4 +147,9 @@ void qup::slot_quit(void)
 
   settings.setValue("geometry", saveGeometry());
   QApplication::exit(0);
+}
+
+void qup::slot_tab_close_requested(int index)
+{
+  close_page(m_ui.pages->widget(index));
 }

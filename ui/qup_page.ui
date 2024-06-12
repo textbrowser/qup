@@ -175,6 +175,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QComboBox" name="operating_system">
+         <property name="maxVisibleItems">
+          <number>15</number>
+         </property>
          <property name="sizeAdjustPolicy">
           <enum>QComboBox::AdjustToContents</enum>
          </property>
@@ -220,7 +223,7 @@
          </item>
          <item>
           <property name="text">
-           <string notr="true">Windows 11</string>
+           <string notr="true">Windows Intel</string>
           </property>
          </item>
         </widget>
@@ -314,6 +317,13 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="label_9">
+     <property name="text">
+      <string>A directory monitor is not included because multiple monitors will burden Qup.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QSplitter" name="splitter">
      <property name="orientation">
       <enum>Qt::Vertical</enum>
@@ -334,6 +344,9 @@
       <property name="sortingEnabled">
        <bool>true</bool>
       </property>
+      <attribute name="horizontalHeaderMinimumSectionSize">
+       <number>200</number>
+      </attribute>
       <attribute name="horizontalHeaderDefaultSectionSize">
        <number>250</number>
       </attribute>

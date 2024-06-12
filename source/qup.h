@@ -43,11 +43,14 @@ class qup: public QMainWindow
  private:
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);
+  void close_page(QWidget *widget);
 
  private slots:
+  void slot_close_page(void);
   void slot_new_page(void);
   void slot_product_name_changed(const QString &t);
   void slot_quit(void);
+  void slot_tab_close_requested(int index);
 
  signals:
   void populate_favorites(void);

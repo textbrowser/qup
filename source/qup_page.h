@@ -29,6 +29,7 @@
 #define _qup_page_h_
 
 #include <QFuture>
+#include <QFutureWatcher>
 #include <QNetworkAccessManager>
 #include <QPointer>
 #include <QTimer>
@@ -69,6 +70,7 @@ class qup_page: public QWidget
   QByteArray m_super_hash;
   QFuture<void> m_copy_files_future;
   QFuture<void> m_populate_files_table_future;
+  QFutureWatcher<void> m_copy_files_future_watcher;
   QNetworkAccessManager m_network_access_manager;
   QPointer<QNetworkReply> m_instruction_file_reply;
   QString m_destination;
@@ -95,6 +97,7 @@ class qup_page: public QWidget
 
  private slots:
   void append(const QString &text);
+  void launch_file_gatherer(void);
   void slot_copy_files(void);
   void slot_delete_favorite(void);
   void slot_download(void);
