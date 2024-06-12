@@ -533,6 +533,21 @@ void qup_page::slot_install(void)
 
   append
     (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
+
+  if(!QFileInfo(m_destination).exists())
+    {
+      QString text("");
+
+      text.append(tr("<b>Creating %1... </b>").arg(m_destination));
+
+      if(QDir().mkpath(m_destination))
+	text.append("<font color='darkgreen'>Created.</font>");
+      else
+	text.append("<font color='darkred'>Failure.</font>");
+
+      append(text);
+    }
+
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   m_copy_files_future = QtConcurrent::run
     (this, &qup_page::copy_files, m_destination, m_path);
