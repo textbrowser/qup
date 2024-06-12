@@ -985,6 +985,8 @@ void qup_page::slot_write_instruction_file_data(void)
 	    append
 	      (tr("<font color='darkred'>Could not write the entire file %1."
 		  "</font>").arg(file_information.fileName()));
+
+	  launch_file_gatherer();
 	}
       else
 	append
