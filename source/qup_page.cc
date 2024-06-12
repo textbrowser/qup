@@ -208,19 +208,24 @@ void qup_page::copy_files
 
       if(file_information.isDir())
 	{
-	  QString text("");
 	  auto destination(destination_path);
 
 	  destination.append(QDir::separator());
 	  destination.append(file_information.fileName());
-	  text.append(tr("Creating %1... ").arg(destination));
 
-	  if(QDir().mkpath(destination))
-	    text.append("<font color='darkgreen'>Created.</font>");
-	  else
-	    text.append("<font color='darkred'>Failure.</font>");
+	  if(!QFileInfo(destination).exists())
+	    {
+	      QString text("");
 
-	  emit append_text(text);
+	      text.append(tr("Creating %1... ").arg(destination));
+
+	      if(QDir().mkpath(destination))
+		text.append("<font color='darkgreen'>Created.</font>");
+	      else
+		text.append("<font color='darkred'>Failure.</font>");
+
+	      emit append_text(text);
+	    }
 	}
       else
 	{
@@ -488,18 +493,23 @@ void qup_page::slot_download(void)
   m_path.append("qup-");
   m_path.append(name);
 
-  auto text(tr("<b>Creating %1... </b>").arg(m_path));
-
-  if(QDir().mkpath(m_path) == false)
+  if(!QFileInfo(m_path).exists())
     {
-      text.append(tr("<font color='darkred'>Failure.</font>"));
+      auto text(tr("<b>Creating %1... </b>").arg(m_path));
+
+      if(QDir().mkpath(m_path) == false)
+	{
+	  text.append(tr("<font color='darkred'>Failure.</font>"));
+	  append(text);
+	  return;
+	}
+      else
+	text.append(tr("<font color='darkgreen'>Created.</font>"));
+
       append(text);
-      return;
     }
   else
-    text.append(tr("<font color='darkgreen'>Created.</font>"));
-
-  append(text);
+    append(QString("The destination path %1 exists.").arg(m_path));
 
   /*
   ** Download the instructions file.
