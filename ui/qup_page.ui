@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>600</height>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -117,7 +117,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>For example, https://github.com/textbrowser/qup/qup.txt.</string>
+        <string>For example, https://raw.githubusercontent.com/textbrowser/qup/main/qup.txt.</string>
        </property>
        <property name="clearButtonEnabled">
         <bool>true</bool>
