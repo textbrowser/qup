@@ -95,6 +95,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QToolButton::clicked,
 	  this,
 	  &qup_page::slot_install);
+  connect(m_ui.refresh,
+	  &QPushButton::clicked,
+	  this,
+	  &qup_page::launch_file_gatherer);
   connect(m_ui.reset,
 	  &QPushButton::clicked,
 	  m_ui.activity,
@@ -133,6 +137,7 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
      "QToolButton::menu-indicator {image: none;}");
 #endif
   m_ui.install->setEnabled(false);
+  m_ui.refresh->setIcon(QIcon::fromTheme("view-refresh"));
   m_ui.reset->setIcon(QIcon::fromTheme("edit-reset"));
   m_ui.select_local_directory->setIcon(QIcon::fromTheme("document-open"));
 }
