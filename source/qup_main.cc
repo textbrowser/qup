@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
   CocoaInitializer ci;
 #endif
   QCoreApplication::setApplicationName("Qup");
-  QCoreApplication::setApplicationVersion(qup::QUP_VERSION_STRING);
+  QCoreApplication::setApplicationVersion(qup::VERSION);
   QCoreApplication::setAttribute(Qt::AA_DontUseNativeDialogs);
   QCoreApplication::setOrganizationName("Qup");
   QSettings::setDefaultFormat(QSettings::IniFormat);
