@@ -176,6 +176,12 @@ QString qup_page::executable_suffix(void) const
     return "";
 }
 
+bool qup_page::active(void) const
+{
+  return m_copy_files_future.isRunning() ||
+    m_network_access_manager.findChildren<QNetworkReply *> ().size() > 0;
+}
+
 void qup_page::append(const QString &text)
 {
   if(text.trimmed().isEmpty())

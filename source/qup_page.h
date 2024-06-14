@@ -43,6 +43,7 @@ class qup_page: public QWidget
  public:
   qup_page(QWidget *parent);
   ~qup_page();
+  bool active(void) const;
 
  public slots:
   void slot_populate_favorites(void);

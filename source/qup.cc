@@ -101,6 +101,15 @@ void qup::close_page(QWidget *widget)
   if(!page)
     return;
 
+  if(page->active())
+    {
+      auto text(m_ui.pages->tabText(m_ui.pages->indexOf(page)));
+
+      statusBar()->showMessage
+	(tr("Cannot close an active page (%1).").arg(text), 2500);
+      return;
+    }
+
   m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
