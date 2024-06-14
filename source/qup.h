@@ -37,7 +37,7 @@ class qup: public QMainWindow
  public:
   qup(void);
   ~qup();
-  static QString QUP_VERSION_STRING;
+  static QString VERSION;
   static QString home_path(void);
 
  private:

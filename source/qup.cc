@@ -32,7 +32,7 @@
 #include "qup.h"
 #include "qup_page.h"
 
-QString qup::QUP_VERSION_STRING = "2024.00.00";
+QString qup::VERSION = "2024.07.04";
 
 qup::qup(void):QMainWindow()
 {
@@ -114,6 +114,7 @@ void qup::close_page(QWidget *widget)
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
 }
+
 void qup::slot_close_page(void)
 {
   close_page(m_ui.pages->widget(m_ui.pages->currentIndex()));

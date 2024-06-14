@@ -1,6 +1,7 @@
 Completed Items
 
 - Clear activity widget.
+- Close page.
 - Copy downloaded files into local directories.
 - Delete downloaded files after a proper installation? No.
 - Delete favorite.
@@ -19,7 +20,6 @@ Completed Items
 
 Remaining Items
 
-- Close page with confirmation.
 - Digests. Lots of work and require separate sites.
 - Exiting during an update.
 - List temporary files.
