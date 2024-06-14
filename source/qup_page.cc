@@ -263,7 +263,7 @@ void qup_page::copy_files
 	      emit append_text(text);
 	      text.clear();
 	      text.append
-		(tr("Setting permissions on %1...").arg(destination));
+		(tr("Setting permissions on %1... ").arg(destination));
 
 	      QFile file(destination);
 
