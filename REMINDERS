@@ -6,6 +6,7 @@ Completed Items
 - Delete downloaded files after a proper installation? No.
 - Delete favorite.
 - Download items.
+- Exiting during an update.
 - Geometry.
 - Highlight problematic product directory widget.
 - Icons for activities.
@@ -22,7 +23,6 @@ Remaining Items
 
 - About.
 - Digests. Lots of work and require separate sites.
-- Exiting during an update.
 - List temporary files.
 - Proxy.
 - Qt 5.5.1.

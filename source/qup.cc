@@ -25,6 +25,7 @@
 ** QUP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QCloseEvent>
 #include <QDir>
 #include <QRegularExpression>
 #include <QSettings>
@@ -90,8 +91,28 @@ QString qup::home_path(void)
 
 void qup::closeEvent(QCloseEvent *event)
 {
+  if(event)
+    for(int i = 0; i < m_ui.pages->count(); i++)
+      {
+	auto page = qobject_cast<qup_page *> (m_ui.pages->widget(i));
+
+	if(page && page->active())
+	  {
+	    event->ignore();
+
+	    auto text(m_ui.pages->tabText(m_ui.pages->indexOf(page)));
+
+	    statusBar()->showMessage
+	      (tr("Cannot close an active page (%1).").arg(text), 3500);
+	    return;
+	  }
+      }
+
+  QSettings settings;
+
+  settings.setValue("geometry", saveGeometry());
   QMainWindow::closeEvent(event);
-  slot_quit();
+  QApplication::exit(0);
 }
 
 void qup::close_page(QWidget *widget)
@@ -106,7 +127,7 @@ void qup::close_page(QWidget *widget)
       auto text(m_ui.pages->tabText(m_ui.pages->indexOf(page)));
 
       statusBar()->showMessage
-	(tr("Cannot close an active page (%1).").arg(text), 2500);
+	(tr("Cannot close an active page (%1).").arg(text), 3500);
       return;
     }
 
@@ -153,10 +174,7 @@ void qup::slot_product_name_changed(const QString &t)
 
 void qup::slot_quit(void)
 {
-  QSettings settings;
-
-  settings.setValue("geometry", saveGeometry());
-  QApplication::exit(0);
+  close();
 }
 
 void qup::slot_tab_close_requested(int index)
