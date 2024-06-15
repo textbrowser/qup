@@ -895,6 +895,7 @@ void qup_page::slot_save_favorite(void)
 	(tr("The favorite %1 has been saved in the Qup INI file.").
 	 arg(name));
       m_super_hash.clear();
+      m_ui.install->setEnabled(false);
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
       emit product_name_changed(m_ui.favorite_name->text());
