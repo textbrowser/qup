@@ -37,7 +37,33 @@ QString qup::VERSION = "2024.07.04";
 
 qup::qup(void):QMainWindow()
 {
+  m_about.setIconPixmap(QPixmap(":/images/qup_large.png"));
+  m_about.setStandardButtons(QMessageBox::Close);
+  m_about.setText
+    (tr("<html>"
+	"<b>Qup Version %1</b><br><br>"
+	"Qup is software management made easy.<br>"
+	"Made with love by textbrowser.<br><br>"
+	"Architecture: %2.<br>"
+	"Product: %3.<br>"
+	"Qt version %4 (runtime version %5).<br><br>"
+	"Please visit "
+	"<a href=\"https://textbrowser.github.io/qup\">"
+	"https://textbrowser.github.io/qup</a> for more details.").
+     arg(VERSION).
+     arg(QSysInfo::currentCpuArchitecture()).
+     arg(QSysInfo::prettyProductName()).
+     arg(QT_VERSION_STR).
+     arg(qVersion()));
+  m_about.setTextFormat(Qt::RichText);
+  m_about.setWindowIcon(windowIcon());
+  m_about.setWindowModality(Qt::NonModal);
+  m_about.setWindowTitle(tr("Qup: About"));
   m_ui.setupUi(this);
+  connect(m_ui.action_about,
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_about);
   connect(m_ui.action_close_page,
 	  &QAction::triggered,
 	  this,
@@ -134,6 +160,20 @@ void qup::close_page(QWidget *widget)
   m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
+}
+
+void qup::slot_about(void)
+{
+  connect(m_about.button(QMessageBox::Close),
+	  &QPushButton::clicked,
+	  &m_about,
+	  &QMessageBox::close,
+	  Qt::UniqueConnection);
+  m_about.button(QMessageBox::Close)->setShortcut(tr("Ctrl+W"));
+  m_about.resize(m_about.sizeHint());
+  m_about.showNormal();
+  m_about.activateWindow();
+  m_about.raise();
 }
 
 void qup::slot_close_page(void)

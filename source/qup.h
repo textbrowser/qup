@@ -28,6 +28,8 @@
 #ifndef _qup_h_
 #define _qup_h_
 
+#include <QMessageBox>
+
 #include "ui_qup.h"
 
 class qup: public QMainWindow
@@ -41,11 +43,13 @@ class qup: public QMainWindow
   static QString home_path(void);
 
  private:
+  QMessageBox m_about;
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);
   void close_page(QWidget *widget);
 
  private slots:
+  void slot_about(void);
   void slot_close_page(void);
   void slot_new_page(void);
   void slot_product_name_changed(const QString &t);
