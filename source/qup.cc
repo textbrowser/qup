@@ -37,7 +37,10 @@ QString qup::VERSION = "2024.07.04";
 
 qup::qup(void):QMainWindow()
 {
-  m_about.setIconPixmap(QPixmap(":/images/qup_large.png"));
+  m_about.setIconPixmap
+    (QPixmap(":/qup_large.png").scaled(QSize(256, 256),
+				       Qt::KeepAspectRatio,
+				       Qt::SmoothTransformation));
   m_about.setStandardButtons(QMessageBox::Close);
   m_about.setText
     (tr("<html>"

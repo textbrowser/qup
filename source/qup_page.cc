@@ -123,7 +123,7 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 					 const QVector<QVector<QString> > &)));
   m_network_access_manager.setRedirectPolicy
     (QNetworkRequest::NoLessSafeRedirectPolicy);
-  m_timer.start(1500);
+  m_timer.start(2500);
   m_ui.favorites->setArrowType(Qt::NoArrow);
   m_ui.favorites->setMenu(new QMenu(this));
 #ifdef Q_OS_MACOS
@@ -854,8 +854,7 @@ void qup_page::slot_reply_finished(void)
 
   if(m_ok)
     /*
-    ** Downloads completed! Copy the files from the temporary
-    ** directory into the destination directory.
+    ** Downloads completed!
     */
 
     m_copy_files_timer.start();

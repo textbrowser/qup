@@ -20,10 +20,14 @@ Completed Items
 - Tasked file copying.
 - Truncate new downloads.
 
-Remaining Items
+Maybe Items
 
 - Digests. Lots of work and require separate sites.
+- Super-nested directories.
+
+Remaining Items
+
 - List temporary files.
 - Proxy.
 - Qt 5.5.1.
-- Super-nested directories.
+- Swifty.
