@@ -408,6 +408,9 @@ void qup_page::slot_copy_files(void)
       return;
     }
 
+  append
+    (tr("<font color='darkgreen'>You may now install %1!</font>").
+     arg(m_product));
   launch_file_gatherer();
   m_ui.install->setEnabled(true);
 }
@@ -498,6 +501,7 @@ void qup_page::slot_download(void)
   m_path.append(QDir::separator());
   m_path.append("qup-");
   m_path.append(name);
+  m_product = name;
 
   if(!QFileInfo(m_path).exists())
     {

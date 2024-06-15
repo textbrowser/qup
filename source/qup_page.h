@@ -77,6 +77,7 @@ class qup_page: public QWidget
   QString m_destination;
   QString m_operating_system;
   QString m_path;
+  QString m_product;
   QString m_qup_txt_file_name;
   QTimer m_copy_files_timer;
   QTimer m_timer;
