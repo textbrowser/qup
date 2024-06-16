@@ -267,56 +267,11 @@
        <item>
         <widget class="QComboBox" name="operating_system">
          <property name="maxVisibleItems">
-          <number>15</number>
+          <number>25</number>
          </property>
          <property name="sizeAdjustPolicy">
           <enum>QComboBox::AdjustToContents</enum>
          </property>
-         <item>
-          <property name="text">
-           <string notr="true">Debian 12 AMD64</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">FreeBSD 13 AMD64</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">MacOS Apple Silicon</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">MacOS Intel</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">PiOS 12 ARM</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">PiOS 12 ARM64</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">Ubuntu 24.04 AMD64</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">Ubuntu 16.04 PowerPC</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string notr="true">Windows Intel</string>
-          </property>
-         </item>
         </widget>
        </item>
        <item>

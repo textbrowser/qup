@@ -96,6 +96,7 @@ class qup_page: public QWidget
     (const QByteArray &super_hash,
      const QString &destination_path,
      const QString &local_path);
+  void prepare_operating_systems_widget(void);
 
  private slots:
   void append(const QString &text);

@@ -140,6 +140,7 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
   m_ui.refresh->setIcon(QIcon::fromTheme("view-refresh"));
   m_ui.reset->setIcon(QIcon::fromTheme("edit-reset"));
   m_ui.select_local_directory->setIcon(QIcon::fromTheme("document-open"));
+  prepare_operating_systems_widget();
 }
 
 qup_page::~qup_page()
@@ -156,8 +157,12 @@ QString qup_page::executable_suffix(void) const
 {
   if(m_operating_system == "Debian 12 AMD64")
     return "_debian_12_amd64";
+  else if(m_operating_system == "Debian 13 AMD64")
+    return "_debian_13_amd64";
   else if(m_operating_system == "FreeBSD 13 AMD64")
     return "_freebsd_13_amd64";
+  else if(m_operating_system == "FreeBSD 14 AMD64")
+    return "_freebsd_14_amd64";
   else if(m_operating_system == "MacOS Apple Silicon")
     return "_macos_apple_silicon";
   else if(m_operating_system == "MacOS Intel")
@@ -166,6 +171,10 @@ QString qup_page::executable_suffix(void) const
     return "_pios_12_arm";
   else if(m_operating_system == "PiOS 12 ARM64")
     return "_pios_12_arm64";
+  else if(m_operating_system == "PiOS 13 ARM")
+    return "_pios_13_arm";
+  else if(m_operating_system == "PiOS 13 ARM64")
+    return "_pios_13_arm64";
   else if(m_operating_system == "Ubuntu 24.04 AMD64")
     return "_ubuntu_24_04_amd64";
   else if(m_operating_system == "Ubuntu 16.04 PowerPC")
@@ -214,7 +223,7 @@ void qup_page::copy_files
 
       if(file_information.isDir())
 	{
-	  auto destination(destination_path);
+	  auto destinationdestination_path);
 
 	  destination.append(QDir::separator());
 	  destination.append(file_information.fileName());
@@ -285,6 +294,51 @@ void qup_page::copy_files
     }
 }
 
+void qup_page::download_files(const QHash<QString, FileInformation> &files,
+			      const QString &directory_destination,
+			      const QString &file_destination,
+			      const QUrl &url)
+{
+  if(files.isEmpty() || url.isEmpty() || url.isValid() == false)
+    return;
+
+  QHashIterator<QString, FileInformation> it(files);
+
+  while(it.hasNext())
+    {
+      it.next();
+
+      if(it.key().trimmed().isEmpty())
+	continue;
+
+      QNetworkReply *reply = nullptr;
+      auto const &dot = it.value().m_destination == "." ||
+	it.value().m_destination.startsWith("./");
+      auto remote_file_name(url.toString());
+
+      remote_file_name.append('/');
+      remote_file_name.append(it.key());
+      append(tr("Downloading %1.").arg(remote_file_name));
+      reply = m_network_access_manager.get
+	(QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
+      reply->ignoreSslErrors();
+      reply->setProperty
+	(PropertyNames::DestinationDirectory, dot ? "" : directory_destination);
+      reply->setProperty
+	(PropertyNames::DestinationFile, dot ? it.key() : file_destination);
+      reply->setProperty(PropertyNames::Executable, it.value().m_executable);
+      reply->setProperty(PropertyNames::FileName, it.key());
+      connect(reply,
+	      &QNetworkReply::finished,
+	      this,
+	      &qup_page::slot_reply_finished);
+      connect(reply,
+	      &QNetworkReply::readyRead,
+	      this,
+	      &qup_page::slot_write_file);
+    }
+}
+
 void qup_page::gather_files
 (const QByteArray &super_hash,
  const QString &destination_path,
@@ -337,50 +391,6 @@ void qup_page::gather_files
   if(sha3_512.result() != super_hash)
     emit files_gathered(sha3_512.result(), data);
 }
-void qup_page::download_files(const QHash<QString, FileInformation> &files,
-			      const QString &directory_destination,
-			      const QString &file_destination,
-			      const QUrl &url)
-{
-  if(files.isEmpty() || url.isEmpty() || url.isValid() == false)
-    return;
-
-  QHashIterator<QString, FileInformation> it(files);
-
-  while(it.hasNext())
-    {
-      it.next();
-
-      if(it.key().trimmed().isEmpty())
-	continue;
-
-      QNetworkReply *reply = nullptr;
-      auto const &dot = it.value().m_destination == "." ||
-	it.value().m_destination.startsWith("./");
-      auto remote_file_name(url.toString());
-
-      remote_file_name.append('/');
-      remote_file_name.append(it.key());
-      append(tr("Downloading %1.").arg(remote_file_name));
-      reply = m_network_access_manager.get
-	(QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
-      reply->ignoreSslErrors();
-      reply->setProperty
-	(PropertyNames::DestinationDirectory, dot ? "" : directory_destination);
-      reply->setProperty
-	(PropertyNames::DestinationFile, dot ? it.key() : file_destination);
-      reply->setProperty(PropertyNames::Executable, it.value().m_executable);
-      reply->setProperty(PropertyNames::FileName, it.key());
-      connect(reply,
-	      &QNetworkReply::finished,
-	      this,
-	      &qup_page::slot_reply_finished);
-      connect(reply,
-	      &QNetworkReply::readyRead,
-	      this,
-	      &qup_page::slot_write_file);
-    }
-}
 
 void qup_page::launch_file_gatherer(void)
 {
@@ -392,6 +402,25 @@ void qup_page::launch_file_gatherer(void)
     m_populate_files_table_future = QtConcurrent::run
       (&qup_page::gather_files, this, m_super_hash, m_destination, m_path);
 #endif
+}
+
+void qup_page::prepare_operating_systems_widget(void)
+{
+  m_ui.operating_system->clear();
+  m_ui.operating_system->addItems
+    (QStringList() << "Debian 12 AMD64"
+                   << "Debian 13 AMD64"
+                   << "FreeBSD 13 AMD64"
+                   << "FreeBSD 14 AMD64"
+                   << "MacOS Apple Silicon"
+                   << "MacOS Intel"
+                   << "PiOS 12 ARM"
+                   << "PiOS 12 ARM64"
+                   << "PiOS 13 ARM"
+                   << "PiOS 13 ARM64"
+                   << "Ubuntu 24.04 AMD64"
+                   << "Ubuntu 16.04 PowerPC"
+                   << "Windows 11");
 }
 
 void qup_page::slot_copy_files(void)
