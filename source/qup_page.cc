@@ -95,6 +95,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QToolButton::clicked,
 	  this,
 	  &qup_page::slot_install);
+  connect(m_ui.launch,
+	  &QPushButton::clicked,
+	  this,
+	  &qup_page::slot_launch);
   connect(m_ui.refresh,
 	  &QPushButton::clicked,
 	  this,
@@ -223,7 +227,7 @@ void qup_page::copy_files
 
       if(file_information.isDir())
 	{
-	  auto destinationdestination_path);
+	  auto destination(destination_path);
 
 	  destination.append(QDir::separator());
 	  destination.append(file_information.fileName());
@@ -619,6 +623,10 @@ void qup_page::slot_instruction_reply_finished(void)
 
       m_instruction_file_reply->deleteLater();
     }
+}
+
+void qup_page::slot_launch(void)
+{
 }
 
 void qup_page::slot_parse_instruction_file(void)

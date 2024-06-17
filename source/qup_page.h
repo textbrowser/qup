@@ -106,6 +106,7 @@ class qup_page: public QWidget
   void slot_download(void);
   void slot_install(void);
   void slot_instruction_reply_finished(void);
+  void slot_launch(void);
   void slot_parse_instruction_file(void);
   void slot_populate_favorite(void);
   void slot_populate_files_table

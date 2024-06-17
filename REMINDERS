@@ -12,6 +12,7 @@ Completed Items
 - Highlight problematic product directory widget.
 - Icons for activities.
 - Interpret the instructions file.
+- Launch the executable. New widget(s).
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
@@ -27,7 +28,6 @@ Maybe Items
 
 Remaining Items
 
-- Launch the executable. New widget(s).
 - List temporary files.
 - Proxy.
 - Qt 5.5.1.
