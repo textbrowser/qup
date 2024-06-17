@@ -449,9 +449,6 @@
      </item>
      <item>
       <widget class="QPushButton" name="launch">
-       <property name="toolTip">
-        <string>Install</string>
-       </property>
        <property name="text">
         <string>&amp;Launch</string>
        </property>

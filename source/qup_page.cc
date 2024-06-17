@@ -627,6 +627,36 @@ void qup_page::slot_instruction_reply_finished(void)
 
 void qup_page::slot_launch(void)
 {
+  auto executable(m_destination);
+
+  executable.append(QDir::separator());
+  executable.append(m_product);
+#ifdef Q_OS_MACOS
+  executable.append(".app");
+
+  if(QFileInfo(executable).isBundle())
+    {
+      QStringList list;
+
+      list << "-a" << executable << "-g";
+      QProcess::startDetached("open", list, m_destination);
+    }
+#elif defined(Q_OS_OS2)
+  executable.append(".exe");
+
+  if(QFileInfo(executable).isExecutable())
+    QProcess::startDetached
+      (QString("\"%1\"").arg(executable), QStringList(), m_destination);
+#elif defined(Q_OS_WINDOWS)
+  executable.append(".exe");
+
+  if(QFileInfo(executable).isExecutable())
+    QProcess::startDetached
+      (QString("\"%1\"").arg(executable), QStringList(), m_destination);
+#else
+  if(QFileInfo(executable).isExecutable())
+    QProcess::startDetached(executable, QStringList(), m_destination);
+#endif
 }
 
 void qup_page::slot_parse_instruction_file(void)
@@ -779,6 +809,7 @@ void qup_page::slot_populate_favorite(void)
   m_path.append(QDir::separator());
   m_path.append("qup-");
   m_path.append(settings.value("name").toString().trimmed());
+  m_product = action->text();
   m_super_hash.clear();
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
   m_ui.files->setRowCount(0);
