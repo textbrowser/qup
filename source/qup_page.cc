@@ -239,9 +239,9 @@ void qup_page::copy_files
 	      text.append(tr("Creating %1... ").arg(destination));
 
 	      if(QDir().mkpath(destination))
-		text.append("<font color='darkgreen'>Created.</font>");
+		text.append(tr("<font color='darkgreen'>Created.</font>"));
 	      else
-		text.append("<font color='darkred'>Failure.</font>");
+		text.append(tr("<font color='darkred'>Failure.</font>"));
 
 	      emit append_text(text);
 	    }
@@ -272,7 +272,7 @@ void qup_page::copy_files
 
 	  if(QFile::copy(file_information.absoluteFilePath(), destination))
 	    {
-	      text.append("<font color='darkgreen'>Copied.</font>");
+	      text.append(tr("<font color='darkgreen'>Copied.</font>"));
 	      emit append_text(text);
 	      text.clear();
 	      text.append
@@ -283,15 +283,15 @@ void qup_page::copy_files
 	      if(file.
 		 setPermissions(QFileInfo(file_information.
 					  absoluteFilePath()).permissions()))
-		text.append("<font color='darkgreen'>Success.</font>");
+		text.append(tr("<font color='darkgreen'>Success.</font>"));
 	      else
-		text.append("<font color='darkred'>Failure.</font>");
+		text.append(tr("<font color='darkred'>Failure.</font>"));
 
 	      emit append_text(text);
 	    }
 	  else
 	    {
-	      text.append("<font color='darkred'>Failure.</font>");
+	      text.append(tr("<font color='darkred'>Failure.</font>"));
 	      emit append_text(text);
 	    }
 	}
@@ -552,13 +552,13 @@ void qup_page::slot_download(void)
       append(text);
     }
   else
-    append(QString("The destination path %1 exists.").arg(m_path));
+    append(tr("The destination path %1 exists.").arg(m_path));
 
   /*
   ** Download the instructions file.
   */
 
-  append(QString("<b>Downloading the file %1.</b>").arg(url.toString()));
+  append(tr("<b>Downloading the file %1.</b>").arg(url.toString()));
   m_instruction_file_reply = m_network_access_manager.get(QNetworkRequest(url));
   m_instruction_file_reply_data.clear();
   m_ok = true;
@@ -594,9 +594,9 @@ void qup_page::slot_install(void)
       text.append(tr("<b>Creating %1... </b>").arg(m_destination));
 
       if(QDir().mkpath(m_destination))
-	text.append("<font color='darkgreen'>Created.</font>");
+	text.append(tr("<font color='darkgreen'>Created.</font>"));
       else
-	text.append("<font color='darkred'>Failure.</font>");
+	text.append(tr("<font color='darkred'>Failure.</font>"));
 
       append(text);
     }
@@ -641,21 +641,33 @@ void qup_page::slot_launch(void)
       list << "-a" << executable << "-g";
       QProcess::startDetached("open", list, m_destination);
     }
+  else
+    append(tr("The executable %1 is not a bundle. Cannot launch.").
+	   arg(executable));
 #elif defined(Q_OS_OS2)
   executable.append(".exe");
 
   if(QFileInfo(executable).isExecutable())
     QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
+  else
+    append(tr("The file %1 is not an executable. Cannot launch.").
+	   arg(executable));
 #elif defined(Q_OS_WINDOWS)
   executable.append(".exe");
 
   if(QFileInfo(executable).isExecutable())
     QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
+  else
+    append(tr("The file %1 is not an executable. Cannot launch").
+	   arg(executable));
 #else
   if(QFileInfo(executable).isExecutable())
     QProcess::startDetached(executable, QStringList(), m_destination);
+  else
+    append(tr("The file %1 is not an executable. Cannot launch.").
+	   arg(executable));
 #endif
 }
 
@@ -893,8 +905,8 @@ void qup_page::slot_reply_finished(void)
 
   if(!reply)
     {
-      append("<font color='darkred'>Cannot discover QNetworkReply object. "
-	     "Serious problem!</font>");
+      append(tr("<font color='darkred'>Cannot discover QNetworkReply object. "
+		"Serious problem!</font>"));
       return;
     }
 
@@ -960,8 +972,7 @@ void qup_page::slot_save_favorite(void)
 			 this,
 			 &qup_page::slot_populate_favorites);
       append
-	(tr("The favorite %1 has been saved in the Qup INI file.").
-	 arg(name));
+	(tr("The favorite %1 has been saved in the Qup INI file.").arg(name));
       m_super_hash.clear();
       m_ui.install->setEnabled(false);
       m_ui.local_directory->setText(local_directory);
@@ -970,8 +981,7 @@ void qup_page::slot_save_favorite(void)
     }
   else
     append
-      (tr("The favorite %1 cannot be saved in the Qup INI file!").
-       arg(name));
+      (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name));
 }
 
 void qup_page::slot_select_local_directory(void)
