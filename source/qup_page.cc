@@ -486,7 +486,7 @@ void qup_page::slot_delete_favorite(void)
       emit populate_favorites();
     }
   else
-    append(tr("Could not delete %1.").arg(name));
+    append(tr("<font color='darkred'>Could not delete %1.</font>").arg(name));
 }
 
 void qup_page::slot_download(void)
@@ -642,8 +642,8 @@ void qup_page::slot_launch(void)
       QProcess::startDetached("open", list, m_destination);
     }
   else
-    append(tr("The executable %1 is not a bundle. Cannot launch.").
-	   arg(executable));
+    append(tr("<font color='darkred'>The executable %1 is not a bundle. "
+	      "Cannot launch.</font>").arg(executable));
 #elif defined(Q_OS_OS2)
   executable.append(".exe");
 
@@ -651,8 +651,8 @@ void qup_page::slot_launch(void)
     QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
   else
-    append(tr("The file %1 is not an executable. Cannot launch.").
-	   arg(executable));
+    append(tr("<font color='darkred'>The file %1 is not an executable. "
+	      "Cannot launch.</font>").arg(executable));
 #elif defined(Q_OS_WINDOWS)
   executable.append(".exe");
 
@@ -660,14 +660,14 @@ void qup_page::slot_launch(void)
     QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
   else
-    append(tr("The file %1 is not an executable. Cannot launch").
-	   arg(executable));
+    append(tr("<font color='darkred'>The file %1 is not an executable. "
+	      "Cannot launch.</font>").arg(executable));
 #else
   if(QFileInfo(executable).isExecutable())
     QProcess::startDetached(executable, QStringList(), m_destination);
   else
-    append(tr("The file %1 is not an executable. Cannot launch.").
-	   arg(executable));
+    append(tr("<font color='darkred'>The file %1 is not an executable. "
+	      "Cannot launch.</font>").arg(executable));
 #endif
 }
 
@@ -953,7 +953,8 @@ void qup_page::slot_save_favorite(void)
 
   if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
     {
-      append(tr("Please complete the required fields."));
+      append(tr("<font color='darkred'>Please complete the "
+		"required fields.</font>"));
       return;
     }
 
@@ -972,7 +973,8 @@ void qup_page::slot_save_favorite(void)
 			 this,
 			 &qup_page::slot_populate_favorites);
       append
-	(tr("The favorite %1 has been saved in the Qup INI file.").arg(name));
+	(tr("<font color='darkgreen'>The favorite %1 has been saved "
+	    "in the Qup INI file.</font>").arg(name));
       m_super_hash.clear();
       m_ui.install->setEnabled(false);
       m_ui.local_directory->setText(local_directory);
@@ -981,7 +983,8 @@ void qup_page::slot_save_favorite(void)
     }
   else
     append
-      (tr("The favorite %1 cannot be saved in the Qup INI file!").arg(name));
+      (tr("<font color='darkred'>The favorite %1 cannot be saved in the "
+	  "Qup INI file!</font>").arg(name));
 }
 
 void qup_page::slot_select_local_directory(void)

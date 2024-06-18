@@ -17,6 +17,7 @@ Completed Items
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
 - Restore and retain favorites.
+- Save shortcut.
 - Show product name in tab title.
 - Tasked file copying.
 - Truncate new downloads.
@@ -32,5 +33,4 @@ Remaining Items
 - List temporary files.
 - Proxy.
 - Qt 5.5.1.
-- Save shortcut.
 - Swifty.
