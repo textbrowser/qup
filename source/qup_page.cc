@@ -628,6 +628,7 @@ void qup_page::slot_instruction_reply_finished(void)
 void qup_page::slot_launch(void)
 {
   auto executable(m_destination);
+  auto result = false;
 
   executable.append(QDir::separator());
   executable.append(m_product);
@@ -639,7 +640,7 @@ void qup_page::slot_launch(void)
       QStringList list;
 
       list << "-a" << executable << "-g";
-      QProcess::startDetached("open", list, m_destination);
+      result = QProcess::startDetached("open", list, m_destination);
     }
   else
     append(tr("<font color='darkred'>The executable %1 is not a bundle. "
@@ -648,7 +649,7 @@ void qup_page::slot_launch(void)
   executable.append(".exe");
 
   if(QFileInfo(executable).isExecutable())
-    QProcess::startDetached
+    result = QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
   else
     append(tr("<font color='darkred'>The file %1 is not an executable. "
@@ -657,18 +658,26 @@ void qup_page::slot_launch(void)
   executable.append(".exe");
 
   if(QFileInfo(executable).isExecutable())
-    QProcess::startDetached
+    result = QProcess::startDetached
       (QString("\"%1\"").arg(executable), QStringList(), m_destination);
   else
     append(tr("<font color='darkred'>The file %1 is not an executable. "
 	      "Cannot launch.</font>").arg(executable));
 #else
   if(QFileInfo(executable).isExecutable())
-    QProcess::startDetached(executable, QStringList(), m_destination);
+    result = QProcess::startDetached(executable, QStringList(), m_destination);
   else
     append(tr("<font color='darkred'>The file %1 is not an executable. "
 	      "Cannot launch.</font>").arg(executable));
 #endif
+
+  if(result)
+    append(tr("<font color='darkgreen'>The program %1 was launched.</font>").
+	   arg(executable));
+  else
+    append
+      (tr("<font color='darkred'>The program %1 was not launched.</font>").
+       arg(executable));
 }
 
 void qup_page::slot_parse_instruction_file(void)
