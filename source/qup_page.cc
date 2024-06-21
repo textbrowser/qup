@@ -363,6 +363,8 @@ void qup_page::gather_files
 
       if(file_information.isFile())
 	{
+	  QString file_name
+	    (file_information.absoluteFilePath().remove(destination_path));
 	  QVector<QString> vector(static_cast<int> (FilesColumns::XYZ));
 
 	  {
@@ -384,7 +386,7 @@ void qup_page::gather_files
 	    QFile file;
 
 	    file.setFileName
-	      (local_path + QDir::separator() + file_information.fileName());
+	      (local_path + QDir::separator() + file_name);
 
 	    if(file.open(QIODevice::ReadOnly))
 	      {
@@ -402,7 +404,7 @@ void qup_page::gather_files
 	    QString::number(file_information.permissions());
 
 	  QFileInfo temporary_file_information
-	    (local_path + QDir::separator() + file_information.fileName());
+	    (local_path + QDir::separator() + file_name);
 
 	  vector[static_cast<int> (FilesColumns::TemporaryFileName)] =
 	    temporary_file_information.absoluteFilePath();
@@ -904,6 +906,10 @@ void qup_page::slot_populate_files_table
 
   auto const &h = m_ui.files->horizontalScrollBar()->value();
   auto const &v = m_ui.files->verticalScrollBar()->value();
+  auto const &selected_file_name
+    (m_ui.files->selectionModel()->
+     selectedRows(static_cast<int> (FilesColumns::LocalFileName)).
+     value(0).data().toString());
 
   m_ui.files->setRowCount(data.size());
   m_ui.files->setSortingEnabled(false);
@@ -916,9 +922,13 @@ void qup_page::slot_populate_files_table
 	{
 	  auto item = new QTableWidgetItem(file.value(j));
 
-	  item->setFlags(Qt::ItemIsEnabled);
+	  item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
 	  item->setToolTip(item->text());
 	  m_ui.files->setItem(i, j, item);
+
+	  if(item->text() == selected_file_name &&
+	     j == static_cast<int> (FilesColumns::LocalFileName))
+	    m_ui.files->selectRow(i);
 	}
     }
 

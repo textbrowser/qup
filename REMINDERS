@@ -13,6 +13,7 @@ Completed Items
 - Icons for activities.
 - Interpret the instructions file.
 - Launch the executable. New widget(s).
+- List temporary files.
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
@@ -30,7 +31,6 @@ Maybe Items
 Remaining Items
 
 - Elegant permissions. Unix permissions require knowledge.
-- List temporary files.
 - Proxy.
 - Qt 5.5.1.
 - Swifty.
