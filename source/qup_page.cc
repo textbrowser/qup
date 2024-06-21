@@ -400,6 +400,14 @@ void qup_page::gather_files
 	    file_information.absoluteFilePath();
 	  vector[static_cast<int> (FilesColumns::LocalFilePermissions)] =
 	    QString::number(file_information.permissions());
+
+	  QFileInfo temporary_file_information
+	    (local_path + QDir::separator() + file_information.fileName());
+
+	  vector[static_cast<int> (FilesColumns::TemporaryFileName)] =
+	    temporary_file_information.absoluteFilePath();
+	  vector[static_cast<int> (FilesColumns::TemporaryFilePermissions)] =
+	    QString::number(temporary_file_information.permissions());
 	  data << vector;
 
 	  foreach(auto const &i, vector)
