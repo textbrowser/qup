@@ -1017,6 +1017,8 @@ void qup_page::slot_save_favorite(void)
       append
 	(tr("<font color='darkgreen'>The favorite %1 has been saved "
 	    "in the Qup INI file.</font>").arg(name));
+      m_destination = local_directory;
+      m_product = name;
       m_super_hash.clear();
       m_ui.install->setEnabled(false);
       m_ui.local_directory->setText(local_directory);
