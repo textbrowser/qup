@@ -348,8 +348,6 @@ void qup_page::gather_files
  const QString &destination_path,
  const QString &local_path)
 {
-  Q_UNUSED(local_path);
-
   QCryptographicHash sha3_512(QCryptographicHash::Sha3_512);
   QDirIterator it
     (destination_path,
@@ -378,6 +376,23 @@ void qup_page::gather_files
 	      }
 
 	    vector[static_cast<int> (FilesColumns::LocalFileDigest)] =
+	      sha3_256.result().toHex();
+	  }
+
+	  {
+	    QCryptographicHash sha3_256(QCryptographicHash::Sha3_256);
+	    QFile file;
+
+	    file.setFileName
+	      (local_path + QDir::separator() + file_information.fileName());
+
+	    if(file.open(QIODevice::ReadOnly))
+	      {
+		sha3_256.addData(&file);
+		file.close();
+	      }
+
+	    vector[static_cast<int> (FilesColumns::TemporaryFileDigest)] =
 	      sha3_256.result().toHex();
 	  }
 
