@@ -916,6 +916,8 @@ void qup_page::slot_populate_files_table
 
   for(int i = 0; i < data.size(); i++)
     {
+      QTableWidgetItem *item_digest_1 = nullptr;
+      QTableWidgetItem *item_digest_2 = nullptr;
       auto const &file(data.at(i));
 
       for(int j = 0; j < m_ui.files->columnCount(); j++)
@@ -929,6 +931,19 @@ void qup_page::slot_populate_files_table
 	  if(item->text() == selected_file_name &&
 	     j == static_cast<int> (FilesColumns::LocalFileName))
 	    m_ui.files->selectRow(i);
+
+	  if(j == static_cast<int> (FilesColumns::LocalFileDigest))
+	    item_digest_1 = item;
+	  else if(j == static_cast<int> (FilesColumns::TemporaryFileDigest))
+	    item_digest_2 = item;
+
+	  if(item_digest_1 &&
+	     item_digest_2 &&
+	     item_digest_1->text() != item_digest_2->text())
+	    {
+	      item_digest_1->setBackground(QColor(240, 128, 128));
+	      item_digest_2->setBackground(item_digest_1->background());
+	    }
 	}
     }
 

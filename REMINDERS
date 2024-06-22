@@ -9,6 +9,7 @@ Completed Items
 - Download items.
 - Exiting during an update.
 - Geometry.
+- Highlight incorrect digests.
 - Highlight problematic product directory widget.
 - Icons for activities.
 - Interpret the instructions file.
@@ -30,8 +31,8 @@ Maybe Items
 
 Remaining Items
 
+- Automation.
 - Elegant permissions. Unix permissions require knowledge.
-- Highlight digests.
 - Proxy.
 - Qt 5.5.1.
 - Swifty.
