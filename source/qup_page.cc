@@ -756,6 +756,12 @@ void qup_page::slot_parse_instruction_file(void)
 
 	      if(p.first == "file")
 		{
+#if defined(Q_OS2) || defined(Q_OS_WINDOWS)
+#else
+		  if(p.second.toLower().endsWith(".dll"))
+		    continue;
+#endif
+
 		  FileInformation file_information;
 
 		  file_information.m_executable = false;
