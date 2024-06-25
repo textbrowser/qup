@@ -716,17 +716,34 @@ void qup_page::slot_parse_instruction_file(void)
     {
       QHash<QString, qup_page::FileInformation> files;
       QString file_destination("");
+      QString line("");
       QTextStream stream(&file);
       auto general = false;
       auto unix = false;
 
       while(!stream.atEnd())
 	{
-	  auto line(stream.readLine().trimmed());
+	  if(line.endsWith('\\'))
+	    {
+	      auto l(stream.readLine().trimmed());
+	      auto const &p = l.indexOf('#');
+
+	      if(p >= 0)
+		l = l.mid(0, p).trimmed();
+
+	      line.remove('\\');
+	      line.append(l);
+	    }
+	  else
+	    line = stream.readLine().trimmed();
+
 	  auto const &position = line.indexOf('#');
 
-	  if(position > 0)
-	    line = line.mid(0, position);
+	  if(position >= 0)
+	    line = line.mid(0, position).trimmed();
+
+	  if(line.endsWith('\\') || line.isEmpty())
+	    continue;
 
 	  if(line == "[General]")
 	    {
