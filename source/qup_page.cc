@@ -248,22 +248,17 @@ void qup_page::copy_files
 	}
       else
 	{
-	  auto destination(destination_path);
+	  QString destination("");
 
+	  destination.append(destination_path);
 	  destination.append(QDir::separator());
-	  destination.append(file_information.dir().dirName());
-
-	  if(QFileInfo(destination).isDir())
-	    destination.append(QDir::separator());
-	  else
-	    destination = destination_path + QDir::separator();
-
-	  QString text("");
-
-	  destination.append(file_information.fileName());
+	  destination.append
+	    (file_information.absoluteFilePath().remove(local_path));
 
 	  if(QFileInfo(destination).exists())
 	    QFile::remove(destination);
+
+	  QString text("");
 
 	  text.append
 	    (tr("Copying %1 to %2... ").
