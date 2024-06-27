@@ -140,7 +140,6 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
      "QToolButton::menu-button {border: none;}"
      "QToolButton::menu-indicator {image: none;}");
 #endif
-  m_ui.install->setEnabled(false);
   m_ui.refresh->setIcon(QIcon::fromTheme("view-refresh"));
   m_ui.reset->setIcon(QIcon::fromTheme("edit-reset"));
   m_ui.select_local_directory->setIcon(QIcon::fromTheme("document-open"));
@@ -230,7 +229,8 @@ void qup_page::copy_files
 	  auto destination(destination_path);
 
 	  destination.append(QDir::separator());
-	  destination.append(file_information.fileName());
+	  destination.append
+	    (file_information.absoluteFilePath().remove(local_path));
 
 	  if(!QFileInfo(destination).exists())
 	    {
@@ -471,7 +471,6 @@ void qup_page::slot_copy_files(void)
     (tr("<font color='darkgreen'>You may now install %1!</font>").
      arg(m_product));
   launch_file_gatherer();
-  m_ui.install->setEnabled(true);
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -589,7 +588,6 @@ void qup_page::slot_download(void)
   m_instruction_file_reply_data.clear();
   m_ok = true;
   m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
-  m_ui.install->setEnabled(false);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::finished,
 	  this,
@@ -905,7 +903,6 @@ void qup_page::slot_populate_favorite(void)
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
   m_ui.files->setRowCount(0);
   m_ui.files->sortByColumn(0, Qt::AscendingOrder);
-  m_ui.install->setEnabled(false);
   m_ui.local_directory->setText
     (settings.value("local-directory").toString().trimmed());
   m_ui.operating_system->setCurrentIndex
@@ -1080,7 +1077,6 @@ void qup_page::slot_save_favorite(void)
       m_destination = local_directory;
       m_product = name;
       m_super_hash.clear();
-      m_ui.install->setEnabled(false);
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
       emit product_name_changed(m_ui.favorite_name->text());
