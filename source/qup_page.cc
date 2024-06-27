@@ -331,7 +331,8 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
       reply->setProperty
 	(PropertyNames::DestinationFile, dot ? it.key() : file_destination);
       reply->setProperty(PropertyNames::Executable, it.value().m_executable);
-      reply->setProperty(PropertyNames::FileName, it.key());
+      reply->setProperty
+	(PropertyNames::FileName, QFileInfo(it.key()).fileName());
       connect(reply,
 	      &QNetworkReply::finished,
 	      this,
@@ -792,11 +793,32 @@ void qup_page::slot_parse_instruction_file(void)
 		  ** Begin the download(s).
 		  */
 
-		  download_files
-		    (files,
-		     file_destination, // Directory.
-		     "",
-		     QUrl::fromUserInput(p.second));
+		  if(file_destination.isEmpty())
+		    {
+		      QHashIterator<QString, qup_page::FileInformation> it
+			(files);
+
+		      while(it.hasNext())
+			{
+			  it.next();
+
+			  QHash<QString, qup_page::FileInformation> f;
+
+			  f[it.key()] = it.value();
+			  download_files
+			    (f,
+			     QFileInfo(it.key()).path(),     // Directory
+			     QFileInfo(it.key()).fileName(), // File
+			     QUrl::fromUserInput(p.second));
+			}
+		    }
+		  else
+		    download_files
+		      (files,
+		       file_destination, // Directory
+		       "",
+		       QUrl::fromUserInput(p.second));
+
 		  file_destination.clear();
 		  files.clear();
 		  general = false;
@@ -846,7 +868,7 @@ void qup_page::slot_parse_instruction_file(void)
 
 		  download_files
 		    (files,
-		     "", // Directory.
+		     "", // Directory
 		     file_destination,
 		     QUrl::fromUserInput(p.second));
 		  file_destination.clear();
