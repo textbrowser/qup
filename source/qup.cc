@@ -37,6 +37,7 @@ QString qup::VERSION = "2024.07.04";
 
 qup::qup(void):QMainWindow()
 {
+  m_ui.setupUi(this);
   m_about.setIconPixmap
     (QPixmap(":/qup_large.png").scaled(QSize(256, 256),
 				       Qt::KeepAspectRatio,
@@ -62,7 +63,6 @@ qup::qup(void):QMainWindow()
   m_about.setWindowIcon(windowIcon());
   m_about.setWindowModality(Qt::NonModal);
   m_about.setWindowTitle(tr("Qup: About"));
-  m_ui.setupUi(this);
   connect(m_ui.action_about,
 	  &QAction::triggered,
 	  this,
