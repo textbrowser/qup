@@ -458,7 +458,7 @@ void qup_page::gather_files
 	  vector[static_cast<int> (FilesColumns::TemporaryFileName)] =
 	    temporary_file_information.absoluteFilePath();
 	  vector[static_cast<int> (FilesColumns::TemporaryFilePermissions)] =
-	    QString::number(temporary_file_information.permissions());
+	    permissions_as_string(temporary_file_information.permissions());
 	  data << vector;
 
 	  foreach(auto const &i, vector)
@@ -1024,7 +1024,16 @@ void qup_page::slot_populate_files_table
 
 	  if(j == static_cast<int> (FilesColumns::LocalFileDigest))
 	    item_digest_1 = item;
-	  else if(j == static_cast<int> (FilesColumns::TemporaryFileDigest))
+
+	  if(j == static_cast<int> (FilesColumns::LocalFilePermissions) ||
+	     j == static_cast<int> (FilesColumns::TemporaryFilePermissions))
+	    {
+	      QFont font("Courier");
+
+	      item->setFont(font);
+	    }
+
+	  if(j == static_cast<int> (FilesColumns::TemporaryFileDigest))
 	    item_digest_2 = item;
 
 	  if(item_digest_1 &&
