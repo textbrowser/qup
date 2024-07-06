@@ -191,8 +191,53 @@ QString qup_page::executable_suffix(void) const
 QString qup_page::permissions_as_string
 (const QFileDevice::Permissions permissions)
 {
-  QString string("");
-  Q_UNUSED(permissions);
+  QString string("%1%2%3:%4%5%6:%7%8%9"); // Owner:Group:Other
+
+  if(permissions & QFileDevice::ExeGroup)
+    string.replace("%6", "x");
+  else
+    string.replace("%6", "-");
+
+  if(permissions & QFileDevice::ExeOther)
+    string.replace("%9", "x");
+  else
+    string.replace("%9", "-");
+
+  if(permissions & QFileDevice::ExeOwner)
+    string.replace("%3", "x");
+  else
+    string.replace("%3", "-");
+
+  if(permissions & QFileDevice::ReadGroup)
+    string.replace("%4", "r");
+  else
+    string.replace("%4", "-");
+
+  if(permissions & QFileDevice::ReadOther)
+    string.replace("%7", "r");
+  else
+    string.replace("%7", "-");
+
+  if(permissions & QFileDevice::ReadOwner)
+    string.replace("%1", "r");
+  else
+    string.replace("%1", "-");
+
+  if(permissions & QFileDevice::WriteGroup)
+    string.replace("%5", "w");
+  else
+    string.replace("%5", "-");
+
+  if(permissions & QFileDevice::WriteOther)
+    string.replace("%8", "w");
+  else
+    string.replace("%8", "-");
+
+  if(permissions & QFileDevice::WriteOwner)
+    string.replace("%2", "w");
+  else
+    string.replace("%2", "-");
+
   return string;
 }
 

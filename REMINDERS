@@ -7,6 +7,7 @@ Completed Items
 - Delete downloaded files after a proper installation? No.
 - Delete favorite.
 - Download items.
+- Elegant permissions.
 - Exiting during an update.
 - Geometry.
 - Highlight incorrect digests.
@@ -32,7 +33,6 @@ Maybe Items
 Remaining Items
 
 - Automation.
-- Elegant permissions. Unix permissions require knowledge.
 - Interrupt?
 - Mention invalid digests.
 - Proxy.
