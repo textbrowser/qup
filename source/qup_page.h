@@ -28,6 +28,7 @@
 #ifndef _qup_page_h_
 #define _qup_page_h_
 
+#include <QFileDevice>
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QNetworkAccessManager>
@@ -44,6 +45,8 @@ class qup_page: public QWidget
   qup_page(QWidget *parent);
   ~qup_page();
   bool active(void) const;
+  static QString permissions_as_string
+    (const QFileDevice::Permissions permissions);
 
  public slots:
   void slot_populate_favorites(void);

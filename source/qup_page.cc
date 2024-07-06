@@ -188,6 +188,14 @@ QString qup_page::executable_suffix(void) const
     return "";
 }
 
+QString qup_page::permissions_as_string
+(const QFileDevice::Permissions permissions)
+{
+  QString string("");
+  Q_UNUSED(permissions);
+  return string;
+}
+
 bool qup_page::active(void) const
 {
   return m_copy_files_future.isRunning() ||
@@ -397,7 +405,7 @@ void qup_page::gather_files
 	  vector[static_cast<int> (FilesColumns::LocalFileName)] =
 	    file_information.absoluteFilePath();
 	  vector[static_cast<int> (FilesColumns::LocalFilePermissions)] =
-	    QString::number(file_information.permissions());
+	    permissions_as_string(file_information.permissions());
 
 	  QFileInfo temporary_file_information
 	    (local_path + QDir::separator() + file_name);
