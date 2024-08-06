@@ -275,7 +275,7 @@ void qup_page::copy_files
     {
       it.next();
 
-      auto const &file_information(it.fileInfo());
+      auto const file_information(it.fileInfo());
 
       if(file_information.isDir())
 	{
@@ -408,7 +408,7 @@ void qup_page::gather_files
     {
       it.next();
 
-      auto const &file_information(it.fileInfo());
+      auto const file_information(it.fileInfo());
 
       if(file_information.isFile())
 	{
@@ -523,7 +523,7 @@ void qup_page::slot_copy_files(void)
 
 void qup_page::slot_delete_favorite(void)
 {
-  auto const &name(m_ui.favorite_name->text().trimmed());
+  auto const name(m_ui.favorite_name->text().trimmed());
 
   if(name.isEmpty())
     return;
@@ -572,7 +572,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto const &local_directory(m_ui.local_directory->text().trimmed());
+  auto const local_directory(m_ui.local_directory->text().trimmed());
 
   if(local_directory.isEmpty())
     {
@@ -582,7 +582,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto const &name(m_ui.favorite_name->text().trimmed());
+  auto const name(m_ui.favorite_name->text().trimmed());
 
   if(name.isEmpty())
     {
@@ -591,7 +591,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto const &url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
+  auto const url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
 
   if(url.isEmpty() || url.isValid() == false)
     {
@@ -811,8 +811,8 @@ void qup_page::slot_parse_instruction_file(void)
 
 	  if(general)
 	    {
-	      auto const &list(line.split('='));
-	      auto const &p
+	      auto const list(line.split('='));
+	      auto const p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
 	      if(p.first.isEmpty() || p.second.isEmpty())
@@ -872,8 +872,8 @@ void qup_page::slot_parse_instruction_file(void)
 	    }
 	  else if(unix)
 	    {
-	      auto const &list(line.split('='));
-	      auto const &p
+	      auto const list(line.split('='));
+	      auto const p
 		(qMakePair(list.value(0).trimmed(), list.value(1).trimmed()));
 
 	      if(p.first.isEmpty() || p.second.isEmpty())
@@ -996,7 +996,7 @@ void qup_page::slot_populate_files_table
 
   auto const h = m_ui.files->horizontalScrollBar()->value();
   auto const v = m_ui.files->verticalScrollBar()->value();
-  auto const &selected_file_name
+  auto const selected_file_name
     (m_ui.files->selectionModel()->
      selectedRows(static_cast<int> (FilesColumns::LocalFileName)).
      value(0).data().toString());
@@ -1008,7 +1008,7 @@ void qup_page::slot_populate_files_table
     {
       QTableWidgetItem *item_digest_1 = nullptr;
       QTableWidgetItem *item_digest_2 = nullptr;
-      auto const &file(data.at(i));
+      auto const file(data.at(i));
 
       for(int j = 0; j < m_ui.files->columnCount(); j++)
 	{
@@ -1102,10 +1102,10 @@ void qup_page::slot_reply_finished(void)
 
 void qup_page::slot_save_favorite(void)
 {
-  auto const &local_directory
+  auto const local_directory
     (QDir::cleanPath(m_ui.local_directory->text().trimmed()));
-  auto const &name(m_ui.favorite_name->text().trimmed());
-  auto const &url(m_ui.qup_txt_location->text().trimmed());
+  auto const name(m_ui.favorite_name->text().trimmed());
+  auto const url(m_ui.qup_txt_location->text().trimmed());
 
   if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
     {
