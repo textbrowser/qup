@@ -452,7 +452,7 @@ void qup_page::gather_files
 	  vector[static_cast<int> (FilesColumns::LocalFilePermissions)] =
 	    permissions_as_string(file_information.permissions());
 
-	  QFileInfo temporary_file_information
+	  QFileInfo const temporary_file_information
 	    (local_path + QDir::separator() + file_name);
 
 	  vector[static_cast<int> (FilesColumns::TemporaryFileName)] =
@@ -1244,7 +1244,7 @@ void qup_page::slot_write_instruction_file_data(void)
   if(m_instruction_file_reply_data.trimmed().endsWith(s_end_of_file))
     {
       QFile file(m_qup_txt_file_name);
-      QFileInfo file_information(m_qup_txt_file_name);
+      QFileInfo const file_information(m_qup_txt_file_name);
 
       if(file.open(QIODevice::Text |
 		   QIODevice::Truncate |
