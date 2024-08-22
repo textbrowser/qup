@@ -45,8 +45,6 @@ class qup_page: public QWidget
   qup_page(QWidget *parent);
   ~qup_page();
   bool active(void) const;
-  static QString permissions_as_string
-    (const QFileDevice::Permissions permissions);
 
  public slots:
   void slot_populate_favorites(void);
@@ -87,6 +85,9 @@ class qup_page: public QWidget
   Ui_qup_page m_ui;
   bool m_ok;
   QString executable_suffix(void) const;
+  static QUrl string_as_url(const QString &s);
+  static QString permissions_as_string
+    (const QFileDevice::Permissions permissions);
   void closeEvent(QCloseEvent *event);
   void copy_files
     (const QString &destination_path, const QString &local_path);

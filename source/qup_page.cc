@@ -241,6 +241,26 @@ QString qup_page::permissions_as_string
   return string;
 }
 
+QUrl qup_page::string_as_url(const QString &s)
+{
+  auto string(s.trimmed());
+
+  while(string.contains("//"))
+    string.replace("//", "/");
+
+  if(string.endsWith("/"))
+    string = string.mid(0, string.length() - 1);
+
+  if(string.startsWith("ftp:/"))
+    string.replace(0, 5, "ftp://");
+  else if(string.startsWith("http:/"))
+    string.replace(0, 6, "http://");
+  else if(string.startsWith("https:/"))
+    string.replace(0, 7, "https://");
+
+  return QUrl::fromUserInput(string);
+}
+
 bool qup_page::active(void) const
 {
   return m_copy_files_future.isRunning() ||
@@ -372,7 +392,7 @@ void qup_page::download_files(const QHash<QString, FileInformation> &files,
       remote_file_name.append(it.key());
       append(tr("Downloading %1.").arg(remote_file_name));
       reply = m_network_access_manager.get
-	(QNetworkRequest(QUrl::fromUserInput(remote_file_name)));
+	(QNetworkRequest(string_as_url(remote_file_name)));
       reply->ignoreSslErrors();
       reply->setProperty
 	(PropertyNames::DestinationDirectory, dot ? "" : directory_destination);
@@ -591,7 +611,7 @@ void qup_page::slot_download(void)
       return;
     }
 
-  auto const url(QUrl::fromUserInput(m_ui.qup_txt_location->text().trimmed()));
+  auto const url(string_as_url(m_ui.qup_txt_location->text().trimmed()));
 
   if(url.isEmpty() || url.isValid() == false)
     {
@@ -855,7 +875,7 @@ void qup_page::slot_parse_instruction_file(void)
 			    (f,
 			     QFileInfo(it.key()).path(),     // Directory
 			     QFileInfo(it.key()).fileName(), // File
-			     QUrl::fromUserInput(p.second));
+			     string_as_url(p.second));
 			}
 		    }
 		  else
@@ -863,7 +883,7 @@ void qup_page::slot_parse_instruction_file(void)
 		      (files,
 		       file_destination, // Directory
 		       "",
-		       QUrl::fromUserInput(p.second));
+		       string_as_url(p.second));
 
 		  file_destination.clear();
 		  files.clear();
@@ -916,7 +936,7 @@ void qup_page::slot_parse_instruction_file(void)
 		    (files,
 		     "", // Directory
 		     file_destination,
-		     QUrl::fromUserInput(p.second));
+		     string_as_url(p.second));
 		  file_destination.clear();
 		  files.clear();
 		  unix = false;
