@@ -131,7 +131,7 @@ void qup::closeEvent(QCloseEvent *event)
       message.addButton(tr("No"), QMessageBox::NoRole);
       message.setIcon(QMessageBox::Question);
       message.setText(tr("Active processes are present. Interrupt?"));
-      message.setWindowTitle(tr("Qup: Question"));
+      message.setWindowTitle(tr("Qup: Confirmation"));
       yes = message.addButton(tr("Yes"), QMessageBox::YesRole);
       yes_all = message.addButton(tr("Yes (All)"), QMessageBox::YesRole);
 
@@ -141,14 +141,19 @@ void qup::closeEvent(QCloseEvent *event)
 
 	  if(page && page->active())
 	    {
-	      if(message.clickedButton() == nullptr ||
-		 message.clickedButton() == yes)
-		message.exec();
+	      auto button = message.clickedButton();
 
-	      if(message.clickedButton() == yes ||
-		 message.clickedButton() == yes_all)
+	      if(button == nullptr || button == yes)
+		{
+		  message.exec();
+		  QApplication::processEvents();
+		}
+
+	      button = message.clickedButton();
+
+	      if(button == yes || button == yes_all)
 		page->interrupt();
-	      else if(message.clickedButton() != nullptr)
+	      else if(button != nullptr)
 		{
 		  event->ignore();
 		  return;
@@ -175,11 +180,24 @@ void qup::close_page(QWidget *widget)
 
   if(page->active())
     {
-      auto text(m_ui.pages->tabText(m_ui.pages->indexOf(page)));
+      m_ui.pages->setCurrentIndex(m_ui.pages->indexOf(page));
 
-      statusBar()->showMessage
-	(tr("Cannot close an active page (%1).").arg(text), 3500);
-      return;
+      QMessageBox mb(this);
+
+      mb.setIcon(QMessageBox::Question);
+      mb.setStandardButtons(QMessageBox::No | QMessageBox::Yes);
+      mb.setText(tr("Interrupt processes?"));
+      mb.setWindowIcon(windowIcon());
+      mb.setWindowModality(Qt::ApplicationModal);
+      mb.setWindowTitle(tr("Qup: Confirmation"));
+
+      if(mb.exec() == QMessageBox::No)
+	{
+	  QApplication::processEvents();
+	  return;
+	}
+
+      page->interrupt();
     }
 
   m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);

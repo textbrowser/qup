@@ -502,6 +502,7 @@ void qup_page::interrupt(void)
   m_copy_files_future.waitForFinished();
   m_populate_files_table_future.cancel();
   m_populate_files_table_future.waitForFinished();
+  qDebug() << tr("Interrupted.");
 }
 
 void qup_page::launch_file_gatherer(void)
@@ -856,7 +857,7 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 #if defined(Q_OS2) || defined(Q_OS_WINDOWS)
 #else
-		  if(p.second.toLower().endsWith(".dll"))
+		  if(p.second.toLower().endsWith(".dll1"))
 		    continue;
 #endif
 
@@ -1102,11 +1103,16 @@ void qup_page::slot_reply_finished(void)
 
   if(reply->error() != QNetworkReply::NoError)
     {
-      QFile::remove
+      auto property
 	(reply->property(PropertyNames::AbsoluteFilePath).toString());
+
+      if(!property.isEmpty())
+	QFile::remove(property);
+
       append
 	(tr("<font color='darkred'>An error occurred while downloading %1."
-	    "</font>").arg(reply->property("file_name").toString()));
+	    "</font>").
+	 arg(reply->property(PropertyNames::FileName).toString()));
       m_ok = false;
     }
   else
