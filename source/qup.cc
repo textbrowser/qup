@@ -106,7 +106,7 @@ QString qup::home_path(void)
 #endif
   else
     {
-      static auto r
+      static auto const r
 	(QRegularExpression(QString("[%1%1]+").arg(QDir::separator())));
 
       home_path.replace(r, QDir::separator());
@@ -120,22 +120,44 @@ QString qup::home_path(void)
 
 void qup::closeEvent(QCloseEvent *event)
 {
-  if(event)
-    for(int i = 0; i < m_ui.pages->count(); i++)
-      {
-	auto page = qobject_cast<qup_page *> (m_ui.pages->widget(i));
+  if(event && m_ui.pages->count() == 0)
+    event->accept();
+  else if(event && m_ui.pages->count() > 0)
+    {
+      QMessageBox message(this);
+      QPushButton *yes = nullptr;
+      QPushButton *yes_all = nullptr;
 
-	if(page && page->active())
-	  {
-	    event->ignore();
+      message.addButton(tr("No"), QMessageBox::NoRole);
+      message.setIcon(QMessageBox::Question);
+      message.setText(tr("Active processes are present. Interrupt?"));
+      message.setWindowTitle(tr("Qup: Question"));
+      yes = message.addButton(tr("Yes"), QMessageBox::YesRole);
+      yes_all = message.addButton(tr("Yes (All)"), QMessageBox::YesRole);
 
-	    auto text(m_ui.pages->tabText(m_ui.pages->indexOf(page)));
+      for(int i = 0; i < m_ui.pages->count(); i++)
+	{
+	  auto page = qobject_cast<qup_page *> (m_ui.pages->widget(i));
 
-	    statusBar()->showMessage
-	      (tr("Cannot close an active page (%1).").arg(text), 3500);
-	    return;
-	  }
-      }
+	  if(page && page->active())
+	    {
+	      if(message.clickedButton() == nullptr ||
+		 message.clickedButton() == yes)
+		message.exec();
+
+	      if(message.clickedButton() == yes ||
+		 message.clickedButton() == yes_all)
+		page->interrupt();
+	      else if(message.clickedButton() != nullptr)
+		{
+		  event->ignore();
+		  return;
+		}
+	    }
+	}
+
+      event->accept();
+    }
 
   QSettings settings;
 

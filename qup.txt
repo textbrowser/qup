@@ -9,7 +9,7 @@ file = REMINDERS
 file_destination = .
 url = https://github.com/textbrowser/qup/releases/download/qup
 
-[MacOS Intel]
+[MacOS]
 
 executable = Qup_Intel.app.zip
 local_executable = Qup.app

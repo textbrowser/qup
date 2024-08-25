@@ -14,6 +14,7 @@ Completed Items
 - Highlight problematic product directory widget.
 - Icons for activities.
 - Interpret the instructions file.
+- Interrupt.
 - Launch the executable. New widget(s).
 - List temporary files.
 - Multiple download pages.
@@ -33,7 +34,6 @@ Maybe Items
 Remaining Items
 
 - Automation.
-- Interrupt?
 - Mention invalid digests.
 - Proxy.
 - Qt 5.5.1.

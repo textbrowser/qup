@@ -486,8 +486,22 @@ void qup_page::gather_files
 	}
     }
 
-  if(sha3_512.result() != super_hash)
+  if(m_populate_files_table_future.isCanceled() == false &&
+     sha3_512.result() != super_hash)
     emit files_gathered(sha3_512.result(), data);
+}
+
+void qup_page::interrupt(void)
+{
+  foreach(auto reply,
+	  m_network_access_manager.findChildren<QNetworkReply *> ())
+    if(reply)
+      reply->abort();
+
+  m_copy_files_future.cancel();
+  m_copy_files_future.waitForFinished();
+  m_populate_files_table_future.cancel();
+  m_populate_files_table_future.waitForFinished();
 }
 
 void qup_page::launch_file_gatherer(void)
