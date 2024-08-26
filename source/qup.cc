@@ -34,6 +34,7 @@
 #include "qup_page.h"
 
 QString qup::VERSION = "2024.07.04";
+static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
 qup::qup(void):QMainWindow()
 {
@@ -49,13 +50,15 @@ qup::qup(void):QMainWindow()
 	"Qup is software management made easy.<br>"
 	"Made with love by textbrowser.<br><br>"
 	"Architecture: %2.<br>"
-	"Product: %3.<br>"
-	"Qt version %4 (runtime version %5).<br><br>"
+	"Compiled On: %3.<br>"
+	"Product: %4.<br>"
+	"Qt version %5 (runtime version %6).<br><br>"
 	"Please visit "
 	"<a href=\"https://textbrowser.github.io/qup\">"
 	"https://textbrowser.github.io/qup</a> for more details.").
      arg(VERSION).
      arg(QSysInfo::currentCpuArchitecture()).
+     arg(COMPILED_ON).
      arg(QSysInfo::prettyProductName()).
      arg(QT_VERSION_STR).
      arg(qVersion()));
