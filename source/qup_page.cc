@@ -1075,8 +1075,10 @@ void qup_page::slot_populate_files_table
 	     item_digest_2 &&
 	     item_digest_1->text() != item_digest_2->text())
 	    {
-	      item_digest_1->setBackground(QColor(240, 128, 128));
+	      item_digest_1->setBackground(QColor(255, 114, 118));
+	      item_digest_1->setForeground(QColor(Qt::white));
 	      item_digest_2->setBackground(item_digest_1->background());
+	      item_digest_2->setForeground(item_digest_1->foreground());
 	    }
 	}
     }
@@ -1205,7 +1207,7 @@ void qup_page::slot_select_local_directory(void)
 
 void qup_page::slot_timeout(void)
 {
-  QColor color(240, 128, 128); // Light coral!
+  QColor color(255, 114, 118); // Light Red!
   auto palette(m_ui.local_directory->palette());
 
   if(QFileInfo(m_ui.local_directory->text().trimmed()).isWritable())
