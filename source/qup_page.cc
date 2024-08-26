@@ -857,7 +857,7 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 #if defined(Q_OS2) || defined(Q_OS_WINDOWS)
 #else
-		  if(p.second.toLower().endsWith(".dll1"))
+		  if(p.second.toLower().endsWith(".dll"))
 		    continue;
 #endif
 
