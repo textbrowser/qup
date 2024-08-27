@@ -272,6 +272,10 @@ void qup::slot_new_page(void)
 	  &qup::populate_favorites,
 	  page,
 	  &qup_page::slot_populate_favorites);
+  connect(this,
+	  &qup::settings_applied,
+	  page,
+	  &qup_page::slot_settings_applied);
   m_ui.action_close_page->setEnabled(true);
   m_ui.pages->setCurrentIndex(m_ui.pages->addTab(page, tr("Download")));
 }
@@ -318,13 +322,15 @@ void qup::slot_select_color(void)
 	{
 	  INVALID_PROCESS_COLOR = dialog.selectedColor();
 	  settings.setValue
-	    ("invalid_process_color", button->text().remove('&'));
+	    ("invalid-process-color", button->text().remove('&'));
 	}
       else
 	{
 	  VALID_PROCESS_COLOR = dialog.selectedColor();
-	  settings.setValue("valid_process_color", button->text().remove('&'));
+	  settings.setValue("valid-process-color", button->text().remove('&'));
 	}
+
+      emit settings_applied();
     }
 }
 

@@ -49,6 +49,7 @@ class qup_page: public QWidget
 
  public slots:
   void slot_populate_favorites(void);
+  void slot_settings_applied(void);
 
  private:
   class FileInformation

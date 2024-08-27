@@ -62,6 +62,7 @@ class qup: public QMainWindow
 
  signals:
   void populate_favorites(void);
+  void settings_applied(void);
 };
 
 #endif

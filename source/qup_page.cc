@@ -37,6 +37,7 @@
 #include <QTimer>
 #include <QtConcurrent>
 
+#include "qup.h"
 #include "qup_page.h"
 
 class PropertyNames
@@ -1075,8 +1076,9 @@ void qup_page::slot_populate_files_table
 	     item_digest_2 &&
 	     item_digest_1->text() != item_digest_2->text())
 	    {
-	      item_digest_1->setBackground(QColor(255, 114, 118));
-	      item_digest_1->setForeground(QColor(Qt::white));
+	      item_digest_1->setBackground(qup::INVALID_PROCESS_COLOR);
+	      item_digest_1->setForeground
+		(qup::INVALID_PROCESS_COLOR.lighter());
 	      item_digest_2->setBackground(item_digest_1->background());
 	      item_digest_2->setForeground(item_digest_1->foreground());
 	    }
@@ -1205,14 +1207,18 @@ void qup_page::slot_select_local_directory(void)
     QApplication::processEvents();
 }
 
+void qup_page::slot_settings_applied(void)
+{
+}
+
 void qup_page::slot_timeout(void)
 {
-  QColor color(255, 114, 118); // Light Red!
+  QColor color(qup::INVALID_PROCESS_COLOR);
   auto palette(m_ui.local_directory->palette());
 
   if(QFileInfo(m_ui.local_directory->text().trimmed()).isWritable())
     {
-      color = QColor(144, 238, 144); // Light green!
+      color = qup::VALID_PROCESS_COLOR;
       m_ui.local_directory->setToolTip("");
     }
   else
