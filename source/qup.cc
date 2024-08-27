@@ -26,13 +26,17 @@
 */
 
 #include <QCloseEvent>
+#include <QColorDialog>
 #include <QDir>
+#include <QPainter>
 #include <QRegularExpression>
 #include <QSettings>
 
 #include "qup.h"
 #include "qup_page.h"
 
+QColor qup::INVALID_PROCESS_COLOR = QColor(255, 114, 118);
+QColor qup::VALID_PROCESS_COLOR = QColor(144, 238, 144);
 QString qup::VERSION = "2024.07.04";
 static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
@@ -66,6 +70,8 @@ qup::qup(void):QMainWindow()
   m_about.setWindowIcon(windowIcon());
   m_about.setWindowModality(Qt::NonModal);
   m_about.setWindowTitle(tr("Qup: About"));
+  assign_image(m_ui.process_invalid_color, INVALID_PROCESS_COLOR);
+  assign_image(m_ui.process_valid_color, VALID_PROCESS_COLOR);
   connect(m_ui.action_about,
 	  &QAction::triggered,
 	  this,
@@ -86,9 +92,20 @@ qup::qup(void):QMainWindow()
 	  SIGNAL(tabCloseRequested(int)),
 	  this,
 	  SLOT(slot_tab_close_requested(int)));
+  connect(m_ui.process_invalid_color,
+	  &QPushButton::clicked,
+	  this,
+	  &qup::slot_select_color);
+  connect(m_ui.process_valid_color,
+	  &QPushButton::clicked,
+	  this,
+	  &qup::slot_select_color);
   m_ui.action_close_page->setIcon(QIcon::fromTheme("window-close"));
   m_ui.action_new_page->setIcon(QIcon::fromTheme("document-new"));
+  m_ui.process_invalid_color->setText
+    (INVALID_PROCESS_COLOR.name(QColor::HexArgb));
   m_ui.temporary_directory->setText(QDir::tempPath());
+  m_ui.process_valid_color->setText(VALID_PROCESS_COLOR.name(QColor::HexArgb));
   restoreGeometry(QSettings().value("geometry").toByteArray());
   slot_new_page();
 }
@@ -119,6 +136,18 @@ QString qup::home_path(void)
 
       return home_path;
     }
+}
+
+void qup::assign_image(QPushButton *button, const QColor &color)
+{
+  if(!button)
+    return;
+
+  QImage image(QSize(16, 16), QImage::Format_RGB32);
+  QPainter painter(&image);
+
+  image.fill(color);
+  button->setIcon(QPixmap::fromImage(image));
 }
 
 void qup::closeEvent(QCloseEvent *event)
@@ -261,6 +290,42 @@ void qup::slot_product_name_changed(const QString &t)
 void qup::slot_quit(void)
 {
   close();
+}
+
+void qup::slot_select_color(void)
+{
+  if(!(m_ui.process_invalid_color == sender() ||
+       m_ui.process_valid_color == sender()))
+    return;
+
+  QColorDialog dialog(this);
+  auto button = qobject_cast<QPushButton *> (sender());
+
+  dialog.setCurrentColor(QColor(button->text().remove('&')));
+  dialog.setOption(QColorDialog::ShowAlphaChannel, true);
+  dialog.setWindowIcon(windowIcon());
+  QApplication::processEvents();
+
+  if(dialog.exec() == QDialog::Accepted)
+    {
+      QApplication::processEvents();
+      assign_image(button, dialog.selectedColor());
+      button->setText(dialog.selectedColor().name(QColor::HexArgb));
+
+      QSettings settings;
+
+      if(button == m_ui.process_invalid_color)
+	{
+	  INVALID_PROCESS_COLOR = dialog.selectedColor();
+	  settings.setValue
+	    ("invalid_process_color", button->text().remove('&'));
+	}
+      else
+	{
+	  VALID_PROCESS_COLOR = dialog.selectedColor();
+	  settings.setValue("valid_process_color", button->text().remove('&'));
+	}
+    }
 }
 
 void qup::slot_tab_close_requested(int index)

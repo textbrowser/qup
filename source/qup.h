@@ -39,8 +39,11 @@ class qup: public QMainWindow
  public:
   qup(void);
   ~qup();
+  static QColor INVALID_PROCESS_COLOR;
+  static QColor VALID_PROCESS_COLOR;
   static QString VERSION;
   static QString home_path(void);
+  static void assign_image(QPushButton *button, const QColor &color);
 
  private:
   QMessageBox m_about;
@@ -54,6 +57,7 @@ class qup: public QMainWindow
   void slot_new_page(void);
   void slot_product_name_changed(const QString &t);
   void slot_quit(void);
+  void slot_select_color(void);
   void slot_tab_close_requested(int index);
 
  signals:
