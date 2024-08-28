@@ -106,7 +106,7 @@ qup::qup(void):QMainWindow()
     (INVALID_PROCESS_COLOR.name(QColor::HexArgb));
   m_ui.temporary_directory->setText(QDir::tempPath());
   m_ui.process_valid_color->setText(VALID_PROCESS_COLOR.name(QColor::HexArgb));
-  restoreGeometry(QSettings().value("geometry").toByteArray());
+  restore_settings();
   slot_new_page();
 }
 
@@ -196,9 +196,7 @@ void qup::closeEvent(QCloseEvent *event)
       event->accept();
     }
 
-  QSettings settings;
-
-  settings.setValue("geometry", saveGeometry());
+  QSettings().setValue("geometry", saveGeometry());
   QMainWindow::closeEvent(event);
   QApplication::exit(0);
 }
@@ -235,6 +233,18 @@ void qup::close_page(QWidget *widget)
   m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
+}
+
+void qup::restore_settings(void)
+{
+  QColor color;
+  QSettings settings;
+
+  color = QColor(settings.value("invalid-process-color").toString().trimmed());
+  INVALID_PROCESS_COLOR = color.isValid() ? color : INVALID_PROCESS_COLOR;
+  color = QColor(settings.value("valid-process-color").toString().trimmed());
+  VALID_PROCESS_COLOR = color.isValid() ? color : VALID_PROCESS_COLOR;
+  restoreGeometry(settings.value("geometry").toByteArray());
 }
 
 void qup::slot_about(void)

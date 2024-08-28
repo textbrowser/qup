@@ -103,7 +103,7 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
   connect(m_ui.refresh,
 	  &QPushButton::clicked,
 	  this,
-	  &qup_page::launch_file_gatherer);
+	  &qup_page::slot_refresh);
   connect(m_ui.reset,
 	  &QPushButton::clicked,
 	  m_ui.activity,
@@ -1094,6 +1094,12 @@ void qup_page::slot_populate_files_table
   m_ui.files->verticalScrollBar()->setValue(v);
 }
 
+void qup_page::slot_refresh(void)
+{
+  m_super_hash.clear();
+  launch_file_gatherer();
+}
+
 void qup_page::slot_reply_finished(void)
 {
   auto reply = qobject_cast<QNetworkReply *> (sender());
@@ -1209,6 +1215,7 @@ void qup_page::slot_select_local_directory(void)
 
 void qup_page::slot_settings_applied(void)
 {
+  slot_refresh();
 }
 
 void qup_page::slot_timeout(void)

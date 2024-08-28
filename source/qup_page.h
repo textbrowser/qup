@@ -117,6 +117,7 @@ class qup_page: public QWidget
   void slot_populate_favorite(void);
   void slot_populate_files_table
     (const QByteArray &hash, const QVector<QVector<QString> > &data);
+  void slot_refresh(void);
   void slot_reply_finished(void);
   void slot_save_favorite(void);
   void slot_select_local_directory(void);

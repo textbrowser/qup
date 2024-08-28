@@ -50,6 +50,7 @@ class qup: public QMainWindow
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);
   void close_page(QWidget *widget);
+  void restore_settings(void);
 
  private slots:
   void slot_about(void);
