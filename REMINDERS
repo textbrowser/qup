@@ -20,6 +20,7 @@ Completed Items
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
 - Qt 6.5 LTS.
+- Resurface awesome colors.
 - Restore and retain favorites.
 - Save shortcut.
 - Show product name in tab title.
@@ -37,6 +38,5 @@ Remaining Items
 
 - Automation.
 - Qt 5.5.1.
-- Resurface awesome colors.
 - Sometimes, completed downloads do not energize notifications.
 - Swifty.
