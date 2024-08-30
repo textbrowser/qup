@@ -50,6 +50,7 @@ class qup: public QMainWindow
   Ui_qup m_ui;
   void closeEvent(QCloseEvent *event);
   void close_page(QWidget *widget);
+  void prepare_tabs_menu(void);
   void restore_settings(void);
 
  private slots:
@@ -59,6 +60,7 @@ class qup: public QMainWindow
   void slot_product_name_changed(const QString &t);
   void slot_quit(void);
   void slot_select_color(void);
+  void slot_select_page(void);
   void slot_tab_close_requested(int index);
 
  signals:

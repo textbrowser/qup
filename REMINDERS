@@ -25,6 +25,7 @@ Completed Items
 - Save shortcut.
 - Show product name in tab title.
 - Super-nested directories.
+- Tabs menu.
 - Tasked file copying.
 - Truncate new downloads.
 
@@ -40,4 +41,3 @@ Remaining Items
 - Qt 5.5.1.
 - Sometimes, completed downloads do not energize notifications.
 - Swifty.
-- Tabs menu.

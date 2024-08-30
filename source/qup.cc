@@ -102,6 +102,7 @@ qup::qup(void):QMainWindow()
 	  &qup::slot_select_color);
   m_ui.action_close_page->setIcon(QIcon::fromTheme("window-close"));
   m_ui.action_new_page->setIcon(QIcon::fromTheme("document-new"));
+  m_ui.menu_tabs->setStyleSheet("QMenu {menu-scrollable: 1;}");
   m_ui.process_invalid_color->setText
     (INVALID_PROCESS_COLOR.name(QColor::HexArgb));
   m_ui.temporary_directory->setText(QDir::tempPath());
@@ -233,6 +234,7 @@ void qup::close_page(QWidget *widget)
   m_ui.action_close_page->setEnabled(m_ui.pages->count() - 1 > 0);
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
+  prepare_tabs_menu();
 }
 
 void qup::restore_settings(void)
@@ -278,6 +280,10 @@ void qup::slot_new_page(void)
 	  SIGNAL(product_name_changed(const QString &)),
 	  this,
 	  SLOT(slot_product_name_changed(const QString &)));
+  connect(page->tabs_menu_action(),
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_select_page);
   connect(this,
 	  &qup::populate_favorites,
 	  page,
@@ -288,6 +294,7 @@ void qup::slot_new_page(void)
 	  &qup_page::slot_settings_applied);
   m_ui.action_close_page->setEnabled(true);
   m_ui.pages->setCurrentIndex(m_ui.pages->addTab(page, tr("Download")));
+  prepare_tabs_menu();
 }
 
 void qup::slot_product_name_changed(const QString &t)
@@ -344,7 +351,62 @@ void qup::slot_select_color(void)
     }
 }
 
+void qup::slot_select_page(void)
+{
+  auto action = qobject_cast<QAction *> (sender());
+
+  if(!action)
+    return;
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 4, 0))
+  m_ui.pages->setCurrentWidget(qobject_cast<QWidget *> (action->parent()));
+#else
+  m_ui.pages->setCurrentWidget(action->parentWidget());
+#endif
+}
+
 void qup::slot_tab_close_requested(int index)
 {
   close_page(m_ui.pages->widget(index));
+}
+
+void qup::prepare_tabs_menu(void)
+{
+  m_ui.menu_tabs->clear();
+
+  if(m_ui.pages->count() == 0)
+    {
+      m_ui.menu_tabs->setEnabled(false);
+      return;
+    }
+  else
+    m_ui.menu_tabs->setEnabled(true);
+
+  auto group = m_ui.menu_tabs->findChild<QActionGroup *> ();
+
+  if(!group)
+    group = new QActionGroup(m_ui.menu_tabs);
+
+  for(int i = 0; i < m_ui.pages->count(); i++)
+    {
+      auto page = qobject_cast<qup_page *> (m_ui.pages->widget(i));
+
+      if(page)
+	{
+	  auto action = page->tabs_menu_action();
+
+	  if(action)
+	    {
+	      action->setCheckable(true);
+	      m_ui.menu_tabs->addAction(action);
+
+	      if(i != m_ui.pages->currentIndex())
+		action->setChecked(false);
+	      else
+		action->setChecked(true);
+
+	      group->addAction(action);
+	    }
+	}
+    }
 }

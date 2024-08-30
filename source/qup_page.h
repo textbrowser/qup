@@ -44,6 +44,7 @@ class qup_page: public QWidget
  public:
   qup_page(QWidget *parent);
   ~qup_page();
+  QAction *tabs_menu_action(void) const;
   bool active(void) const;
   void interrupt(void);
 
@@ -70,6 +71,7 @@ class qup_page: public QWidget
     XYZ = TemporaryFileDigest + 1
   };
 
+  QAction *m_tabs_menu_action;
   QByteArray m_instruction_file_reply_data;
   QByteArray m_super_hash;
   QFuture<void> m_copy_files_future;

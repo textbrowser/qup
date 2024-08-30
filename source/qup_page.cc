@@ -65,6 +65,7 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
   m_copy_files_timer.setInterval(1500);
   m_copy_files_timer.setSingleShot(true);
   m_ok = true;
+  m_tabs_menu_action = new QAction(tr("Download"), this);
   m_ui.setupUi(this);
   QTimer::singleShot
     (s_populate_favorites_interval, this, &qup_page::slot_populate_favorites);
@@ -155,6 +156,11 @@ qup_page::~qup_page()
   m_populate_files_table_future.cancel();
   m_populate_files_table_future.waitForFinished();
   m_timer.stop();
+}
+
+QAction *qup_page::tabs_menu_action(void) const
+{
+  return m_tabs_menu_action;
 }
 
 QString qup_page::executable_suffix(void) const
@@ -984,6 +990,7 @@ void qup_page::slot_populate_favorite(void)
   m_path.append(settings.value("name").toString().trimmed());
   m_product = action->text();
   m_super_hash.clear();
+  m_tabs_menu_action->setText(settings.value("name").toString().trimmed());
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
   m_ui.files->setRowCount(0);
   m_ui.files->sortByColumn(0, Qt::AscendingOrder);
@@ -1184,6 +1191,7 @@ void qup_page::slot_save_favorite(void)
       m_destination = local_directory;
       m_product = name;
       m_super_hash.clear();
+      m_tabs_menu_action->setText(name);
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
       emit product_name_changed(m_ui.favorite_name->text());
