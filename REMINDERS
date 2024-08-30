@@ -24,6 +24,8 @@ Completed Items
 - Restore and retain favorites.
 - Save shortcut.
 - Show product name in tab title.
+- Sometimes, completed downloads do not energize notifications. Not a
+  problem.
 - Super-nested directories.
 - Tabs menu.
 - Tasked file copying.
@@ -39,5 +41,4 @@ Remaining Items
 
 - Automation.
 - Qt 5.5.1.
-- Sometimes, completed downloads do not energize notifications.
 - Swifty.

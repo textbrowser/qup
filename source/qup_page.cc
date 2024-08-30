@@ -1155,6 +1155,14 @@ void qup_page::slot_reply_finished(void)
     */
 
     m_copy_files_timer.start();
+  else
+    {
+      if(m_network_access_manager.
+	 findChildren<QNetworkReply *> ().size() - 1 <= 0)
+	append
+	  (tr("<font color='darkred'>Some of the files were not downloaded."
+	      "</font>"));
+    }
 }
 
 void qup_page::slot_save_favorite(void)
@@ -1282,12 +1290,8 @@ void qup_page::slot_write_file(void)
   reply->setProperty(PropertyNames::Read, true);
 
   if(file.open(flags) && reply->bytesAvailable() > 0)
-    {
-      append(tr("Writing data into %1.").arg(file.fileName()));
-
-      while(reply->bytesAvailable() > 0)
-	file.write(reply->readAll());
-    }
+    while(reply->bytesAvailable() > 0)
+      file.write(reply->readAll());
 }
 
 void qup_page::slot_write_instruction_file_data(void)
