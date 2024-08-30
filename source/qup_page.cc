@@ -1160,8 +1160,8 @@ void qup_page::slot_reply_finished(void)
       if(m_network_access_manager.
 	 findChildren<QNetworkReply *> ().size() - 1 <= 0)
 	append
-	  (tr("<font color='darkred'>Some of the files were not downloaded."
-	      "</font>"));
+	  (tr("<font color='darkred'>Some of the files were not downloaded. "
+	      "Please review.</font>"));
     }
 }
 
