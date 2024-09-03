@@ -1049,6 +1049,7 @@ void qup_page::slot_populate_files_table
 
   for(int i = 0; i < data.size(); i++)
     {
+      QString tool_tip("<html>");
       QTableWidgetItem *item_digest_1 = nullptr;
       QTableWidgetItem *item_digest_2 = nullptr;
       auto const file(data.at(i));
@@ -1058,7 +1059,6 @@ void qup_page::slot_populate_files_table
 	  auto item = new QTableWidgetItem(file.value(j));
 
 	  item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
-	  item->setToolTip(item->text());
 	  m_ui.files->setItem(i, j, item);
 
 	  if(item->text() == selected_file_name &&
@@ -1089,7 +1089,19 @@ void qup_page::slot_populate_files_table
 	      item_digest_2->setBackground(item_digest_1->background());
 	      item_digest_2->setForeground(item_digest_1->foreground());
 	    }
+
+	  tool_tip.append
+	    (QString("<b>%1:</b> %2").
+	     arg(m_ui.files->horizontalHeaderItem(j)->text()).
+	     arg(item->text()));
+	  tool_tip.append(j < m_ui.files->columnCount() - 1 ? "<br>" : "");
 	}
+
+      tool_tip.append("</html>");
+
+      for(int j = 0; j < m_ui.files->columnCount(); j++)
+	if(m_ui.files->item(i, j))
+	  m_ui.files->item(i, j)->setToolTip(tool_tip);
     }
 
   m_ui.files->horizontalScrollBar()->setValue(h);
