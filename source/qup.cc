@@ -34,10 +34,11 @@
 
 #include "qup.h"
 #include "qup_page.h"
+#include "qup_swifty.h"
 
 QColor qup::INVALID_PROCESS_COLOR = QColor(255, 114, 118);
 QColor qup::VALID_PROCESS_COLOR = QColor(144, 238, 144);
-QString qup::VERSION = "2024.07.04";
+QString qup::VERSION = "2024.09.15";
 static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
 qup::qup(void):QMainWindow()
@@ -48,28 +49,17 @@ qup::qup(void):QMainWindow()
 				       Qt::KeepAspectRatio,
 				       Qt::SmoothTransformation));
   m_about.setStandardButtons(QMessageBox::Close);
-  m_about.setText
-    (tr("<html>"
-	"<b>Qup Version %1</b><br><br>"
-	"Qup is software management made easy.<br>"
-	"Made with love by textbrowser.<br><br>"
-	"Architecture: %2.<br>"
-	"Compiled On: %3.<br>"
-	"Product: %4.<br>"
-	"Qt version %5 (runtime version %6).<br><br>"
-	"Please visit "
-	"<a href=\"https://textbrowser.github.io/qup\">"
-	"https://textbrowser.github.io/qup</a> for more details.").
-     arg(VERSION).
-     arg(QSysInfo::currentCpuArchitecture()).
-     arg(COMPILED_ON).
-     arg(QSysInfo::prettyProductName()).
-     arg(QT_VERSION_STR).
-     arg(qVersion()));
   m_about.setTextFormat(Qt::RichText);
   m_about.setWindowIcon(windowIcon());
   m_about.setWindowModality(Qt::NonModal);
   m_about.setWindowTitle(tr("Qup: About"));
+  m_swifty = new swifty
+    (VERSION,
+     "QString qup::VERSION = ",
+     QUrl::fromUserInput("https://raw.githubusercontent.com/"
+			 "textbrowser/qup/master/source/qup.cc"),
+     this);
+  m_swifty->download();
   assign_image(m_ui.process_invalid_color, INVALID_PROCESS_COLOR);
   assign_image(m_ui.process_valid_color, VALID_PROCESS_COLOR);
   connect(m_ui.action_about,
@@ -258,6 +248,26 @@ void qup::slot_about(void)
 	  Qt::UniqueConnection);
   m_about.button(QMessageBox::Close)->setShortcut(tr("Ctrl+W"));
   m_about.resize(m_about.sizeHint());
+  m_about.setText
+    (tr("<html>"
+	"<b>Qup Version %1</b><br>"
+	"The official version is <b>%2</b>.<br><br>"
+	"Qup is software management made easy.<br>"
+	"Made with love by textbrowser.<br><br>"
+	"Architecture: %3.<br>"
+	"Compiled On: %4.<br>"
+	"Product: %5.<br>"
+	"Qt version %6 (runtime version %7).<br><br>"
+	"Please visit "
+	"<a href=\"https://textbrowser.github.io/qup\">"
+	"https://textbrowser.github.io/qup</a> for more information.").
+     arg(VERSION).
+     arg(m_swifty->newest_version()).
+     arg(QSysInfo::currentCpuArchitecture()).
+     arg(COMPILED_ON).
+     arg(QSysInfo::prettyProductName()).
+     arg(QT_VERSION_STR).
+     arg(qVersion()));
   m_about.showNormal();
   m_about.activateWindow();
   m_about.raise();

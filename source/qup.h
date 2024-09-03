@@ -32,6 +32,8 @@
 
 #include "ui_qup.h"
 
+class swifty;
+
 class qup: public QMainWindow
 {
   Q_OBJECT
@@ -48,6 +50,7 @@ class qup: public QMainWindow
  private:
   QMessageBox m_about;
   Ui_qup m_ui;
+  swifty *m_swifty;
   void closeEvent(QCloseEvent *event);
   void close_page(QWidget *widget);
   void prepare_tabs_menu(void);

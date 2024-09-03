@@ -114,7 +114,9 @@ QMAKE_EXTRA_TARGETS += doxygen purge
 }
 
 FORMS       += ui/qup.ui ui/qup_page.ui
-HEADERS     += source/qup.h source/qup_page.h
+HEADERS     += source/qup.h \
+               source/qup_page.h \
+               source/qup_swifty.h
 INCLUDEPATH += source
 MOC_DIR     = temporary/moc
 OBJECTS_DIR = temporary/obj
