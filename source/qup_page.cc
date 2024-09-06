@@ -64,6 +64,8 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 {
   m_copy_files_timer.setInterval(1500);
   m_copy_files_timer.setSingleShot(true);
+  m_download_timer.setInterval(3600000);
+  m_install_automatically = false;
   m_ok = true;
   m_tabs_menu_action = new QAction(tr("Download"), this);
   m_ui.setupUi(this);
@@ -77,6 +79,10 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
 	  &QFutureWatcher<void>::finished,
 	  this,
 	  &qup_page::launch_file_gatherer);
+  connect(&m_download_timer,
+	  &QTimer::timeout,
+	  this,
+	  &qup_page::slot_download);
   connect(&m_timer,
 	  &QTimer::timeout,
 	  this,
@@ -153,6 +159,7 @@ qup_page::~qup_page()
   m_copy_files_future.cancel();
   m_copy_files_future.waitForFinished();
   m_copy_files_timer.stop();
+  m_download_timer.stop();
   m_populate_files_table_future.cancel();
   m_populate_files_table_future.waitForFinished();
   m_timer.stop();
@@ -507,6 +514,7 @@ void qup_page::interrupt(void)
 
   m_copy_files_future.cancel();
   m_copy_files_future.waitForFinished();
+  m_download_timer.stop();
   m_populate_files_table_future.cancel();
   m_populate_files_table_future.waitForFinished();
   qDebug() << tr("Interrupted.");
@@ -561,6 +569,7 @@ void qup_page::slot_copy_files(void)
     (tr("<font color='darkgreen'>You may now install %1!</font>").
      arg(m_product));
   launch_file_gatherer();
+  m_install_automatically ? m_ui.install->click() : (void) 0;
 }
 
 void qup_page::slot_delete_favorite(void)
@@ -599,6 +608,7 @@ void qup_page::slot_delete_favorite(void)
 			 this,
 			 &qup_page::slot_populate_favorites);
       emit populate_favorites();
+      interrupt();
     }
   else
     append(tr("<font color='darkred'>Could not delete %1.</font>").arg(name));
@@ -984,6 +994,7 @@ void qup_page::slot_populate_favorite(void)
 
   settings.beginGroup(QString("favorite-%1").arg(action->text()));
   m_destination = settings.value("local-directory").toString().trimmed();
+  m_install_automatically = settings.value("install", false).toBool();
   m_path = QDir::tempPath();
   m_path.append(QDir::separator());
   m_path.append("qup-");
@@ -991,9 +1002,17 @@ void qup_page::slot_populate_favorite(void)
   m_product = action->text();
   m_super_hash.clear();
   m_tabs_menu_action->setText(settings.value("name").toString().trimmed());
+  m_ui.download_frequency->setCurrentIndex
+    (m_ui.download_frequency->
+     findText(settings.value("download-frequency").toString()));
+  m_ui.download_frequency->setCurrentIndex
+    (m_ui.download_frequency->currentIndex() < 0 ?
+     m_ui.download_frequency->findText(tr("Never")) :
+     m_ui.download_frequency->currentIndex());
   m_ui.favorite_name->setText(settings.value("name").toString().trimmed());
   m_ui.files->setRowCount(0);
   m_ui.files->sortByColumn(0, Qt::AscendingOrder);
+  m_ui.install_automatically->setChecked(m_install_automatically);
   m_ui.local_directory->setText
     (settings.value("local-directory").toString().trimmed());
   m_ui.operating_system->setCurrentIndex
@@ -1004,6 +1023,8 @@ void qup_page::slot_populate_favorite(void)
      0 : m_ui.operating_system->currentIndex());
   m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
   launch_file_gatherer();
+  settings.value("download-frequency").toString() != tr("Never") ?
+    m_download_timer.start() : m_download_timer.stop();
   emit product_name_changed(m_ui.favorite_name->text());
 }
 
@@ -1171,9 +1192,12 @@ void qup_page::slot_reply_finished(void)
     {
       if(m_network_access_manager.
 	 findChildren<QNetworkReply *> ().size() - 1 <= 0)
-	append
-	  (tr("<font color='darkred'>Some of the files were not downloaded. "
-	      "Please review.</font>"));
+	{
+	  append
+	    (tr("<font color='darkred'>Some of the files were not downloaded. "
+		"Please review.</font>"));
+	  m_install_automatically ? m_ui.install->click() : (void) 0;
+	}
     }
 }
 
@@ -1212,9 +1236,13 @@ void qup_page::slot_save_favorite(void)
 	(tr("<font color='darkgreen'>The favorite %1 has been saved "
 	    "in the Qup INI file.</font>").arg(name));
       m_destination = local_directory;
+      m_install_automatically = m_ui.install_automatically->isChecked();
       m_product = name;
       m_super_hash.clear();
       m_tabs_menu_action->setText(name);
+      m_ui.download_frequency->currentIndex() !=
+	m_ui.download_frequency->findText(tr("Never")) ?
+	m_download_timer.start() : m_download_timer.stop();
       m_ui.local_directory->setText(local_directory);
       emit populate_favorites();
       emit product_name_changed(m_ui.favorite_name->text());

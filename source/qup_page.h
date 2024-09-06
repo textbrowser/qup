@@ -85,8 +85,10 @@ class qup_page: public QWidget
   QString m_product;
   QString m_qup_txt_file_name;
   QTimer m_copy_files_timer;
+  QTimer m_download_timer;
   QTimer m_timer;
   Ui_qup_page m_ui;
+  bool m_install_automatically;
   bool m_ok;
   QString executable_suffix(void) const;
   static QUrl string_as_url(const QString &s);
