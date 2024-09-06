@@ -478,7 +478,7 @@
         </font>
        </property>
        <property name="toolTip">
-        <string>Copy the product files from the temporary directory into the destination directory.</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Copy the product files from the temporary directory into the destination directory. Automatically performed if the Install option is on.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="styleSheet">
         <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
