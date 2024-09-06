@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>610</height>
+    <height>654</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -26,6 +26,33 @@
    </item>
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="3" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QComboBox" name="operating_system">
+         <property name="maxVisibleItems">
+          <number>25</number>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
      <item row="1" column="2">
       <widget class="QLineEdit" name="qup_txt_location">
        <property name="minimumSize">
@@ -49,20 +76,42 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <widget class="QLineEdit" name="favorite_name">
-       <property name="placeholderText">
-        <string>Product Name</string>
+     <item row="0" column="6">
+      <widget class="QPushButton" name="delete_favorite">
+       <property name="toolTip">
+        <string>Delete Favorite</string>
        </property>
-       <property name="clearButtonEnabled">
-        <bool>true</bool>
+       <property name="icon">
+        <iconset resource="../images/images.qrc">
+         <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
+     <item row="0" column="1">
+      <widget class="QLabel" name="label_10">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
+       </property>
        <property name="text">
-        <string>Local Product Directory</string>
+        <string>1</string>
        </property>
       </widget>
      </item>
@@ -104,130 +153,13 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Name</string>
+     <item row="0" column="2">
+      <widget class="QLineEdit" name="favorite_name">
+       <property name="placeholderText">
+        <string>Product Name</string>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="label_12">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="toolTip">
-        <string>Local destination of product files.</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
-       </property>
-       <property name="text">
-        <string>3</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Definitiions File Download</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="3">
-      <widget class="QPushButton" name="select_local_directory">
-       <property name="text">
-        <string>Select...</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="label_11">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
-       </property>
-       <property name="text">
-        <string>2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="6">
-      <widget class="QPushButton" name="delete_favorite">
-       <property name="toolTip">
-        <string>Delete Favorite</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images/images.qrc">
-         <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QPushButton" name="save_favorite">
-       <property name="toolTip">
-        <string>Save Favorite</string>
-       </property>
-       <property name="icon">
-        <iconset resource="../images/images.qrc">
-         <normaloff>:/save.png</normaloff>:/save.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="shortcut">
-        <string>Ctrl+S</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_10">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="font">
-        <font>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
-       </property>
-       <property name="text">
-        <string>1</string>
+       <property name="clearButtonEnabled">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -265,32 +197,100 @@
        </item>
       </layout>
      </item>
-     <item row="3" column="2">
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QComboBox" name="operating_system">
-         <property name="maxVisibleItems">
-          <number>25</number>
-         </property>
-         <property name="sizeAdjustPolicy">
-          <enum>QComboBox::AdjustToContents</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Definitiions File Download</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QPushButton" name="select_local_directory">
+       <property name="text">
+        <string>Select...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_11">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
+       </property>
+       <property name="text">
+        <string>2</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="label_12">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="toolTip">
+        <string>Local destination of product files.</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
+       </property>
+       <property name="text">
+        <string>3</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Local Product Directory</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QPushButton" name="save_favorite">
+       <property name="toolTip">
+        <string>Save Favorite</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../images/images.qrc">
+         <normaloff>:/save.png</normaloff>:/save.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>24</width>
+         <height>24</height>
+        </size>
+       </property>
+       <property name="shortcut">
+        <string>Ctrl+S</string>
+       </property>
+      </widget>
      </item>
      <item row="0" column="4">
       <widget class="QLabel" name="label_14">
@@ -308,6 +308,86 @@
        </property>
        <property name="toolTip">
         <string>Save the favorite.</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
+       </property>
+       <property name="text">
+        <string>6</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_19">
+       <property name="text">
+        <string>Optional Automation</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QLabel" name="label_18">
+         <property name="text">
+          <string>Download Frequency</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="download_frequency">
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <property name="sizeAdjustPolicy">
+          <enum>QComboBox::AdjustToContents</enum>
+         </property>
+         <item>
+          <property name="text">
+           <string>Hourly</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Never</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="install_automatically">
+         <property name="text">
+          <string>Install</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_5">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLabel" name="label_20">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="styleSheet">
         <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
@@ -352,7 +432,7 @@
         <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
        </property>
        <property name="text">
-        <string>6</string>
+        <string>7</string>
        </property>
       </widget>
      </item>
@@ -404,7 +484,7 @@
         <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
        </property>
        <property name="text">
-        <string>7</string>
+        <string>8</string>
        </property>
       </widget>
      </item>
@@ -446,7 +526,7 @@
         <string notr="true">QLabel {background-color: lightblue; border: 1px solid white; border-radius: 2.5px; color: white; margin: 2px; padding: 2px;}</string>
        </property>
        <property name="text">
-        <string>8</string>
+        <string>9</string>
        </property>
       </widget>
      </item>
@@ -482,7 +562,10 @@
        <item>
         <widget class="QLabel" name="label_9">
          <property name="text">
-          <string>A directory monitor is not included because multiple monitors will burden Qup.</string>
+          <string>A directory monitor is not included because multiple monitors will burden the operating system.</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -627,6 +710,8 @@
   <tabstop>local_directory</tabstop>
   <tabstop>select_local_directory</tabstop>
   <tabstop>operating_system</tabstop>
+  <tabstop>download_frequency</tabstop>
+  <tabstop>install_automatically</tabstop>
   <tabstop>download</tabstop>
   <tabstop>install</tabstop>
   <tabstop>launch</tabstop>

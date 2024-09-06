@@ -1194,6 +1194,9 @@ void qup_page::slot_save_favorite(void)
   QSettings settings;
 
   settings.beginGroup(QString("favorite-%1").arg(name));
+  settings.setValue
+    ("download-frequency", m_ui.download_frequency->currentText());
+  settings.setValue("install", m_ui.install_automatically->isChecked());
   settings.setValue("local-directory", local_directory);
   settings.setValue("name", name);
   settings.setValue("operating-system", m_ui.operating_system->currentText());
