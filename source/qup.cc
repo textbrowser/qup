@@ -25,6 +25,7 @@
 ** QUP, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <QActionGroup>
 #include <QCloseEvent>
 #include <QColorDialog>
 #include <QDir>
