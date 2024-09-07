@@ -994,7 +994,8 @@ void qup_page::slot_populate_favorite(void)
 
   settings.beginGroup(QString("favorite-%1").arg(action->text()));
   m_destination = settings.value("local-directory").toString().trimmed();
-  m_install_automatically = settings.value("install", false).toBool();
+  m_install_automatically = settings.value
+    ("install-automatically", false).toBool();
   m_path = QDir::tempPath();
   m_path.append(QDir::separator());
   m_path.append("qup-");
@@ -1220,7 +1221,8 @@ void qup_page::slot_save_favorite(void)
   settings.beginGroup(QString("favorite-%1").arg(name));
   settings.setValue
     ("download-frequency", m_ui.download_frequency->currentText());
-  settings.setValue("install", m_ui.install_automatically->isChecked());
+  settings.setValue
+    ("install-automatically", m_ui.install_automatically->isChecked());
   settings.setValue("local-directory", local_directory);
   settings.setValue("name", name);
   settings.setValue("operating-system", m_ui.operating_system->currentText());
