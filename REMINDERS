@@ -2,6 +2,7 @@ Completed Items
 
 - About.
 - Automation.
+- Clean information field periodically.
 - Clear activity widget.
 - Close page.
 - Copy downloaded files into local directories.
@@ -41,5 +42,4 @@ Maybe Items
 
 Remaining Items
 
-- Clean information field periodically.
 - Qt 5.5.1.

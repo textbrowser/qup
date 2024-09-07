@@ -58,6 +58,7 @@ char const *PropertyNames::Executable = "executable";
 char const *PropertyNames::FileName = "file_name";
 char const *PropertyNames::Read = "read";
 char const static *const s_end_of_file = "# End of file. Required comment.";
+const int static s_activity_maximum_line_count = 100000;
 const int static s_populate_favorites_interval = 250;
 
 qup_page::qup_page(QWidget *parent):QWidget(parent)
@@ -136,6 +137,9 @@ qup_page::qup_page(QWidget *parent):QWidget(parent)
   m_network_access_manager.setRedirectPolicy
     (QNetworkRequest::NoLessSafeRedirectPolicy);
   m_timer.start(2500);
+  m_ui.activity_label->setText
+    (tr("Activity contents are removed after %1 lines.").
+     arg(QLocale().toString(s_activity_maximum_line_count)));
   m_ui.favorites->setArrowType(Qt::NoArrow);
   m_ui.favorites->setMenu(new QMenu(this));
 #ifdef Q_OS_MACOS
@@ -286,6 +290,8 @@ void qup_page::append(const QString &text)
   if(text.trimmed().isEmpty())
     return;
 
+  m_ui.activity->document()->lineCount() > s_activity_maximum_line_count ?
+    m_ui.activity->clear() : (void) 0;
   m_ui.activity->append
     (QString("<u>[%1]</u>: %2").
      arg(QDateTime::currentDateTime().toString(Qt::ISODate)).

@@ -665,6 +665,16 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
+        <widget class="QLabel" name="activity_label">
+         <property name="text">
+          <string>Label</string>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QTextEdit" name="activity">
          <property name="readOnly">
           <bool>true</bool>
