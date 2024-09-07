@@ -1364,7 +1364,7 @@ void qup_page::slot_write_instruction_file_data(void)
 	     static_cast<qint64> (m_instruction_file_reply_data.length()))
 	    {
 	      QTimer::singleShot
-		(250, this, &qup_page::slot_parse_instruction_file);
+		(1000, this, &qup_page::slot_parse_instruction_file);
 	      append
 		(tr("<font color='darkgreen'>File %1 saved locally.</font>").
 		 arg(file_information.fileName()));

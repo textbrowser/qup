@@ -73,11 +73,8 @@ int main(int argc, char *argv[])
   QSettings::setDefaultFormat(QSettings::IniFormat);
   QSettings::setPath
     (QSettings::IniFormat, QSettings::UserScope, qup::home_path());
-
   qup qup;
 
   qup.show();
-
-  auto rc = qapplication.exec();
-  return static_cast<int> (rc);
+  return static_cast<int> (qapplication.exec());
 }
