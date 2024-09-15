@@ -20,7 +20,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tab">
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -242,7 +242,7 @@
   </action>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>tab</tabstop>
   <tabstop>pages</tabstop>
   <tabstop>process_invalid_color</tabstop>
   <tabstop>process_valid_color</tabstop>

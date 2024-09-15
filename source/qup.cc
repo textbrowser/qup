@@ -374,6 +374,7 @@ void qup::slot_select_page(void)
 #else
   m_ui.pages->setCurrentWidget(action->parentWidget());
 #endif
+  m_ui.tab->setCurrentIndex(0);
 }
 
 void qup::slot_tab_close_requested(int index)
