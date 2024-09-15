@@ -65,7 +65,7 @@
           <item>
            <widget class="QLabel" name="label">
             <property name="text">
-             <string>Process Invalid</string>
+             <string>Process Invalid Color</string>
             </property>
            </widget>
           </item>
@@ -96,7 +96,7 @@
           <item>
            <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>Process Valid</string>
+             <string>Process Valid Color</string>
             </property>
            </widget>
           </item>
