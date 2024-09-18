@@ -15,17 +15,17 @@ then
 	export LD_LIBRARY_PATH=Lib
     fi
 
-    exec ./Qup "$@"
+    exec ./Qup -style=Breeze "$@"
     exit $?
 elif [ -r /opt/qup/Qup ] && [ -x /opt/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /opt/qup && exec ./Qup "$@"
+    cd /opt/qup && exec ./Qup -style=Breeze "$@"
     exit $?
 elif [ -r /usr/local/qup/Qup ] && [ -x /usr/local/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /usr/local/qup && exec ./Qup "$@"
+    cd /usr/local/qup && exec ./Qup -style=Breeze "$@"
     exit $?
 else
     echo "Cannot locate Qup. Why?"
