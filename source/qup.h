@@ -62,6 +62,8 @@ class qup: public QMainWindow
   void slot_new_page(void);
   void slot_product_name_changed(const QString &t);
   void slot_quit(void);
+  void slot_save_proxy(void);
+  void slot_save_proxy_type(int index);
   void slot_select_color(void);
   void slot_select_page(void);
   void slot_tab_close_requested(int index);

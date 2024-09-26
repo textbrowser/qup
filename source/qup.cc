@@ -91,6 +91,14 @@ qup::qup(void):QMainWindow()
 	  &QPushButton::clicked,
 	  this,
 	  &qup::slot_select_color);
+  connect(m_ui.proxy,
+	  &QLineEdit::returnPressed,
+	  this,
+	  &qup::slot_save_proxy);
+  connect(m_ui.proxy_type,
+	  SIGNAL(currentIndexChanged(int)),
+	  this,
+	  SLOT(slot_save_proxy_type(int)));
   m_ui.action_close_page->setIcon(QIcon::fromTheme("window-close"));
   m_ui.action_new_page->setIcon(QIcon::fromTheme("document-new"));
   m_ui.menu_tabs->setStyleSheet("QMenu {menu-scrollable: 1;}");
@@ -238,6 +246,11 @@ void qup::restore_settings(void)
   color = QColor(settings.value("valid-process-color").toString().trimmed());
   VALID_PROCESS_COLOR = color.isValid() ? color : VALID_PROCESS_COLOR;
   restoreGeometry(settings.value("geometry").toByteArray());
+  m_ui.proxy->setText(settings.value("proxy").toString().trimmed());
+  m_ui.proxy_type->setCurrentIndex
+    (qBound(0,
+	    settings.value("proxy_type_index", 2).toInt(),
+	    m_ui.proxy_type->count() - 1));
 }
 
 void qup::slot_about(void)
@@ -322,6 +335,17 @@ void qup::slot_product_name_changed(const QString &t)
 void qup::slot_quit(void)
 {
   close();
+}
+
+void qup::slot_save_proxy(void)
+{
+  QSettings().setValue("proxy", m_ui.proxy->text().trimmed());
+  m_ui.proxy->selectAll();
+}
+
+void qup::slot_save_proxy_type(int index)
+{
+  QSettings().setValue("proxy_type_index", index);
 }
 
 void qup::slot_select_color(void)
