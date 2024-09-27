@@ -95,6 +95,10 @@ qup::qup(void):QMainWindow()
 	  &QLineEdit::returnPressed,
 	  this,
 	  &qup::slot_save_proxy);
+  connect(m_ui.proxy,
+	  SIGNAL(textChanged(const QString &)),
+	  this,
+	  SLOT(slot_proxy_changed(const QString &)));
   connect(m_ui.proxy_type,
 	  SIGNAL(currentIndexChanged(int)),
 	  this,
@@ -251,6 +255,7 @@ void qup::restore_settings(void)
     (qBound(0,
 	    settings.value("proxy_type_index", 2).toInt(),
 	    m_ui.proxy_type->count() - 1));
+  slot_proxy_changed(m_ui.proxy->text());
 }
 
 void qup::slot_about(void)
@@ -330,6 +335,21 @@ void qup::slot_product_name_changed(const QString &t)
 
   m_ui.pages->setTabText
     (m_ui.pages->indexOf(qobject_cast<qup_page *> (sender())), text);
+}
+
+void qup::slot_proxy_changed(const QString &t)
+{
+  QRegularExpression const regular_expression
+    ("[\\-\\.0-9A-Za-z]+:[1-9]\\d*$");
+  auto const text(t.trimmed());
+  auto palette(m_ui.proxy->palette());
+
+  if(regular_expression.match(text).hasMatch())
+    palette.setColor(m_ui.proxy->backgroundRole(), VALID_PROCESS_COLOR);
+  else
+    palette.setColor(m_ui.proxy->backgroundRole(), INVALID_PROCESS_COLOR);
+
+  m_ui.proxy->setPalette(palette);
 }
 
 void qup::slot_quit(void)

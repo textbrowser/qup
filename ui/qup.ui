@@ -131,7 +131,7 @@
            <item>
             <widget class="QLineEdit" name="proxy">
              <property name="toolTip">
-              <string>Press Enter to save.</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The correct format is Host:Port. Please press the Enter key to save the proxy text.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="placeholderText">
               <string>Host:Port</string>
