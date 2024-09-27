@@ -430,6 +430,7 @@ void qup::slot_select_color(void)
 	  settings.setValue("valid-process-color", button->text().remove('&'));
 	}
 
+      slot_proxy_changed(m_ui.proxy->text());
       emit settings_applied();
     }
 }
