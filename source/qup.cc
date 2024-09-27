@@ -253,19 +253,22 @@ void qup::restore_settings(void)
   VALID_PROCESS_COLOR = color.isValid() ? color : VALID_PROCESS_COLOR;
   restoreGeometry(settings.value("geometry").toByteArray());
   m_ui.proxy->setText(settings.value("proxy").toString().trimmed());
+  m_ui.proxy->selectAll();
   m_ui.proxy_type->setCurrentIndex
     (qBound(0,
 	    settings.value("proxy-type-index", 2).toInt(),
 	    m_ui.proxy_type->count() - 1));
-  slot_proxy_changed(m_ui.proxy->text());
 }
 
 void qup::set_proxy(void)
 {
   QNetworkProxyFactory::setUseSystemConfiguration(false);
 
-  if(m_ui.proxy_type->currentText() == tr("HTTP") ||
-     m_ui.proxy_type->currentText() == tr("SOCKS"))
+  auto const proxy_type
+    (m_ui.proxy_type->
+     itemText(QSettings().value("proxy-type-index", 2).toInt()));
+
+  if(proxy_type == tr("HTTP") || proxy_type == tr("SOCKS"))
     {
       QNetworkProxy proxy;
       auto const list
@@ -274,7 +277,7 @@ void qup::set_proxy(void)
       proxy.setHostName(list.value(0).trimmed());
       proxy.setPort(list.value(1).trimmed().toUShort());
 
-      if(m_ui.proxy_type->currentText() == tr("HTTP"))
+      if(proxy_type == tr("HTTP"))
 	proxy.setType(QNetworkProxy::HttpProxy);
       else
 	proxy.setType(QNetworkProxy::Socks5Proxy);
@@ -364,10 +367,9 @@ void qup::slot_product_name_changed(const QString &t)
     (m_ui.pages->indexOf(qobject_cast<qup_page *> (sender())), text);
 }
 
-void qup::slot_proxy_changed(const QString &t)
+void qup::slot_proxy_changed(const QString &text)
 {
   QRegularExpression const r("[\\-\\.0-9A-Za-z]+:[1-9]\\d*$");
-  auto const text(t.trimmed());
   auto palette(m_ui.proxy->palette());
 
   if(r.match(text).hasMatch())
@@ -386,6 +388,7 @@ void qup::slot_quit(void)
 void qup::slot_save_proxy(void)
 {
   QSettings().setValue("proxy", m_ui.proxy->text().trimmed());
+  m_ui.proxy->setText(m_ui.proxy->text().trimmed());
   m_ui.proxy->selectAll();
   set_proxy();
 }
