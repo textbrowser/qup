@@ -29,6 +29,7 @@
 #include <QCloseEvent>
 #include <QColorDialog>
 #include <QDir>
+#include <QNetworkProxy>
 #include <QPainter>
 #include <QRegularExpression>
 #include <QSettings>
@@ -111,6 +112,7 @@ qup::qup(void):QMainWindow()
   m_ui.temporary_directory->setText(QDir::tempPath());
   m_ui.process_valid_color->setText(VALID_PROCESS_COLOR.name(QColor::HexArgb));
   restore_settings();
+  set_proxy();
   slot_new_page();
 }
 
@@ -253,9 +255,34 @@ void qup::restore_settings(void)
   m_ui.proxy->setText(settings.value("proxy").toString().trimmed());
   m_ui.proxy_type->setCurrentIndex
     (qBound(0,
-	    settings.value("proxy_type_index", 2).toInt(),
+	    settings.value("proxy-type-index", 2).toInt(),
 	    m_ui.proxy_type->count() - 1));
   slot_proxy_changed(m_ui.proxy->text());
+}
+
+void qup::set_proxy(void)
+{
+  QNetworkProxyFactory::setUseSystemConfiguration(false);
+
+  if(m_ui.proxy_type->currentText() == tr("HTTP") ||
+     m_ui.proxy_type->currentText() == tr("SOCKS"))
+    {
+      QNetworkProxy proxy;
+      auto const list
+	(QSettings().value("proxy").toString().trimmed().split(':'));
+
+      proxy.setHostName(list.value(0).trimmed());
+      proxy.setPort(list.value(1).trimmed().toUShort());
+
+      if(m_ui.proxy_type->currentText() == tr("HTTP"))
+	proxy.setType(QNetworkProxy::HttpProxy);
+      else
+	proxy.setType(QNetworkProxy::Socks5Proxy);
+
+      QNetworkProxy::setApplicationProxy(proxy);
+    }
+  else
+    QNetworkProxyFactory::setUseSystemConfiguration(true);
 }
 
 void qup::slot_about(void)
@@ -339,12 +366,11 @@ void qup::slot_product_name_changed(const QString &t)
 
 void qup::slot_proxy_changed(const QString &t)
 {
-  QRegularExpression const regular_expression
-    ("[\\-\\.0-9A-Za-z]+:[1-9]\\d*$");
+  QRegularExpression const r("[\\-\\.0-9A-Za-z]+:[1-9]\\d*$");
   auto const text(t.trimmed());
   auto palette(m_ui.proxy->palette());
 
-  if(regular_expression.match(text).hasMatch())
+  if(r.match(text).hasMatch())
     palette.setColor(m_ui.proxy->backgroundRole(), VALID_PROCESS_COLOR);
   else
     palette.setColor(m_ui.proxy->backgroundRole(), INVALID_PROCESS_COLOR);
@@ -361,11 +387,13 @@ void qup::slot_save_proxy(void)
 {
   QSettings().setValue("proxy", m_ui.proxy->text().trimmed());
   m_ui.proxy->selectAll();
+  set_proxy();
 }
 
 void qup::slot_save_proxy_type(int index)
 {
-  QSettings().setValue("proxy_type_index", index);
+  QSettings().setValue("proxy-type-index", index);
+  set_proxy();
 }
 
 void qup::slot_select_color(void)

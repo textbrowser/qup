@@ -55,6 +55,7 @@ class qup: public QMainWindow
   void close_page(QWidget *widget);
   void prepare_tabs_menu(void);
   void restore_settings(void);
+  void set_proxy(void);
 
  private slots:
   void slot_about(void);

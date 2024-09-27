@@ -21,6 +21,7 @@ Completed Items
 - List temporary files.
 - Multiple download pages.
 - Populate favorites if the INI file has been changed? No.
+- Proxy.
 - Qt 6.5 LTS.
 - Resurface awesome colors.
 - Restore and retain favorites.
@@ -38,7 +39,6 @@ Maybe Items
 
 - Digests. Lots of work and require separate sites.
 - Mention invalid digests.
-- Proxy.
 
 Remaining Items
 
