@@ -106,7 +106,7 @@ OBJECTIVE_HEADERS              += source/CocoaInitializer.h
 OBJECTIVE_SOURCES              += source/CocoaInitializer.mm
 QMAKE_DISTCLEAN                += -r Qup.d
 QMAKE_EXTRA_TARGETS            += dmg
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 11.0
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 12.0
 }
 
 unix {
