@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>900</width>
-    <height>654</height>
+    <height>682</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,6 +30,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
         <widget class="QComboBox" name="operating_system">
+         <property name="currentText">
+          <string notr="true"/>
+         </property>
          <property name="maxVisibleItems">
           <number>25</number>
          </property>

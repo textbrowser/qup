@@ -49,6 +49,9 @@ class PropertyNames
   char const static *Executable;
   char const static *FileName;
   char const static *Read;
+
+ private:
+  PropertyNames(void);
 };
 
 char const *PropertyNames::AbsoluteFilePath = "absolute_file_path";
@@ -554,7 +557,38 @@ void qup_page::prepare_operating_systems_widget(void)
                    << "PiOS 13 ARM64"
                    << "Ubuntu 24.04 AMD64"
                    << "Ubuntu 16.04 PowerPC"
-                   << "Windows 11");
+                   << "Windows 11 AMD64");
+
+#ifdef Q_OS_FREEBSD
+  auto const product_type_version
+    (QString("%1 %2").
+     arg(QSysInfo::productType()).arg(QSysInfo::productVersion()));
+
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->
+     findText(product_type_version, Qt::MatchStartsWith));
+#elif defined(Q_OS_LINUX)
+  auto const product_type_version
+    (QString("%1 %2").
+     arg(QSysInfo::productType()).arg(QSysInfo::productVersion()));
+
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->
+     findText(product_type_version, Qt::MatchStartsWith));
+#elif defined(Q_OS_MACOS)
+  if(QSysInfo::currentCpuArchitecture().contains("arm", Qt::CaseInsensitive))
+    m_ui.operating_system->setCurrentIndex
+      (m_ui.operating_system->findText("MacOS Apple", Qt::MatchStartsWith));
+  else
+    m_ui.operating_system->setCurrentIndex
+      (m_ui.operating_system->findText("MacOS Intel", Qt::MatchStartsWith));
+#elif defined(Q_OS_WINDOWS)
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->findText("Windows", Qt::MatchStartsWith));
+#endif
+  m_ui.operating_system->setCurrentIndex
+    (m_ui.operating_system->currentIndex() < 0 ?
+     0 : m_ui.operating_system->currentIndex());
 }
 
 void qup_page::slot_copy_files(void)
@@ -1026,8 +1060,9 @@ void qup_page::slot_populate_favorite(void)
     (m_ui.operating_system->
      findText(settings.value("operating-system").toString().trimmed()));
   m_ui.operating_system->setCurrentIndex
-    (m_ui.operating_system->currentIndex() < 0 ?
-     0 : m_ui.operating_system->currentIndex());
+    (qBound(0,
+	    m_ui.operating_system->currentIndex(),
+	    m_ui.operating_system->count() - 1));
   m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
   launch_file_gatherer();
   settings.value("download-frequency").toString() != tr("Never") ?
