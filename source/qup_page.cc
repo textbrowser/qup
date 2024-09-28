@@ -1078,7 +1078,8 @@ void qup_page::slot_populate_favorite(void)
     (qBound(0,
 	    m_ui.operating_system->currentIndex(),
 	    m_ui.operating_system->count() - 1));
-  m_ui.qup_txt_location->setText(settings.value("url").toString().trimmed());
+  m_ui.qup_txt_location->setText
+    (string_as_url(settings.value("url").toString().trimmed()).toString());
   launch_file_gatherer();
   settings.value("download-frequency").toString() != tr("Never") ?
     m_download_timer.start() : m_download_timer.stop();
@@ -1263,14 +1264,19 @@ void qup_page::slot_save_favorite(void)
   auto const local_directory
     (QDir::cleanPath(m_ui.local_directory->text().trimmed()));
   auto const name(m_ui.favorite_name->text().trimmed());
-  auto const url(m_ui.qup_txt_location->text().trimmed());
+  auto const url(string_as_url(m_ui.qup_txt_location->text().trimmed()));
 
-  if(local_directory.trimmed().isEmpty() || name.isEmpty() || url.isEmpty())
+  if(local_directory.trimmed().isEmpty() ||
+     name.isEmpty() ||
+     url.isEmpty() ||
+     url.isValid() == false)
     {
       append(tr("<font color='darkred'>Please complete the "
 		"required fields.</font>"));
       return;
     }
+  else
+    m_ui.qup_txt_location->setText(url.toString());
 
   QSettings settings;
 
@@ -1282,7 +1288,7 @@ void qup_page::slot_save_favorite(void)
   settings.setValue("local-directory", local_directory);
   settings.setValue("name", name);
   settings.setValue("operating-system", m_ui.operating_system->currentText());
-  settings.setValue("url", url);
+  settings.setValue("url", url.toString());
   settings.endGroup();
 
   if(settings.status() == QSettings::NoError)
