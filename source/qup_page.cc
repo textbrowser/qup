@@ -264,13 +264,7 @@ QString qup_page::permissions_as_string
 
 QString qup_page::proper_path(const QString &path)
 {
-  auto const separators(QString("%1%1").arg(QDir::separator()));
-  auto string(path);
-
-  while(string.contains(separators))
-    string.replace(separators, QDir::separator());
-
-  return string;
+  return QFileInfo(path).absoluteFilePath();
 }
 
 QUrl qup_page::string_as_url(const QString &s)
