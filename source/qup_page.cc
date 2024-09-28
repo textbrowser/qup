@@ -262,6 +262,17 @@ QString qup_page::permissions_as_string
   return string;
 }
 
+QString qup_page::proper_path(const QString &path)
+{
+  auto const separators(QString("%1%1").arg(QDir::separator()));
+  auto string(path);
+
+  while(string.contains(separators))
+    string.replace(separators, QDir::separator());
+
+  return string;
+}
+
 QUrl qup_page::string_as_url(const QString &s)
 {
   auto string(s.trimmed());
@@ -327,6 +338,7 @@ void qup_page::copy_files
 	  destination.append(QDir::separator());
 	  destination.append
 	    (file_information.absoluteFilePath().remove(local_path));
+	  destination = proper_path(destination);
 
 	  if(!QFileInfo(destination).exists())
 	    {
@@ -350,6 +362,7 @@ void qup_page::copy_files
 	  destination.append(QDir::separator());
 	  destination.append
 	    (file_information.absoluteFilePath().remove(local_path));
+	  destination = proper_path(destination);
 
 	  if(QFileInfo(destination).exists())
 	    QFile::remove(destination);
@@ -478,7 +491,7 @@ void qup_page::gather_files
 	    QFile file;
 
 	    file.setFileName
-	      (local_path + QDir::separator() + file_name);
+	      (proper_path(local_path + QDir::separator() + file_name));
 
 	    if(file.open(QIODevice::ReadOnly))
 	      {
@@ -496,7 +509,7 @@ void qup_page::gather_files
 	    permissions_as_string(file_information.permissions());
 
 	  QFileInfo const temporary_file_information
-	    (local_path + QDir::separator() + file_name);
+	    (proper_path(local_path + QDir::separator() + file_name));
 
 	  vector[static_cast<int> (FilesColumns::TemporaryFileName)] =
 	    temporary_file_information.absoluteFilePath();
@@ -699,6 +712,7 @@ void qup_page::slot_download(void)
   m_path.append(QDir::separator());
   m_path.append("qup-");
   m_path.append(name);
+  m_path = proper_path(m_path);
   m_product = name;
 
   if(!QFileInfo(m_path).exists())
@@ -728,6 +742,7 @@ void qup_page::slot_download(void)
   m_instruction_file_reply_data.clear();
   m_ok = true;
   m_qup_txt_file_name = m_path + QDir::separator() + url.fileName();
+  m_qup_txt_file_name = proper_path(m_qup_txt_file_name);
   connect(m_instruction_file_reply,
 	  &QNetworkReply::finished,
 	  this,
@@ -798,6 +813,7 @@ void qup_page::slot_launch(void)
   executable.append(m_product);
 #ifdef Q_OS_MACOS
   executable.append(".app");
+  executable = proper_path(executable);
 
   if(QFileInfo(executable).isBundle())
     {
@@ -811,6 +827,7 @@ void qup_page::slot_launch(void)
 	      "Cannot launch.</font>").arg(executable));
 #elif defined(Q_OS_OS2)
   executable.append(".exe");
+  executable = proper_path(executable);
 
   if(QFileInfo(executable).isExecutable())
     result = QProcess::startDetached
@@ -820,6 +837,7 @@ void qup_page::slot_launch(void)
 	      "Cannot launch.</font>").arg(executable));
 #elif defined(Q_OS_WINDOWS)
   executable.append(".exe");
+  executable = proper_path(executable);
 
   if(QFileInfo(executable).isExecutable())
     result = QProcess::startDetached
@@ -828,6 +846,8 @@ void qup_page::slot_launch(void)
     append(tr("<font color='darkred'>The file %1 is not an executable. "
 	      "Cannot launch.</font>").arg(executable));
 #else
+  executable = proper_path(executable);
+
   if(QFileInfo(executable).isExecutable())
     result = QProcess::startDetached(executable, QStringList(), m_destination);
   else
@@ -1040,6 +1060,7 @@ void qup_page::slot_populate_favorite(void)
   m_path.append(QDir::separator());
   m_path.append("qup-");
   m_path.append(settings.value("name").toString().trimmed());
+  m_path = proper_path(m_path);
   m_product = action->text();
   m_super_hash.clear();
   m_tabs_menu_action->setText(settings.value("name").toString().trimmed());

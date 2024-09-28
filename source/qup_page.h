@@ -94,6 +94,7 @@ class qup_page: public QWidget
   static QUrl string_as_url(const QString &s);
   static QString permissions_as_string
     (const QFileDevice::Permissions permissions);
+  static QString proper_path(const QString &path);
   void closeEvent(QCloseEvent *event);
   void copy_files
     (const QString &destination_path, const QString &local_path);
