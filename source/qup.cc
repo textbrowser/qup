@@ -114,6 +114,7 @@ qup::qup(void):QMainWindow()
   restore_settings();
   set_proxy();
   slot_new_page();
+  slot_proxy_changed(m_ui.proxy->text());
 }
 
 qup::~qup()
