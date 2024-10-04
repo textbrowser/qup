@@ -44,6 +44,7 @@ class qup: public QMainWindow
   static QColor INVALID_PROCESS_COLOR;
   static QColor VALID_PROCESS_COLOR;
   static QString VERSION;
+  static QString VERSION_LTS;
   static QString home_path(void);
   static void assign_image(QPushButton *button, const QColor &color);
 

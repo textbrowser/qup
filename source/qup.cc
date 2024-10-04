@@ -41,6 +41,7 @@
 QColor qup::INVALID_PROCESS_COLOR = QColor(255, 114, 118);
 QColor qup::VALID_PROCESS_COLOR = QColor(144, 238, 144);
 QString qup::VERSION = "2024.09.15";
+QString qup::VERSION_LTS = "2024.09.15";
 static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
 qup::qup(void):QMainWindow()
@@ -57,7 +58,7 @@ qup::qup(void):QMainWindow()
   m_about.setWindowTitle(tr("Qup: About"));
   m_swifty = new swifty
     (VERSION,
-     "QString qup::VERSION = ",
+     "QString qup::VERSION_LTS = ",
      QUrl::fromUserInput("https://raw.githubusercontent.com/"
 			 "textbrowser/qup/master/source/qup.cc"),
      this);
