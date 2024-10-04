@@ -11,7 +11,11 @@ fi
 
 FILE="source/qup.cc"
 
-sed -i 's/\(QString qup::VERSION = "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
+sed -i \
+    's/\(QString qup::VERSION = "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
     $FILE
+sed -i \
+'s/\(QString qup::VERSION_LTS = "\)[0-9]\+\(\.[0-9]\+\)*"/\1'"$VERSION"'"/' \
+$FILE
 
 echo "Please modify the release notes."
