@@ -393,6 +393,60 @@ void qup_page::copy_files
 	      text.append(tr("<font color='darkred'>Failure.</font>"));
 	      emit append_text(text);
 	    }
+
+	  if(file_information.suffix() == "desktop")
+	    {
+	      auto destination
+		(QStandardPaths::
+		 writableLocation(QStandardPaths::DesktopLocation));
+
+	      if(destination.isEmpty() == false)
+		{
+		  destination.append(QDir::separator());
+		  destination.append(file_information.fileName());
+		  destination = proper_path(destination);
+
+		  if(QFileInfo(destination).exists())
+		    QFile::remove(destination);
+
+		  QString text("");
+
+		  text.append
+		    (tr("Copying %1 to %2... ").
+		     arg(file_information.absoluteFilePath()).
+		     arg(destination));
+
+		  if(QFile::copy(file_information.absoluteFilePath(),
+				 destination))
+		    {
+		      text.append
+			(tr("<font color='darkgreen'>Copied.</font>"));
+		      emit append_text(text);
+		      text.clear();
+		      text.append
+			(tr("Setting permissions on %1... ").arg(destination));
+
+		      QFile file(destination);
+
+		      if(file.setPermissions(QFileInfo(file_information.
+						       absoluteFilePath()).
+					     permissions()))
+			text.append
+			  (tr("<font color='darkgreen'>Success.</font>"));
+		      else
+			text.append
+			  (tr("<font color='darkred'>Failure.</font>"));
+
+		      emit append_text(text);
+		    }
+		  else
+		    {
+		      text.append
+			(tr("<font color='darkred'>Failure.</font>"));
+		      emit append_text(text);
+		    }
+		}
+	    }
 	}
     }
 }
@@ -989,17 +1043,8 @@ void qup_page::slot_parse_instruction_file(void)
 	      if(p.first.isEmpty() || p.second.isEmpty())
 		continue;
 
-	      if(p.first == "desktop")
-		{
-		  FileInformation file_information;
-
-		  file_information.m_executable = true;
-		  file_information.m_destination = QStandardPaths::
-		    writableLocation(QStandardPaths::DesktopLocation);
-		  files[p.second] = file_information;
-		}
-	      else if(p.first == "executable" &&
-		      p.second.toLower().endsWith(executable_suffix()))
+	      if(p.first == "executable" &&
+		 p.second.toLower().endsWith(executable_suffix()))
 		{
 		  FileInformation file_information;
 
