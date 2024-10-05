@@ -34,6 +34,7 @@
 #include <QNetworkReply>
 #include <QScrollBar>
 #include <QSettings>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QtConcurrent>
 
@@ -988,8 +989,17 @@ void qup_page::slot_parse_instruction_file(void)
 	      if(p.first.isEmpty() || p.second.isEmpty())
 		continue;
 
-	      if(p.first == "executable" &&
-		 p.second.toLower().endsWith(executable_suffix()))
+	      if(p.first == "desktop")
+		{
+		  FileInformation file_information;
+
+		  file_information.m_executable = true;
+		  file_information.m_destination = QStandardPaths::
+		    writableLocation(QStandardPaths::DesktopLocation);
+		  files[p.second] = file_information;
+		}
+	      else if(p.first == "executable" &&
+		      p.second.toLower().endsWith(executable_suffix()))
 		{
 		  FileInformation file_information;
 
