@@ -621,7 +621,10 @@ void qup_page::slot_copy_files(void)
 
 void qup_page::slot_delete_favorite(void)
 {
-  auto const name(m_ui.favorite_name->text().trimmed());
+  auto name(m_ui.favorite_name->text().trimmed());
+
+  if(name.isEmpty())
+    name = m_product;
 
   if(name.isEmpty())
     return;
@@ -1055,7 +1058,7 @@ void qup_page::slot_populate_favorite(void)
   m_path.append("qup-");
   m_path.append(settings.value("name").toString().trimmed());
   m_path = proper_path(m_path);
-  m_product = action->text();
+  m_product = action->text().trimmed();
   m_super_hash.clear();
   m_tabs_menu_action->setText(settings.value("name").toString().trimmed());
   m_ui.download_frequency->setCurrentIndex
