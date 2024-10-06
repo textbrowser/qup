@@ -6,6 +6,10 @@ export AA_USEHIGHDPIPIXMAPS=1
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_X11_NO_MITSHM=1
 
+# Begin Qup
+# Here be special Qup instructions.
+# End Up
+
 if [ -r ./Qup ] && [ -x ./Qup ]
 then
     echo "Launching a local Qup."
