@@ -8,7 +8,7 @@ export QT_X11_NO_MITSHM=1
 
 # Begin Qup
 # Here be special Qup instructions.
-# End Up
+# End Qup
 
 if [ -r ./Qup ] && [ -x ./Qup ]
 then

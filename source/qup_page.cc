@@ -447,6 +447,9 @@ void qup_page::copy_files
 		    }
 		}
 	    }
+
+	  if(file_information.suffix() == "sh")
+	    prepare_shell_file(file_information.absoluteFilePath());
 	}
     }
 }
@@ -651,6 +654,45 @@ void qup_page::prepare_operating_systems_widget(void)
   m_ui.operating_system->setCurrentIndex
     (m_ui.operating_system->currentIndex() < 0 ?
      0 : m_ui.operating_system->currentIndex());
+}
+
+void qup_page::prepare_shell_file(const QString &path)
+{
+  QFile file(path);
+  QFile temporary(path + "_temporary");
+
+  if(file.open(QIODevice::ReadOnly | QIODevice::Text) &&
+     temporary.open(QIODevice::Text | QIODevice::WriteOnly))
+    {
+      QByteArray data(4096, '0');
+      qint64 rc = 0;
+
+      while((rc = file.readLine(data.data(),
+				static_cast<qint64> (data.length()))) > 0)
+	{
+	  temporary.write(data.mid(0, static_cast<int> (rc)));
+
+	  if(data.mid(0, static_cast<int> (rc)).trimmed() ==
+	     "# Here be special Qup instructions.")
+	    {
+	      QString text("");
+
+	      text.append
+		(QString("if [ -r %1/%2 ] && [ -x %1/%2 ]\n").
+		 arg(m_destination).arg(m_product));
+	      text.append("then\n");
+	      text.append
+		(QString("    echo \"Launching an official %1.\"\n").
+		 arg(m_product));
+	      text.append
+		(QString("    cd %1 && exec ./%2 \"$@\"\n").
+		 arg(m_destination).arg(m_product));
+	      text.append("    exit $?\n");
+	      text.append("fi\n");
+	      temporary.write(text.toUtf8());
+	    }
+	}
+    }
 }
 
 void qup_page::slot_copy_files(void)

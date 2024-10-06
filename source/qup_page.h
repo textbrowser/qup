@@ -108,6 +108,7 @@ class qup_page: public QWidget
      const QString &destination_path,
      const QString &local_path);
   void prepare_operating_systems_widget(void);
+  void prepare_shell_file(const QString &path);
 
  private slots:
   void append(const QString &text);
