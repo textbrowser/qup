@@ -62,6 +62,8 @@ char const *PropertyNames::Executable = "executable";
 char const *PropertyNames::FileName = "file_name";
 char const *PropertyNames::Read = "read";
 char const static *const s_end_of_file = "# End of file. Required comment.";
+char const static *const s_shell_comment =
+  "# Here be special Qup instructions.";
 const int static s_activity_maximum_line_count = 100000;
 const int static s_populate_favorites_interval = 250;
 
@@ -313,7 +315,9 @@ void qup_page::closeEvent(QCloseEvent *event)
 }
 
 void qup_page::copy_files
-(const QString &destination_path, const QString &local_path)
+(const QString &destination_path,
+ const QString &local_path,
+ const QString &product)
 {
   QDirIterator it
     (local_path,
@@ -449,7 +453,8 @@ void qup_page::copy_files
 	    }
 
 	  if(file_information.suffix() == "sh")
-	    prepare_shell_file(file_information.absoluteFilePath());
+	    prepare_shell_file
+	      (destination_path, file_information.absoluteFilePath(), product);
 	}
     }
 }
@@ -656,7 +661,8 @@ void qup_page::prepare_operating_systems_widget(void)
      0 : m_ui.operating_system->currentIndex());
 }
 
-void qup_page::prepare_shell_file(const QString &path)
+void qup_page::prepare_shell_file
+(const QString &destination_path, const QString &path, const QString &product)
 {
   QFile file(path);
   QFile temporary(path + "_temporary");
@@ -672,8 +678,7 @@ void qup_page::prepare_shell_file(const QString &path)
 	{
 	  temporary.write(data.mid(0, static_cast<int> (rc)));
 
-	  if(data.mid(0, static_cast<int> (rc)).trimmed() ==
-	     "# Here be special Qup instructions.")
+	  if(data.mid(0, static_cast<int> (rc)).trimmed() == s_shell_comment)
 	    {
 	      QString text("");
 
@@ -682,14 +687,14 @@ void qup_page::prepare_shell_file(const QString &path)
 		  text.append("\n");
 		  text.append
 		    (QString("if [ -r %1/%2 ] && [ -x %1/%2 ]\n").
-		     arg(m_destination).arg(m_product));
+		     arg(destination_path).arg(product));
 		  text.append("then\n");
 		  text.append
 		    (QString("    echo \"Launching an official %1.\"\n").
-		     arg(m_product));
+		     arg(product));
 		  text.append
 		    (QString("    cd %1 && exec ./%2 \"$@\"\n").
-		     arg(m_destination).arg(m_product));
+		     arg(destination_path).arg(product));
 		  text.append("    exit $?\n");
 		  text.append("fi\n\n");
 		}
@@ -883,10 +888,10 @@ void qup_page::slot_install(void)
 
 #if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
   m_copy_files_future = QtConcurrent::run
-    (this, &qup_page::copy_files, m_destination, m_path);
+    (this, &qup_page::copy_files, m_destination, m_path, m_product);
 #else
   m_copy_files_future = QtConcurrent::run
-    (&qup_page::copy_files, this, m_destination, m_path);
+    (&qup_page::copy_files, this, m_destination, m_path, m_product);
 #endif
   m_copy_files_future_watcher.setFuture(m_copy_files_future);
 }

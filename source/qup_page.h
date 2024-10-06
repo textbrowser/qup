@@ -97,7 +97,9 @@ class qup_page: public QWidget
   static QString proper_path(const QString &path);
   void closeEvent(QCloseEvent *event);
   void copy_files
-    (const QString &destination_path, const QString &local_path);
+    (const QString &destination_path,
+     const QString &local_path,
+     const QString &product);
   void download_files
     (const QHash<QString, FileInformation> &files,
      const QString &directory_destination,
@@ -108,7 +110,10 @@ class qup_page: public QWidget
      const QString &destination_path,
      const QString &local_path);
   void prepare_operating_systems_widget(void);
-  void prepare_shell_file(const QString &path);
+  void prepare_shell_file
+    (const QString &destination_path,
+     const QString &path,
+     const QString &product);
 
  private slots:
   void append(const QString &text);
