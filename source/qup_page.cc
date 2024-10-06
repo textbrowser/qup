@@ -677,19 +677,26 @@ void qup_page::prepare_shell_file(const QString &path)
 	    {
 	      QString text("");
 
-	      text.append
-		(QString("if [ -r %1/%2 ] && [ -x %1/%2 ]\n").
-		 arg(m_destination).arg(m_product));
-	      text.append("then\n");
-	      text.append
-		(QString("    echo \"Launching an official %1.\"\n").
-		 arg(m_product));
-	      text.append
-		(QString("    cd %1 && exec ./%2 \"$@\"\n").
-		 arg(m_destination).arg(m_product));
-	      text.append("    exit $?\n");
-	      text.append("fi\n");
-	      temporary.write(text.toUtf8());
+	      if(path.toLower().trimmed().endsWith(".sh"))
+		{
+		  text.append("\n");
+		  text.append
+		    (QString("if [ -r %1/%2 ] && [ -x %1/%2 ]\n").
+		     arg(m_destination).arg(m_product));
+		  text.append("then\n");
+		  text.append
+		    (QString("    echo \"Launching an official %1.\"\n").
+		     arg(m_product));
+		  text.append
+		    (QString("    cd %1 && exec ./%2 \"$@\"\n").
+		     arg(m_destination).arg(m_product));
+		  text.append("    exit $?\n");
+		  text.append("fi\n\n");
+		}
+
+
+	      if(text.length() > 0)
+		temporary.write(text.toUtf8());
 	    }
 	}
     }
