@@ -452,9 +452,8 @@ void qup_page::copy_files
 		}
 	    }
 
-	  if(file_information.suffix() == "sh")
-	    prepare_shell_file
-	      (destination_path, file_information.absoluteFilePath(), product);
+	  prepare_shell_file
+	    (destination_path, file_information.absoluteFilePath(), product);
 	}
     }
 }
@@ -664,8 +663,15 @@ void qup_page::prepare_operating_systems_widget(void)
 void qup_page::prepare_shell_file
 (const QString &destination_path, const QString &path, const QString &product)
 {
+  QFileInfo const file_information(path);
+  auto const file_name(file_information.fileName().toLower());
+
+  if(!(file_name == product.toLower() + ".bash" ||
+       file_name == product.toLower() + ".sh"))
+    return;
+
   QFile file(path);
-  QFile temporary(path + "_temporary");
+  QFile temporary(path + ".qup_temporary");
 
   if(file.open(QIODevice::ReadOnly | QIODevice::Text) &&
      temporary.open(QIODevice::Text | QIODevice::WriteOnly))
@@ -687,14 +693,14 @@ void qup_page::prepare_shell_file
 		  text.append("\n");
 		  text.append
 		    (QString("if [ -r %1/%2 ] && [ -x %1/%2 ]\n").
-		     arg(destination_path).arg(product));
+		     arg(proper_path(destination_path)).arg(product));
 		  text.append("then\n");
 		  text.append
 		    (QString("    echo \"Launching an official %1.\"\n").
 		     arg(product));
 		  text.append
 		    (QString("    cd %1 && exec ./%2 \"$@\"\n").
-		     arg(destination_path).arg(product));
+		     arg(proper_path(destination_path)).arg(product));
 		  text.append("    exit $?\n");
 		  text.append("fi\n\n");
 		}
