@@ -674,7 +674,9 @@ void qup_page::prepare_shell_file
   QFile temporary(path + ".qup_temporary");
 
   if(file.open(QIODevice::ReadOnly | QIODevice::Text) &&
-     temporary.open(QIODevice::Text | QIODevice::WriteOnly))
+     temporary.open(QIODevice::Text |
+		    QIODevice::Truncate |
+		    QIODevice::WriteOnly))
     {
       QByteArray data(4096, '0');
       qint64 rc = 0;
@@ -704,7 +706,6 @@ void qup_page::prepare_shell_file
 		  text.append("    exit $?\n");
 		  text.append("fi\n\n");
 		}
-
 
 	      if(text.length() > 0)
 		temporary.write(text.toUtf8());
