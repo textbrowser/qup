@@ -456,6 +456,29 @@ void qup_page::copy_files
 	    (destination_path, file_information.absoluteFilePath(), product);
 	}
     }
+
+  foreach(auto const &string, QStringList() << ".bash" << ".sh")
+    {
+      auto const shell_file_name
+	(QString("%1%2%3%4").
+	 arg(destination_path).
+	 arg(QDir::separator()).
+	 arg(product.toLower()).
+	 arg(string));
+      auto const temporary_shell_file_name(shell_file_name + ".qup_temporary");
+
+      if(QFileInfo::exists(temporary_shell_file_name))
+	{
+	  QFile::remove(shell_file_name);
+	  QFile::rename(temporary_shell_file_name, shell_file_name);
+	  QFile::remove(temporary_shell_file_name);
+
+	  QFile file(shell_file_name);
+
+	  file.setPermissions(QFileDevice::ExeOwner | file.permissions());
+	  break;
+	}
+    }
 }
 
 void qup_page::download_files(const QHash<QString, FileInformation> &files,
@@ -712,6 +735,9 @@ void qup_page::prepare_shell_file
 	    }
 	}
     }
+
+  file.close();
+  temporary.close();
 }
 
 void qup_page::slot_copy_files(void)
@@ -722,7 +748,9 @@ void qup_page::slot_copy_files(void)
       m_copy_files_timer.start();
       return;
     }
-  else if(m_copy_files_future.isFinished() == false || m_ok == false)
+  else if(m_copy_files_future.isFinished() == false ||
+	  m_ok == false ||
+	  m_product.isEmpty())
     {
       m_copy_files_timer.stop();
       return;
