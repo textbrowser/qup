@@ -406,6 +406,7 @@ void qup_page::copy_files
 
 	      if(destination.isEmpty() == false)
 		{
+		  QDir().mkpath(destination);
 		  destination.append(QDir::separator());
 		  destination.append(file_information.fileName());
 		  destination = proper_path(destination);
@@ -449,6 +450,15 @@ void qup_page::copy_files
 			(tr("<font color='darkred'>Failure.</font>"));
 		      emit append_text(text);
 		    }
+		}
+	      else
+		{
+		  QString text("");
+
+		  text.append
+		    (tr("<font color='darkred'>A Desktop location is "
+			"not defined.</font>"));
+		  emit append_text(text);
 		}
 	    }
 
