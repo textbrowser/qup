@@ -239,6 +239,8 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="action_about"/>
+    <addaction name="separator"/>
+    <addaction name="action_release_notes"/>
    </widget>
    <widget class="QMenu" name="menu_tabs">
     <property name="title">
@@ -285,6 +287,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
+   </property>
+  </action>
+  <action name="action_release_notes">
+   <property name="text">
+    <string>&amp;Release Notes...</string>
    </property>
   </action>
  </widget>

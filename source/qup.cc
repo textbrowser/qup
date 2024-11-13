@@ -81,6 +81,10 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
+  connect(m_ui.action_release_notes,
+	  &QAction::triggered,
+	  this,
+	  &qup::slot_release_notes);
   connect(m_ui.pages,
 	  SIGNAL(tabCloseRequested(int)),
 	  this,
@@ -385,6 +389,10 @@ void qup::slot_proxy_changed(const QString &text)
 void qup::slot_quit(void)
 {
   close();
+}
+
+void qup::slot_release_notes(void)
+{
 }
 
 void qup::slot_save_proxy(void)
