@@ -20,9 +20,9 @@ url = https://github.com/textbrowser/qup/releases/download/qup
 
 desktop = ./qup.desktop
 executable = Qup_PiOS_12_ARM
-executable = Qup_PiOS_12_ARM64
+executable = Qup_PiOS_12_ARM64_Qt6
 executable = Qup_Ubuntu_16_04_PowerPC
-executable = Qup_Ubuntu_24_04_AMD64
+executable = Qup_Ubuntu_24_04_AMD64_Qt5
 local_executable = Qup
 shell = ./qup.sh
 url = https://github.com/textbrowser/qup/releases/download/qup
