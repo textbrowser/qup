@@ -657,8 +657,8 @@ void qup_page::prepare_operating_systems_widget(void)
                    << "PiOS 12 ARM64"
                    << "PiOS 13 ARM"
                    << "PiOS 13 ARM64"
-                   << "Ubuntu 24.04 AMD64"
                    << "Ubuntu 16.04 PowerPC"
+                   << "Ubuntu 24.04 AMD64"
                    << "Windows 11 AMD64");
 
 #ifdef Q_OS_FREEBSD
