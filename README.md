@@ -36,4 +36,4 @@ People:
 <li>Zero bundles.</li>
 </ol>
 
-![qup](https://github.com/user-attachments/assets/ca2133b1-7b79-4bf0-8673-e4e67b21089d)
+![qup](https://github.com/user-attachments/assets/5ba9c3af-5ced-463f-826b-d85d212a9e82)
