@@ -55,6 +55,7 @@ class qup: public QMainWindow
   void closeEvent(QCloseEvent *event);
   void close_page(QWidget *widget);
   void prepare_tabs_menu(void);
+  void release_notes(void);
   void restore_settings(void);
   void set_proxy(void);
 
@@ -65,7 +66,6 @@ class qup: public QMainWindow
   void slot_product_name_changed(const QString &t);
   void slot_proxy_changed(const QString &text);
   void slot_quit(void);
-  void slot_release_notes(void);
   void slot_save_proxy(void);
   void slot_save_proxy_type(int index);
   void slot_select_color(void);

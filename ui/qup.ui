@@ -51,6 +51,24 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_release_notes">
+       <attribute name="icon">
+        <iconset resource="../images/images.qrc">
+         <normaloff>:/qup.png</normaloff>:/qup.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Release Notes</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QTextBrowser" name="release_notes">
+          <property name="tabChangesFocus">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page_settings">
        <attribute name="icon">
         <iconset resource="../images/images.qrc">
@@ -239,8 +257,6 @@
      <string>&amp;Help</string>
     </property>
     <addaction name="action_about"/>
-    <addaction name="separator"/>
-    <addaction name="action_release_notes"/>
    </widget>
    <widget class="QMenu" name="menu_tabs">
     <property name="title">
@@ -287,11 +303,6 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+W</string>
-   </property>
-  </action>
-  <action name="action_release_notes">
-   <property name="text">
-    <string>&amp;Release Notes...</string>
    </property>
   </action>
  </widget>

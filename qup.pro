@@ -4,7 +4,7 @@ dmg.commands = make install && hdiutil create Qup.d.dmg -srcfolder Qup.d
 
 unix {
 doxygen.commands = doxygen qup.doxygen
-purge.commands   = find . -name '*~' -exec rm {} \;
+purge.commands   = find . -name \'*~\' -exec rm {} \;
 }
 
 CONFIG	    += qt release warn_on
@@ -122,7 +122,7 @@ MOC_DIR     = temporary/moc
 OBJECTS_DIR = temporary/obj
 PROJECTNAME = Qup
 RCC_DIR     = temporary/rcc
-RESOURCES   = images/images.qrc
+RESOURCES   = documentation.qrc images/images.qrc
 SOURCES     += source/qup.cc \
                source/qup_main.cc \
                source/qup_page.cc

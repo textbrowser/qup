@@ -358,6 +358,9 @@
        </item>
        <item>
         <widget class="QCheckBox" name="install_automatically">
+         <property name="toolTip">
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If checked, a correct download may initiate an install.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
          <property name="text">
           <string>Install</string>
          </property>
@@ -442,7 +445,7 @@
      <item>
       <widget class="QPushButton" name="download">
        <property name="toolTip">
-        <string>Download</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Download and perhaps install (see Install checkbox).&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="icon">
         <iconset resource="../images/images.qrc">

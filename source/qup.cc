@@ -40,8 +40,8 @@
 
 QColor qup::INVALID_PROCESS_COLOR = QColor(255, 114, 118);
 QColor qup::VALID_PROCESS_COLOR = QColor(144, 238, 144);
-QString qup::VERSION = "2024.11.12";
-QString qup::VERSION_LTS = "2024.11.12";
+QString qup::VERSION = "2024.11.13";
+QString qup::VERSION_LTS = "2024.11.13";
 static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
 qup::qup(void):QMainWindow()
@@ -81,10 +81,6 @@ qup::qup(void):QMainWindow()
 	  &QAction::triggered,
 	  this,
 	  &qup::slot_quit);
-  connect(m_ui.action_release_notes,
-	  &QAction::triggered,
-	  this,
-	  &qup::slot_release_notes);
   connect(m_ui.pages,
 	  SIGNAL(tabCloseRequested(int)),
 	  this,
@@ -116,6 +112,7 @@ qup::qup(void):QMainWindow()
     (INVALID_PROCESS_COLOR.name(QColor::HexArgb));
   m_ui.temporary_directory->setText(QDir::tempPath());
   m_ui.process_valid_color->setText(VALID_PROCESS_COLOR.name(QColor::HexArgb));
+  release_notes();
   restore_settings();
   set_proxy();
   slot_new_page();
@@ -246,6 +243,16 @@ void qup::close_page(QWidget *widget)
   m_ui.pages->removeTab(m_ui.pages->indexOf(page));
   page ? page->deleteLater() : (void) 0;
   prepare_tabs_menu();
+}
+
+void qup::release_notes(void)
+{
+  QFile file(":/ReleaseNotes.html");
+
+  if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    m_ui.release_notes->setHtml(file.readAll());
+
+  file.close();
 }
 
 void qup::restore_settings(void)
@@ -389,10 +396,6 @@ void qup::slot_proxy_changed(const QString &text)
 void qup::slot_quit(void)
 {
   close();
-}
-
-void qup::slot_release_notes(void)
-{
 }
 
 void qup::slot_save_proxy(void)
