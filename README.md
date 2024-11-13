@@ -10,6 +10,8 @@ Raspberry Pi Linux, and Windows releases. Many bundles! As a developer,
 it's easier to compile the individual release files and upload them.
 Zero bundles.
 
+Qup configuration file: https://raw.githubusercontent.com/textbrowser/qup/master/qup.txt.
+
 Benefits:
 <ul>
 <li>Creating bundles is not necessary!</li>
