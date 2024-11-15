@@ -182,34 +182,7 @@ QAction *qup_page::tabs_menu_action(void) const
 
 QString qup_page::executable_suffix(void) const
 {
-  if(m_operating_system == "Debian 12 AMD64")
-    return "_debian_12_amd64";
-  else if(m_operating_system == "Debian 13 AMD64")
-    return "_debian_13_amd64";
-  else if(m_operating_system == "FreeBSD 13 AMD64")
-    return "_freebsd_13_amd64";
-  else if(m_operating_system == "FreeBSD 14 AMD64")
-    return "_freebsd_14_amd64";
-  else if(m_operating_system == "MacOS Apple Silicon")
-    return "_macos_apple_silicon";
-  else if(m_operating_system == "MacOS Intel")
-    return "_macos_intel";
-  else if(m_operating_system == "PiOS 12 ARM")
-    return "_pios_12_arm";
-  else if(m_operating_system == "PiOS 12 ARM64")
-    return "_pios_12_arm64";
-  else if(m_operating_system == "PiOS 13 ARM")
-    return "_pios_13_arm";
-  else if(m_operating_system == "PiOS 13 ARM64")
-    return "_pios_13_arm64";
-  else if(m_operating_system == "Ubuntu 24.04 AMD64")
-    return "_ubuntu_24_04_amd64";
-  else if(m_operating_system == "Ubuntu 16.04 PowerPC")
-    return "_ubuntu_16_04_powerpc";
-  else if(m_operating_system == "Windows 11")
-    return "";
-  else
-    return "";
+  return QString(m_operating_system).replace(' ', '_').toLower();
 }
 
 QString qup_page::permissions_as_string
@@ -646,20 +619,19 @@ void qup_page::launch_file_gatherer(void)
 void qup_page::prepare_operating_systems_widget(void)
 {
   m_ui.operating_system->clear();
-  m_ui.operating_system->addItems
-    (QStringList() << "Debian 12 AMD64"
-                   << "Debian 13 AMD64"
-                   << "FreeBSD 13 AMD64"
-                   << "FreeBSD 14 AMD64"
-                   << "MacOS Apple Silicon"
-                   << "MacOS Intel"
-                   << "PiOS 12 ARM"
-                   << "PiOS 12 ARM64"
-                   << "PiOS 13 ARM"
-                   << "PiOS 13 ARM64"
-                   << "Ubuntu 16.04 PowerPC"
-                   << "Ubuntu 24.04 AMD64"
-                   << "Windows 11 AMD64");
+
+  QFile file(":/OperatingSystems.txt");
+
+  if(file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      auto const bytes(file.readAll().trimmed());
+
+      file.close();
+      m_ui.operating_system->addItems(QString(bytes).split('\n'));
+    }
+
+  if(m_ui.operating_system->count() == 0)
+    m_ui.operating_system->addItem("Unknown");
 
 #ifdef Q_OS_FREEBSD
   auto const product_type_version
