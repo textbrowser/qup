@@ -886,6 +886,18 @@ void qup_page::slot_install(void)
       return;
     }
 
+  if(m_destination.isEmpty())
+    {
+      append(tr("<font color='darkred'>Empty destination path.</font>"));
+      return;
+    }
+
+  if(m_path.isEmpty())
+    {
+      append(tr("<font color='darkred'>Empty temporary product path.</font>"));
+      return;
+    }
+
   append
     (tr("<b>Copying files from %1 to %2.</b>").arg(m_path).arg(m_destination));
 
