@@ -5,7 +5,6 @@
 
 [General]
 
-file = REMINDERS
 file = qup.png
 file_destination = .
 url = https://github.com/textbrowser/qup/releases/download/qup
