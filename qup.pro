@@ -106,7 +106,7 @@ OBJECTIVE_HEADERS              += source/CocoaInitializer.h
 OBJECTIVE_SOURCES              += source/CocoaInitializer.mm
 QMAKE_DISTCLEAN                += -r Qup.d
 QMAKE_EXTRA_TARGETS            += dmg
-QMAKE_MACOSX_DEPLOYMENT_TARGET = 12.0
+QMAKE_MACOSX_DEPLOYMENT_TARGET = 13.0
 }
 
 unix {
@@ -122,7 +122,7 @@ MOC_DIR     = temporary/moc
 OBJECTS_DIR = temporary/obj
 PROJECTNAME = Qup
 RCC_DIR     = temporary/rcc
-RESOURCES   = documentation.qrc images/images.qrc
+RESOURCES   = documentation/documentation.qrc images/images.qrc
 SOURCES     += source/qup.cc \
                source/qup_main.cc \
                source/qup_page.cc
