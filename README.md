@@ -1,18 +1,9 @@
-Are you annoyed with software maintenance? If so, read on.
-
-Qup, pronounced cup, is software maintenance simplified. Building and
-preparing numerous releases is boring and time-consuming. If a software
-release includes a single-file change, why download an entire bundle?
-Why create an entire bundle?
-
-BiblioteQ requires Android, Debian Linux, Mac, PowerPC Linux,
-Raspberry Pi Linux, and Windows releases. Many bundles! As a developer,
-it's easier to compile the individual release files and upload them.
-Zero bundles.
-
 Qup configuration file: https://raw.githubusercontent.com/textbrowser/qup/master/qup.txt.
 
-Benefits:
+Qup will work with FreeBSD, Linux, MacOS, Windows. For Android, APK is best.
+Debian files are simple, however, the preparation process is much work.
+
+Qup Benefits:
 <ul>
 <li>Creating bundles is not necessary!</li>
 <li>Downloads are smaller.</li>
@@ -20,7 +11,7 @@ Benefits:
 <li>Simple!</li>
 </ul>
 
-Developers:
+Release Developers:
 <ol>
 <li>Compile and deploy only necessary files.</li>
 <li>Create smartly-labeled files.</li>
