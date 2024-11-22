@@ -7,6 +7,6 @@ solution. Please visit https://brew.sh and install Homebrew.
 > cd
 > git clone https://github.com/textbrowser/qup qup.d
 > cd qup.d
-> qmake -o Makefile qup.pro
+> qmake
 > make -j 5
 > open ./Qup.app
