@@ -4,7 +4,8 @@ echo "The command sed may fail on MacOS."
 
 VERSION=$1
 
-if [ -z "$VERSION" ]; then
+if [ -z "$VERSION" ]
+then
     echo "Please specify the version: $0 <VERSION>."
     exit 1
 fi
