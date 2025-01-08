@@ -40,8 +40,8 @@
 
 QColor qup::INVALID_PROCESS_COLOR = QColor(255, 114, 118);
 QColor qup::VALID_PROCESS_COLOR = QColor(144, 238, 144);
-QString qup::VERSION = "2024.11.15";
-QString qup::VERSION_LTS = "2024.11.15";
+QString qup::VERSION = "2025.01.08";
+QString qup::VERSION_LTS = "2025.01.08";
 static const char * const COMPILED_ON = __DATE__ " @ " __TIME__;
 
 qup::qup(void):QMainWindow()

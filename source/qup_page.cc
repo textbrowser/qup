@@ -706,7 +706,8 @@ void qup_page::prepare_shell_file
 		    (QString("    echo \"Launching an official %1.\"\n").
 		     arg(product));
 		  text.append
-		    (QString("    cd %1 && exec ./%2 \"$@\"\n").
+		    (QString("    cd %1 && exec ./%2 \"$qup_arguments\" "
+			     "\"$@\"\n").
 		     arg(proper_path(destination_path)).arg(product));
 		  text.append("    exit $?\n");
 		  text.append("fi\n\n");
@@ -1130,8 +1131,8 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 		  FileInformation file_information;
 
-		  file_information.m_executable = false;
 		  file_information.m_destination = p.second;
+		  file_information.m_executable = false;
 		  files[p.second] = file_information;
 		}
 	      else if(p.first == "executable" &&
@@ -1139,8 +1140,8 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 		  FileInformation file_information;
 
-		  file_information.m_executable = true;
 		  file_information.m_destination = "";
+		  file_information.m_executable = true;
 		  files[p.second] = file_information;
 		}
 	      else if(p.first == "local_executable")
@@ -1149,8 +1150,8 @@ void qup_page::slot_parse_instruction_file(void)
 		{
 		  FileInformation file_information;
 
-		  file_information.m_executable = true;
 		  file_information.m_destination = p.second;
+		  file_information.m_executable = true;
 		  files[p.second] = file_information;
 		}
 	      else if(p.first == "url")
