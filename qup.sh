@@ -6,6 +6,16 @@ export AA_USEHIGHDPIPIXMAPS=1
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_X11_NO_MITSHM=1
 
+kde=$(env | grep -ci kde 2>/dev/null)
+
+if [ $kde -gt 0 ]
+then
+    echo "KDE!"
+    style="-style=Breeze"
+else
+    style="-style=Fusion"
+fi
+
 # Begin Qup
 # Here be special Qup instructions.
 # End Qup
@@ -19,17 +29,17 @@ then
 	export LD_LIBRARY_PATH=Lib
     fi
 
-    exec ./Qup -style=Breeze "$@"
+    exec ./Qup "$style" "$@"
     exit $?
 elif [ -r /opt/qup/Qup ] && [ -x /opt/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /opt/qup && exec ./Qup -style=Breeze "$@"
+    cd /opt/qup && exec ./Qup "$style" "$@"
     exit $?
 elif [ -r /usr/local/qup/Qup ] && [ -x /usr/local/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /usr/local/qup && exec ./Qup -style=Breeze "$@"
+    cd /usr/local/qup && exec ./Qup "$style" "$@"
     exit $?
 else
     echo "Cannot locate Qup. Why?"
