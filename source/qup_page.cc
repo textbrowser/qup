@@ -1463,11 +1463,11 @@ void qup_page::slot_select_local_directory(void)
 {
   QFileDialog dialog(this);
 
-  dialog.selectFile(m_ui.local_directory->text());
   dialog.setDirectory(QDir::homePath());
   dialog.setFileMode(QFileDialog::Directory);
   dialog.setLabelText(QFileDialog::Accept, tr("Select"));
   dialog.setWindowTitle(tr("Qup: Select Download Path"));
+  dialog.selectFile(m_ui.local_directory->text());
 
   if(dialog.exec() == QDialog::Accepted)
     {
