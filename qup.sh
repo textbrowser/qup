@@ -29,17 +29,17 @@ then
 	export LD_LIBRARY_PATH=Lib
     fi
 
-    exec ./Qup "$style" "$@"
+    ./Qup "$style" "$@"
     exit $?
 elif [ -r /opt/qup/Qup ] && [ -x /opt/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /opt/qup && exec ./Qup "$style" "$@"
+    cd /opt/qup && ./Qup "$style" "$@"
     exit $?
 elif [ -r /usr/local/qup/Qup ] && [ -x /usr/local/qup/Qup ]
 then
     echo "Launching an official Qup."
-    cd /usr/local/qup && exec ./Qup "$style" "$@"
+    cd /usr/local/qup && ./Qup "$style" "$@"
     exit $?
 else
     echo "Cannot locate Qup. Why?"
