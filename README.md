@@ -1,9 +1,8 @@
-Qup configuration file: https://raw.githubusercontent.com/textbrowser/qup/master/qup.txt.
+Read https://raw.githubusercontent.com/textbrowser/qup/master/qup.txt
+for a sample Qup configuration file.
 
-Qup will work with FreeBSD, Linux, MacOS, Windows. For Android, APK is best.
-Debian files are simple, however, the preparation process is much work.
+Qup Benefits
 
-Qup Benefits:
 <ul>
 <li>Creating bundles is not necessary!</li>
 <li>Downloads are smaller.</li>
@@ -11,13 +10,15 @@ Qup Benefits:
 <li>Simple!</li>
 </ul>
 
-Release Developers:
+Release Developers
+
 <ol>
 <li>Compile and deploy only necessary files.</li>
 <li>Create smartly-labeled files.</li>
 </ol>
 
-People:
+People
+
 <ol>
 <li>Download Qup.</li>
 <li>Select a local product.</li>
@@ -26,5 +27,3 @@ People:
 <li>You are now current!</li>
 <li>Zero bundles.</li>
 </ol>
-
-![qup](https://github.com/user-attachments/assets/5ba9c3af-5ced-463f-826b-d85d212a9e82)
