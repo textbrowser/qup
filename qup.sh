@@ -6,11 +6,13 @@ export AA_ENABLEHIGHDPISCALING=1
 export AA_USEHIGHDPIPIXMAPS=1
 export QT_AUTO_SCREEN_SCALE_FACTOR=1
 export QT_X11_NO_MITSHM=1
+
 kde=$(env | grep -ci kde 2>/dev/null)
 
 if [ $kde -gt 0 ]
 then
     echo "KDE!"
+
     qup_arguments=style="-style=Breeze"
 else
     qup_arguments=style="-style=Fusion"
