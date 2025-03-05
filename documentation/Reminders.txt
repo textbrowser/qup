@@ -39,7 +39,6 @@ Maybe Items
 
 - Digests. Lots of work and require separate sites.
 - Mention invalid digests.
+- Qt 5.5.1.
 
 Remaining Items
-
-- Qt 5.5.1.
