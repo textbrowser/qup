@@ -65,6 +65,7 @@ char const static *const s_end_of_file = "# End of file. Required comment.";
 char const static *const s_shell_comment =
   "# Here be special Qup instructions.";
 const int static s_activity_maximum_line_count = 100000;
+const int static s_maximum_size_of_instruction_buffer = 5 * 1024 * 1024;
 const int static s_populate_favorites_interval = 250;
 
 qup_page::qup_page(QWidget *parent):QWidget(parent)
@@ -1553,6 +1554,10 @@ void qup_page::slot_write_instruction_file_data(void)
       m_instruction_file_reply_data.append
 	(m_instruction_file_reply->readAll());
 
+      if(m_instruction_file_reply_data.size() >
+	 s_maximum_size_of_instruction_buffer)
+	break;
+
       if(m_instruction_file_reply_data.trimmed().endsWith(s_end_of_file))
 	break;
     }
@@ -1587,6 +1592,13 @@ void qup_page::slot_write_instruction_file_data(void)
 	  (tr("<font color='darkred'>Could not open a local file %1.</file>").
 	   arg(file_information.fileName()));
 
+      m_instruction_file_reply->abort();
+      m_instruction_file_reply_data.clear();
+    }
+  else if(m_instruction_file_reply_data.size() >
+	  s_maximum_size_of_instruction_buffer)
+    {
+      m_instruction_file_reply->abort();
       m_instruction_file_reply_data.clear();
     }
 }
