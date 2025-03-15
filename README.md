@@ -14,7 +14,7 @@ Release Developers
 
 <ol>
 <li>Compile and deploy only necessary files.</li>
-<li>Create smartly-labeled files.</li>
+<li>Label files for specific releases.</li>
 </ol>
 
 People
