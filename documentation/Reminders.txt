@@ -23,6 +23,7 @@ Completed Items
 - Populate favorites if the INI file has been changed? No.
 - Proxy.
 - Qt 6.5 LTS.
+- Qt 6.8 LTS.
 - Resurface awesome colors.
 - Restore and retain favorites.
 - Save shortcut.
